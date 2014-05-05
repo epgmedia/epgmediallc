@@ -1,0 +1,48 @@
+############
+# Weird Files and logs
+
+._*
+.htaccess
+.idea
+*.log
+error_log
+
+############
+# Sitemap
+
+sitemap.xml
+sitemap.xml.gz
+
+############
+# Wordpress
+
+# Admin
+wp-admin/
+
+# Config file
+wp-config.php
+
+# Content folders
+wp-content/advanced-cache.php
+wp-content/backups/
+wp-content/backup-db/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/gallery/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/wp-cache-config.php
+
+# System files
+wp-includes/
+cg-bin/
+e/
+ftp/
+FTP/
+.ftpquota
+wordpress/
+
+
+############
+# Site Specific
+
