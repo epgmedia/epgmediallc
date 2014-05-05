@@ -15,3 +15,12 @@ require ( get_template_directory() . '/includes/post-custom-meta.php' );
 require ( get_template_directory() . '/includes/tha-theme-hooks.php' );
 require ( get_template_directory() . '/includes/hooks.php' );
 require ( get_template_directory() . '/includes/version.php' );
+
+
+function epg_form_styles() {
+    wp_enqueue_style('epg-forms', get_template_directory_uri() . '/includes/timeoff.css');
+    wp_enqueue_script('float-labels', get_template_directory_uri() . '/js/floatlabels.min.js', array("jquery"));
+    wp_enqueue_script('it-request', get_template_directory_uri() . '/js/it-request.js', array("jquery", "float-labels"));
+    wp_enqueue_script('html5-shiv', "//html5shiv.googlecode.com/svn/trunk/html5.js", array("jquery", "it-request"));
+}
+add_action('wp_enqueue_scripts', 'epg_form_styles');

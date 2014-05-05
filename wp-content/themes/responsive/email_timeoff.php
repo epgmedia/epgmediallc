@@ -11,6 +11,10 @@ Template Name: Time-Off Confirmation
  *
  * @function Send emails to TimeOff@epgmediallc.com, Supervisor, and self
  */
+// Exit if accessed directly
+if ( !defined('ABSPATH')) exit;
+
+get_header();
 
 if(isset($_POST['email']))
 {
@@ -43,8 +47,7 @@ if(isset($_POST['email']))
         )
     {
         died('We are sorry, but there appears to be a problem with the form you submitted.');
-    } else
-    {
+    } else {
         $employee       = $_POST['employee'];
         $date_submitted = $_POST['date_submitted'];
         $pay_type       = $_POST['pay_type'];
@@ -62,30 +65,24 @@ if(isset($_POST['email']))
     $email_exp      = '/^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/';
     $string_exp     = "/^[A-Za-z .'-]+$/";
 
-	if(!preg_match($email_exp,$email_from))
-	{
+	if(!preg_match($email_exp,$email_from)) {
 		$error_message .= 'The Email Address you entered does not appear to be valid.<br />';
 	}
-	if(!preg_match($email_exp,$supervisor))
-	{
+	if(!preg_match($email_exp,$supervisor)) {
 		$error_message .= 'The Supervisor Email Address does not appear to be valid.<br />';
 	}
-    if(!preg_match($string_exp,$employee))
-    {
+    if(!preg_match($string_exp,$employee)) {
         $error_message .= 'The First Name you entered does not appear to be valid.<br />';
     }
-    if(strlen($reason) < 2)
-    {
+    if(strlen($reason) < 2) {
     	$error_message .= 'The Reason you entered does not appear to be valid text.<br />';
     }
-
-    if(strlen($error_message) > 0)
-    {
+    if(strlen($error_message) > 0) {
 		died($error_message);
     }
     //creating email message
     $email_message  = "Form details below.\n\n";
-	$email_message .= <<<CDATA
+	$email_message .= <<<EmailData
 <table width="600" align="center" cellpadding="10" style="border-top:1px solid black;border-bottom:1px solid black;">
     <tr>
         <td align="left">
@@ -107,9 +104,9 @@ if(isset($_POST['email']))
         </td>
     </tr>
 </table>
-CDATA;
+EmailData;
 
-    $email_to       = 'timeoff@epgmediallc.com';
+    $email_to       = 'EPG Time-Off Request <timeoff@epgmediallc.com>';
     $email_subject  = 'SCHEDULED AND UNSCHEDULED TIME OFF REQUEST FORM';
 
     // Headers array
@@ -121,6 +118,7 @@ CDATA;
         'Cc:' . $supervisor,
         'X-Mailer: PHP/' . phpversion()
     );
+
     // Send the email with headers
     mail(
         $email_to,
@@ -128,59 +126,42 @@ CDATA;
         $email_message,
         implode("\r\n", $headers)
     );
+    ?>
+    <h1>Time Off<span>request confirmation</span></h1>
+    <div class="timeOffWrap">
+        <h2>Thank You</h2>
+        <div class="innerwrap">
+            <h3>
+                Please verify the entries from your submission.
+            </h3>
+            <p>
+                Date submitted: <span><?php echo $date_submitted; ?></span>
+            </p>
+            <p>
+                Thank you <span><?php echo $employee; ?></span>. Your email address is: <span><?php echo $email_from; ?></span>.
+            </p>
+            <p>
+                You are requesting <?php echo $requesting; ?> hours of <span><?php echo $pay_type; ?></span> time off
+                from <span><?php echo $datefrom; ?></span> to <span><?php echo $dateto; ?></span>.
+            <h3>
+                The reason for this request:
+            </h3>
+            <p>
+                <?php echo $reason; ?>
+            </p>
+            <p>
+                Your request has been sent to <span><?php echo $supervisor; ?></span>.
+            </p>
+            <p>
+                Thank You!
+            </p>
+            <p>
+                <a href="javascript:history.go(-1);">To Return to form</a>
+            </p>
+        </div>
+    </div>
 
-    echo <<<SUCCESSDATA
-<!--
-	include success html here
--->
-<html>
-	<head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-	<title>Time off Request - Thank You</title>
-	<link href="timeoff.css" rel="stylesheet" type="text/css">
-	<script src="jquery-1.10.2.js" type="text/javascript"></script>
-
-	<script src="floatlabels.min.js" type="text/javascript"></script>
-	<!--[if lt IE 9]>
-        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-</head>
-	<body>
-		<h1>EPG Media, LLC <span>request form</span></h1>
-		<div class="timeOffWrap">
-			<h2>Thank You</h2>
-			<div class="innerwrap">
-				<h3>
-					Please verify the entries from your submission.
-				</h3>
-				<p>
-					Date submitted: <span>$date_submitted</span>
-				</p>
-				<p>
-					Thank you <span>$employee</span>. Your email address is: <span>$email_from</span>
-				</p>
-				<p>
-					You are requesting $requesting hours of <span>$pay_type</span> time off from <span>$datefrom</span> to <span>$dateto</span>.
-				<h3>The reason for this request:</h3>
-				<p>
-					$reason
-				</p>
-				<p>
-					Your request has been sent to <span>$supervisor</span>.
-				</p>
-				<p>Thank You!</p>
-				<p>
-					<a href="javascript:history.go(-1);">To Return to form</a>
-				</p>
-			</div>
-		</div>
-	</body>
-</html>
-SUCCESSDATA;
-}
-else
-{
+<?php get_footer(); ?>
+<?php } else {
     header('Location:http://www.epgmediallc.com/time-off-request/');
 }
-?>

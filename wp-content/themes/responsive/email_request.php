@@ -2,6 +2,10 @@
 /*
  * Template name: IT Request Form Email
  */
+// Exit if accessed directly
+if ( !defined('ABSPATH')) exit;
+
+get_header();
 
 /**
  *
@@ -11,13 +15,11 @@
  *
  * @function Send emails to IT, VP Operations, Supervisor, Employee about request
  */
-if(isset($_POST['email']))
-{
+if(isset($_POST['email'])) {
     /*
      * Returns set of errors
      */
-    function died($error)
-    {
+    function died($error) {
         // your error code can go here
         echo "We are very sorry, but there were error(s) found with the form you submitted. ";
         echo "These errors appear below.<br /><br />";
@@ -28,8 +30,7 @@ if(isset($_POST['email']))
     /*
      * Cleans up email string
      */
-    function clean_string($string)
-    {
+    function clean_string($string) {
         $bad = array("content-type","bcc:","to:","cc:","href");
         return str_replace($bad,"",$string);
     }
@@ -47,11 +48,9 @@ if(isset($_POST['email']))
         !isset($_POST['computerType']) ||
         !isset($_POST['shortReason']) ||
         !isset($_POST['reason'])
-    )
-    {
+    ) {
         died('We are sorry, but there appears to be a problem with the form you submitted.');
-    } else
-    {
+    } else {
         $dateSubmitted  =   $_POST['date_submitted'];
         $employeeName   =   $_POST['employee'];
         $employeeEmail  =   $_POST['email'];
@@ -63,34 +62,27 @@ if(isset($_POST['email']))
         $requestReason  =   stripslashes($_POST['reason']);
     }
 
-
     /*
      * Preg Replace strings.
      */
     $email_exp = '/^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/';
     $string_exp = "/^[A-Za-z .'-]+/";
-    if(!preg_match($email_exp,$employeeEmail))
-    {
+    if(!preg_match($email_exp,$employeeEmail)) {
         $error_message .= 'The email address you entered does not appear to be valid.<br />';
     }
-    if(!preg_match($email_exp,$supervisor))
-    {
+    if(!preg_match($email_exp,$supervisor)) {
         $error_message .= 'The supervisor email address does not appear to be valid.<br />';
     }
-    if(!preg_match($string_exp,$employeeName))
-    {
+    if(!preg_match($string_exp,$employeeName)) {
         $error_message .= 'The name you entered does not appear to be valid.<br />';
     }
-    if(strlen($requestReason) <= 2)
-    {
+    if(strlen($requestReason) <= 2) {
         $error_message .= 'The reason you entered does not appear to be valid text.<br />';
     }
-
-    if(strlen($error_message) > 0)
-    {
+    if(strlen($error_message) > 0) {
         died($error_message);
     }
-    $emailMessage .= <<<CDATA
+    $emailMessage .= <<<EmailData
 <table width="600" align="center" cellpadding="10" style="border-top:1px solid black;border-bottom:1px solid black;">
     <tr>
         <td align="left">
@@ -116,15 +108,19 @@ if(isset($_POST['email']))
         </td>
     </tr>
 </table>
-CDATA;
+EmailData;
+
     // Headers array
     $headers = array (
         'From: ' . $employeeEmail,
         'Content-Type: text/html',
         'Cc:' . $employeeName . '<' . $employeeEmail . '>',
-        'Cc: Barb Hammer <bhammer@epgmediallc.com>',
         'Cc:' . $supervisor
     );
+
+    if ($supervisor !== "jprusak@snowgoer.com") {
+        $headers[] = 'Cc: John Prusak <jprusak@epgmediallc.com>';
+    }
     // Send the email with headers
     mail(
         'CNT Admin <cntadmin@epgmediallc.com>',
@@ -132,53 +128,36 @@ CDATA;
         $emailMessage,
         implode("\r\n", $headers)
     );
-}
-?>
+} ?>
+    <h1>IT Request <span>confirmation</span></h1>
+    <div class="timeOffWrap">
+        <h2>Thank You</h2>
+        <div class="innerwrap">
+            <h3>
+                Please verify the entries from your submission.
+            </h3>
+            <p>
+                Date submitted: <span><?php echo $dateSubmitted; ?></span>
+            </p>
+            <p>
+                A copy of the following email was sent to you, your supervisor and IT:
+            </p>
+            <p>
+                <?php echo $emailMessage; ?>
+            </p>
+            <p>
+                <?php echo $reason; ?>
+            </p>
+            <p>
+                Your request has been sent to <span><?php echo $supervisor; ?></span>.
+            </p>
+            <p>
+                Thank You!
+            </p>
+            <p>
+                <a href="javascript:history.go(-1);">To Return to form</a>
+            </p>
+        </div>
+    </div>
 
-<!--
-	include success html here
--->
-<html>
-	<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-	<title>IT Request - Thank You</title>
-	<link href="<?php bloginfo('template_directory');?>/timeoff.css" rel="stylesheet" type="text/css">
-	<script src="<?php bloginfo('template_directory');?>/js/jquery-1.10.2.js" type="text/javascript"></script>
-
-	<script src="<?php bloginfo('template_directory');?>/js/floatlabels.min.js" type="text/javascript"></script>
-	<!--[if lt IE 9]>
-        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-</head>
-	<body>
-		<h1>EPG Media, LLC <span>request form</span></h1>
-		<div class="timeOffWrap">
-			<h2>Thank You</h2>
-			<div class="innerwrap">
-				<h3>
-					Please verify the entries from your submission.
-				</h3>
-				<p>
-					Date submitted: <span><?php echo $dateSubmitted; ?></span>
-				</p>
-				<p>
-					A copy of the following email was sent to you, your supervisor and IT:
-				</p>
-
-                <p><?php echo $emailMessage?></p>
-
-                <p>
-					<?php echo $reason; ?>
-				</p>
-				<p>
-					Your request has been sent to <span><?php echo $supervisor; ?></span>.
-				</p>
-				<p>Thank You!</p>
-				<p>
-					<a href="javascript:history.go(-1);">To Return to form</a>
-				</p>
-			</div>
-		</div>
-	</body>
-</html>
+<?php get_footer(); ?>
