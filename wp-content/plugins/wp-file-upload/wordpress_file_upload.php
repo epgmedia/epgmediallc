@@ -4,7 +4,7 @@ session_start();
 Plugin Name: Wordpress File Upload
 Plugin URI: http://www.iptanus.com/support/wordpress-file-upload
 Description: Simple interface to upload files from a page.
-Version: 2.3.1
+Version: 2.4.1
 Author: Nickolas Bossinas
 Author URI: http://www.iptanus.com
 */
@@ -28,6 +28,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+//set global db variables
+$wfu_tb_log_version = "1.0";
+$wfu_tb_userdata_version = "1.0";
+
 /* do not load plugin if this is the login page */
 $uri = $_SERVER['REQUEST_URI'];
 if ( strpos($uri, 'wp-login.php') !== false ) return;
@@ -42,7 +46,8 @@ if ( is_admin() ) {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script('wordpress_file_upload_admin_script', WPFILEUPLOAD_DIR.'js/wordpress_file_upload_adminfunctions.js', array( 'wp-color-picker' ), false, true);
 		wp_enqueue_script('wordpress_file_upload_classname_script', WPFILEUPLOAD_DIR.'js/getElementsByClassName-1.0.1.js');
-		wp_localize_script( 'wordpress_file_upload_admin_script', 'AdminParams', array("wfu_ajax_url" => site_url()."/wp-admin/admin-ajax.php") );
+		$AdminParams = array("wfu_ajax_url" => site_url()."/wp-admin/admin-ajax.php");
+		wp_localize_script( 'wordpress_file_upload_admin_script', 'AdminParams', $AdminParams );
 	}
 }
 else {
@@ -53,14 +58,19 @@ else {
 	wp_enqueue_script('wordpress_file_upload_script', WPFILEUPLOAD_DIR.'js/wordpress_file_upload_functions.js');
 }
 add_action('admin_menu', 'wordpress_file_upload_add_admin_pages');
+register_activation_hook(__FILE__,'wordpress_file_upload_install');
+add_action('plugins_loaded', 'wordpress_file_upload_update_db_check');
+//ajax actions
 add_action('wp_ajax_wfu_ajax_action', 'wfu_ajax_action_callback');
 add_action('wp_ajax_nopriv_wfu_ajax_action', 'wfu_ajax_action_callback');
 add_action('wp_ajax_wfu_ajax_action_send_email_notification', 'wfu_ajax_action_send_email_notification');
 add_action('wp_ajax_nopriv_wfu_ajax_action_send_email_notification', 'wfu_ajax_action_send_email_notification');
+add_action('wp_ajax_wfu_ajax_action_notify_wpfilebase', 'wfu_ajax_action_notify_wpfilebase');
+add_action('wp_ajax_nopriv_wfu_ajax_action_notify_wpfilebase', 'wfu_ajax_action_notify_wpfilebase');
 add_action('wp_ajax_wfu_ajax_action_save_shortcode', 'wfu_ajax_action_save_shortcode');
+add_action('wp_ajax_wfu_ajax_action_read_subfolders', 'wfu_ajax_action_read_subfolders');
+add_action('wp_ajax_wfu_ajax_action_download_file', 'wfu_ajax_action_download_file');
 wfu_include_lib();
-//foreach ( glob( plugin_dir_path( __FILE__ )."lib/*.php" ) as $file )
-//	include_once $file;
 
 function wfu_include_lib() {
 	if ( $handle = opendir(plugin_dir_path( __FILE__ )."lib/") ) {
@@ -92,6 +102,8 @@ function wordpress_file_upload_function($incomingfromhandler) {
 	global $blog_id;
 	$params = wfu_plugin_parse_array($incomingfromhandler);
 	$sid = $params["uploadid"];
+	// store current page id in params array
+	$params["pageid"] = $post->ID;
 
 	$_SESSION['wfu_token_'.$sid] = uniqid(mt_rand(), TRUE);
 
@@ -120,10 +132,10 @@ function wordpress_file_upload_function($incomingfromhandler) {
 	$params["adminerrors"] = "";
 
 	/* Define dynamic upload path from variables */
-	$search = array ('/%username%/', '/%blogid%/', '/%pageid%/', '/%pagetitle%/');	
+	$search = array ('/%userid%/', '/%username%/', '/%blogid%/', '/%pageid%/', '/%pagetitle%/');	
 	if ( is_user_logged_in() ) $username = $user->user_login;
 	else $username = "guests";
-	$replace = array ($username, $blog_id, $post->ID, get_the_title($post->ID));
+	$replace = array ($user->ID, $username, $blog_id, $post->ID, get_the_title($post->ID));
 	$params["uploadpath"] = preg_replace($search, $replace, $params["uploadpath"]);
 
 	/* Determine if userdata fields have been defined */
@@ -233,6 +245,7 @@ function wordpress_file_upload_function($incomingfromhandler) {
 		array_push($section_array, $uploadform_item);
 		$wordpress_file_upload_output .= call_user_func_array("wfu_add_div", $section_array);
 	}
+
 	/* Pass constants to javascript */
 	$consts = wfu_set_javascript_constants();
 	$handler = 'function() { wfu_Initialize_Consts("'.$consts.'") }';
@@ -247,6 +260,7 @@ function wordpress_file_upload_function($incomingfromhandler) {
 //	In the second case we do not want to perform any file upload, so we abort the rest of the script.
 	if ( $_SESSION['wfu_check_refresh_'.$sid] != "form button pressed" ) {
 		$_SESSION['wfu_check_refresh_'.$sid] = 'do not process';
+		$wordpress_file_upload_output .= wfu_post_plugin_actions($params);
 		return $wordpress_file_upload_output."\n";
 	}
 	$_SESSION['wfu_check_refresh_'.$sid] = 'do not process';
@@ -260,7 +274,10 @@ function wordpress_file_upload_function($incomingfromhandler) {
 //	If the uploaded file variable stored in $_FILES ends with "_redirected", then it means that ajax functionality is not supported and the plugin must switch to classic functionality. 
 	if ( isset($_FILES[$uploadedfile.'_redirected']) ) $params['forceclassic'] = "true";
 
-	if ( $params['forceclassic'] != "true" ) return $wordpress_file_upload_output."\n";
+	if ( $params['forceclassic'] != "true" ) {
+		$wordpress_file_upload_output .= wfu_post_plugin_actions($params);
+		return $wordpress_file_upload_output."\n";
+	}
 
 //	The section below is executed when using classic upload methods
 	if ( isset( $_POST[$adminerrorcodes] ) ) {
@@ -280,9 +297,15 @@ function wordpress_file_upload_function($incomingfromhandler) {
 	$wfu_process_file_array_str = wfu_encode_array_to_string($wfu_process_file_array);
 	$ProcessUploadComplete_functiondef = 'function(){wfu_ProcessUploadComplete('.$sid.', 1, "'.$wfu_process_file_array_str.'", "no-ajax", "", "", "'.$safe_output.'", ["false", "", "false"]);}';
 	$wordpress_file_upload_output .= '<script type="text/javascript">window.onload='.$ProcessUploadComplete_functiondef.'</script>';
-	
 
+	$wordpress_file_upload_output .= wfu_post_plugin_actions($params);
 	return $wordpress_file_upload_output."\n";
+}
+
+function wfu_post_plugin_actions($params) {
+	$echo_str = '';
+
+	return $echo_str;
 }
 
 ?>

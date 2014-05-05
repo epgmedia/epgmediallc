@@ -40,6 +40,7 @@ DEFINE("WFU_WAITMESSAGECOLORS", "#666666,#EEEEEE,#333333");
 DEFINE("WFU_SHOWTARGETFOLDER", "false");
 DEFINE("WFU_TARGETFOLDERLABEL", "Upload Directory");
 DEFINE("WFU_ASKFORSUBFOLDERS", "false");
+DEFINE("WFU_SUBFOLDERLABEL", "Select Subfolder");
 DEFINE("WFU_SUBFOLDERTREE", "");
 DEFINE("WFU_FORCECLASSIC", "false");
 DEFINE("WFU_TESTMODE", "false");
@@ -50,6 +51,7 @@ DEFINE("WFU_PLACEMENTS", "title/filename+selectbutton+uploadbutton/subfolders"."
 DEFINE("WFU_USERDATA", "false");               
 DEFINE("WFU_USERDATALABEL", __('Your message', 'wordpress-file-upload'));   
 DEFINE("WFU_MEDIALINK", "false");
+DEFINE("WFU_POSTLINK", "false");
 
 //define plugin errors
 DEFINE("WFU_ERROR_ADMIN_FTPDIR_RESOLVE", __("Error. Could not resolve ftp target filedir. Check the domain in 'ftpinfo' attribute.", "wordpress-file-upload"));
@@ -102,8 +104,10 @@ DEFINE("WFU_WARNING_REDIRECT_NOTEXECUTED_FILESFAILED", __("Redirection not execu
 
 //define plugin messages
 DEFINE("WFU_NOTIFY_TESTMODE", __("Test Mode", "wordpress-file-upload"));
+DEFINE("WFU_SUBDIR_SELECTDIR", __("select dir...", "wordpress-file-upload"));
 DEFINE("WFU_SUCCESSMESSAGE_DETAILS", __('Upload path: %filepath%', 'wordpress-file-upload'));
 DEFINE("WFU_FAILMESSAGE_DETAILS", __('Failed upload path: %filepath%', 'wordpress-file-upload'));
+DEFINE("WFU_USERDATA_REQUIREDLABEL", __(' (required)', 'wordpress-file-upload'));
 
 //define plugin test messages
 DEFINE("WFU_TESTMESSAGE_MESSAGE", __('This is a test message', 'wordpress-file-upload'));
@@ -116,11 +120,14 @@ DEFINE("WFU_TESTMESSAGE_FILE2_MESSAGE", __('File testfile 2 message', 'wordpress
 DEFINE("WFU_TESTMESSAGE_FILE2_ADMINMESSAGE", __('File testfile 2 administrator message', 'wordpress-file-upload'));
 
 //define tool tip constants
+DEFINE("WFU_VARIABLE_TITLE_USERID", __("Insert variable %userid% inside text. It will be replaced by the id of the current user.", "wordpress-file-upload"));
 DEFINE("WFU_VARIABLE_TITLE_USERNAME", __("Insert variable %username% inside text. It will be replaced by the username of the current user.", "wordpress-file-upload"));
 DEFINE("WFU_VARIABLE_TITLE_USEREMAIL", __("Insert variable %useremail% inside text. It will be replaced by the email of the current user.", "wordpress-file-upload"));
 DEFINE("WFU_VARIABLE_TITLE_FILENAME", __("Insert variable %filename% inside text. It will be replaced by the filename of the uploaded file.", "wordpress-file-upload"));
 DEFINE("WFU_VARIABLE_TITLE_FILEPATH", __("Insert variable %filepath% inside text. It will be replaced by the full filepath of the uploaded file.", "wordpress-file-upload"));
 DEFINE("WFU_VARIABLE_TITLE_BLOGID", __("Insert variable %blogid% inside text. It will be replaced by the blog id of the website.", "wordpress-file-upload"));
+DEFINE("WFU_VARIABLE_TITLE_PAGEID", __("Insert variable %pageid% inside text. It will be replaced by the id of the current page.", "wordpress-file-upload"));
+DEFINE("WFU_VARIABLE_TITLE_PAGETITLE", __("Insert variable %pagetitle% inside text. It will be replaced by the title of the current page.", "wordpress-file-upload"));
 DEFINE("WFU_VARIABLE_TITLE_USERDATAXXX", __("Insert variable %userdataXXX% inside text. Select the user field from the drop-down list. It will be replaced by the value that the user entered in this field.", "wordpress-file-upload"));
 DEFINE("WFU_VARIABLE_TITLE_N", __("Insert variable %n% inside text to denote a line change.", "wordpress-file-upload"));
 
@@ -164,6 +171,10 @@ DEFINE("WFU_IMAGE_ADMIN_HELP", $siteurl.WPFILEUPLOAD_DIR.'images/help_16.png');
 DEFINE("WFU_IMAGE_ADMIN_RESTOREDEFAULT", $siteurl.WPFILEUPLOAD_DIR.'images/restore_16.png');
 DEFINE("WFU_IMAGE_ADMIN_USERDATA_ADD", $siteurl.WPFILEUPLOAD_DIR.'images/add_12.png');
 DEFINE("WFU_IMAGE_ADMIN_USERDATA_REMOVE", $siteurl.WPFILEUPLOAD_DIR.'images/remove_12.png');
+DEFINE("WFU_IMAGE_ADMIN_SUBFOLDER_BROWSE", $siteurl.WPFILEUPLOAD_DIR.'images/tree_16.gif');
+DEFINE("WFU_IMAGE_ADMIN_SUBFOLDER_OK", $siteurl.WPFILEUPLOAD_DIR.'images/ok_12.gif');
+DEFINE("WFU_IMAGE_ADMIN_SUBFOLDER_CANCEL", $siteurl.WPFILEUPLOAD_DIR.'images/cancel_12.gif');
+DEFINE("WFU_IMAGE_ADMIN_SUBFOLDER_LOADING", $siteurl.WPFILEUPLOAD_DIR.'images/refresh_16.gif');
 DEFINE("WFU_IMAGE_SIMPLE_PROGBAR", $siteurl.WPFILEUPLOAD_DIR.'images/progbar.gif');
 
 function wfu_set_javascript_constants() {

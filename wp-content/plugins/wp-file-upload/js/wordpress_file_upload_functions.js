@@ -288,24 +288,20 @@ function wfu_selectbutton_clicked(sid) {
 	}
 }
 
-//wfu_RunWPFileBaseHttpRequest: function to update WP-FileBase plugin
-function wfu_RunWPFileBaseHttpRequest(filebaseurl) {
-	var xmlhttp = wfu_GetHttpRequestObject();
-	if (xmlhttp == null) {
-		//alternative way of sending GET request using IFRAME, in case AJAX is disabled
-		var i = document.createElement("iframe");
-		i.style.display = "none";
-		i.src = filebaseurl;
-		document.body.appendChild(i);
-		return;
+//wfu_selectsubdir_check: function that checks if a subdirectory has been selected (when askforsubfolder is on)
+function wfu_selectsubdir_check(sid) {
+	var sel = document.getElementById("selectsubdir_" + sid);
+	if (!sel) return true;
+	document.getElementById('hiddeninput_' + sid).value = sel.selectedIndex;
+	if (sel.selectedIndex == 0) {
+		sel.style.backgroundColor = 'red';
+		return false;
 	}
-
-	xmlhttp.open("GET", filebaseurl, true);
-	xmlhttp.onreadystatechange=function() {
-		if (xmlhttp.readyState==4) {
-		}
+	else {
+		sel.style.backgroundColor = 'transparent';
+		sel.options[0].style.display = "none";
+		return true;
 	}
-	xmlhttp.send(null);
 }
 
 //wfu_Redirect: function to redirect to another url
@@ -342,10 +338,40 @@ function wfu_uploadProgress(evt) {
 }
 
 /* wfu_notify_WPFilebase: function to notify WPFilebase plugin about file changes */
-function wfu_notify_WPFilebase(url) {
-	wfu_RunWPFileBaseHttpRequest(url + "/wp-admin/tools.php?page=wpfilebase&action=sync&hash_sync=1");
-	//addition to support newer versions of WP-Filebase
-	wfu_RunWPFileBaseHttpRequest(url + "/wp-admin/admin.php?page=wpfilebase_manage&action=sync&hash_sync=1");
+function wfu_notify_WPFilebase(params_index, session_token) {
+	var xhr = wfu_GetHttpRequestObject();
+	if (xhr == null) {
+		//alternative way of sending GET request using IFRAME, in case AJAX is disabled
+		var i = document.createElement("iframe");
+		i.style.display = "none";
+		i.src = GlobalData.consts.ajax_url + "?action=wfu_ajax_action_notify_wpfilebase&params_index=" + params_index + "&session_token=" + session_token;
+		document.body.appendChild(i);
+		return;
+	}
+
+	var url = GlobalData.consts.ajax_url;
+	params = new Array(3);
+	params[0] = new Array(2);
+	params[0][0] = 'action';
+	params[0][1] = 'wfu_ajax_action_notify_wpfilebase';
+	params[1] = new Array(2);
+	params[1][0] = 'params_index';
+	params[1][1] = params_index;
+	params[2] = new Array(2);
+	params[2][0] = 'session_token';
+	params[2][1] = session_token;
+
+	var parameters = '';
+	for (var i = 0; i < params.length; i++) {
+		parameters += (i > 0 ? "&" : "") + params[i][0] + "=" + encodeURI(params[i][1]);
+	}
+
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.setRequestHeader("Content-length", parameters.length);
+	xhr.setRequestHeader("Connection", "close");
+	xhr.onreadystatechange = function() {}
+	xhr.send(parameters);
 }
 
 /* wfu_send_email_notification: function to send notification message as ajax request */
@@ -437,10 +463,10 @@ function wfu_uploadComplete(evt) {
 	var upload_params = "";
 	var safe_params = "";
 	var debug_data = "";
+	var success_txt = "wfu_fileupload_success:";
 	var result_data = evt.target.responseText;
 	if (evt.target.responseText != -1) {
 		var txt = evt.target.responseText;
-		var success_txt = "wfu_fileupload_success:";
 		var pos = txt.indexOf(success_txt);
 		if ( pos > -1 ) {
 			if (this.debugmode == "true") debug_data = txt.substr(0, pos);
@@ -637,7 +663,8 @@ function wfu_ProcessUploadComplete(sid, file_id, upload_params, unique_id, param
 		// prepare and execute actions related to WPFilebase, email notifications and redirection if this is the last call
 		if (G.update_wpfilebase != "") {
 			G.admin_messages.wpfilebase = "";
-			wfu_notify_WPFilebase(G.update_wpfilebase);
+//			wfu_notify_WPFilebase(G.update_wpfilebase);
+			wfu_notify_WPFilebase(params_index, session_token);
 		}
 		if (G.notify_only_filename_list != "") {
 			G.admin_messages.notify = "";
@@ -647,7 +674,7 @@ function wfu_ProcessUploadComplete(sid, file_id, upload_params, unique_id, param
 			G.notify_only_filename_list = "";   //reset this variable so that repetitive email messages are not sent
 		}
 		if (G.errors.redirect != "") G.redirect_link = "";
-		if (G.redirect_link != "") {
+		if (G.redirect_link != "" && G.last) {
 			// if redirection is executed, then set upload state to redirecting...
 			G.upload_state = 11;
 			do_redirect = true;
@@ -657,6 +684,7 @@ function wfu_ProcessUploadComplete(sid, file_id, upload_params, unique_id, param
 	
 	// last adjustment of header messages due to json parse error of UploadState or debug messages
 	var nonadmin_message = G.message;
+
 	var admin_message = wfu_join_strings("<br />", 
 		G.admin_messages.other,
 		G.admin_messages.wpfilebase,
@@ -872,6 +900,9 @@ function wfu_redirect_to_classic(sid, session_token, flag, adminerrorcode) {
 	//check if file has been selected or not
 	if (wfu_filesselected(sid) == 0) return;
 
+	//check if a subfolder has been selected (in case askforsubfolders is on)
+	if (!wfu_selectsubdir_check(sid)) return;
+
 	// check if there are empty user data fields that are required
 	if (!wfu_check_required_userdata(sid)) return; 
 
@@ -896,6 +927,8 @@ function wfu_redirect_to_classic_cont(sid, session_token, flag, adminerrorcode, 
 			if (adminerrorcode > 0) document.getElementById('adminerrorcodes_' + sid).value = adminerrorcode;
 			else document.getElementById('adminerrorcodes_' + sid).value = "";
 			document.getElementById('upfile_' + sid).disabled = false;
+			// set the unique identifier of the current upload
+			document.getElementById('uniqueuploadid_' + sid).value = wfu_randomString(20);
 			document.getElementById('uploadform_' + sid).submit();
 		}
 	}
@@ -1002,6 +1035,9 @@ function wfu_HTML5UploadFile(sid, JSONtext, session_token) {
 	var numfiles = wfu_filesselected(sid);
 	if (numfiles == 0) return;
 
+	//check if a subfolder has been selected (in case askforsubfolders is on)
+	if (!wfu_selectsubdir_check(sid)) return;
+
 
 	// check if there are empty user data fields that are required
 	if (!wfu_check_required_userdata(sid)) return; 
@@ -1024,6 +1060,7 @@ function wfu_HTML5UploadFile_cont(sid, JSONobj, session_token, other_params) {
 		// define POST parameters
 		fd.append("uploadedfile_" + sid + suffice, file);
 		fd.append("action", "wfu_ajax_action");
+		fd.append("uniqueuploadid_" + sid, unique_upload_id);
 		fd.append("params_index", JSONobj.params_index);
 		fd.append("subdir_sel_index", subdir_sel_index);
 		fd.append("session_token", session_token);
@@ -1080,10 +1117,12 @@ function wfu_HTML5UploadFile_cont(sid, JSONobj, session_token, other_params) {
 	// get file list
 	var inputfile = document.getElementById("upfile_" + sid);
 	var farr = inputfile.files;
-	//fix in case files attribute is not supported
+	// fix in case files attribute is not supported
 	if (!farr) { if (inputfile.value) farr = [{name:inputfile.value}]; else farr = []; }
 	if (typeof inputfile.filearray != "undefined") farr = inputfile.filearray;
 	var suffice = "";
+	// set the unique identifier of the current upload
+	var unique_upload_id = wfu_randomString(20);
 	/* initialize global object to hold dynamic upload status during upload */
 	var rand_str = wfu_randomString(10);
 	GlobalData[sid] = {};
@@ -1166,7 +1205,7 @@ function wfu_clear(sid) {
 		textbox.className = 'file_input_textbox';
 	}
 	var subdir = document.getElementById('selectsubdir_' + sid);
-	if (subdir) subdir.selectedIndex = 0;
+	if (subdir) subdir.selectedIndex = parseInt(document.getElementById('selectsubdirdefault_' + sid).value);
 	var userdata_count = wfu_get_userdata_count(sid);
 	for (var i = 0; i < userdata_count; i++) {
 		document.getElementById('userdata_' + sid + '_message_' + i).value = "";
@@ -1201,6 +1240,7 @@ function wfu_reset_message(sid) {
 
 
 function wfu_show_simple_progressbar(sid, effect) {
+
 	var bar = document.getElementById('progressbar_' + sid + '_animation');
 	var barsafe = document.getElementById('progressbar_' + sid + '_imagesafe');
 	if (bar) {

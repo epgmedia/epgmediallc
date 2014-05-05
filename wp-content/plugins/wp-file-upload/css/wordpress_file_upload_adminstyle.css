@@ -161,6 +161,320 @@ span.wfu_ptext_span
 	width: 60px;
 }
 
+select.wfu_select_folders
+{
+	height: auto;
+	min-width: 75%;
+}
+
+div.wfu_subfolders_inner_shadow
+{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	border: none;
+	background-color: rgba(255,255,255,0.8);
+}
+
+option.wfu_select_folders_option_default
+{
+	color: blue;
+}
+
+div.wfu_subfolder_nav_container
+{
+	width: 40px;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	display: inline-block;
+	vertical-align: top;
+}
+
+table.wfu_subfolder_nav
+{
+	table-layout: fixed;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	border-spacing: 1px;
+}
+
+table.wfu_subfolder_nav tr
+{
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+}
+
+table.wfu_subfolder_nav td
+{
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	font-size: small;
+	line-height: 1;
+	text-align: center;
+}
+
+table.wfu_subfolder_nav button.button
+{
+	margin: 0;
+	padding: 0;
+	width: 17px;
+	font-size: smaller;
+	height: 18px;
+	line-height: 1;
+	color: black;
+	font-weight: bold;
+}
+
+table.wfu_subfolder_nav button.button:disabled
+{
+	color: silver;
+}
+
+.button.wfu_subfolder_nav_pressed, .button.wfu_subfolder_nav_pressed:hover, .button.wfu_subfolder_nav_pressed:focus
+{
+	background: royalblue;
+}
+
+div.wfu_subfolder_tools_container
+{
+	width: 75%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+}
+
+table.wfu_subfolder_tools
+{
+	table-layout: fixed;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+}
+
+table.wfu_subfolder_tools tr
+{
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+}
+
+table.wfu_subfolder_tools td
+{
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	font-size: smaller;
+}
+
+table.wfu_subfolder_tools td div
+{
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	position: relative;
+}
+
+table.wfu_subfolder_tools label
+{
+	display: block;
+	padding: 0;
+	margin: 0;
+	line-height: 1;
+}
+
+table.wfu_subfolder_tools input
+{
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+table.wfu_subfolder_tools input:disabled
+{
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	color: silver;
+}
+
+table.wfu_subfolder_tools button.button
+{
+	margin: 0;
+	padding: 1px 0 0 0;
+	width: 17px;
+	font-size: smaller;
+	height: 17px;
+	line-height: 1;
+	position: absolute;
+	bottom: 2px;
+}
+
+table.wfu_subfolder_tools button.button:disabled
+{
+	color: silver;
+}
+
+table.wfu_subfolder_tools button.button:disabled img
+{
+	opacity: 0.4;
+}
+
+.wfu_subfolder_tools_disabled 
+{
+	color: silver;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container
+{
+	position: absolute;
+	width: 150px;
+	height: 150px;
+	margin: 0;
+	padding: 0;
+	z-index: 100;
+	border: 1px solid silver;
+	box-shadow: 1px 1px 2px;
+	background-color: white;
+	font-size: inherit;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container table
+{
+	table-layout: fixed;
+	width: 100%;
+	height: 100%;
+	border: none;
+	background: #eee;
+	margin: 0;
+	padding: 0;
+	border-spacing: 0;
+	font-size: inherit;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container tr
+{
+	border: none;
+	background: none;
+	margin: 0;
+	padding: 0;
+	font-size: inherit;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container td
+{
+	border: none;
+	background: none;
+	margin: 0;
+	padding: 2px;
+	line-height: 0;
+	overflow: hidden;
+	font-size: inherit;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container td div
+{
+	position: relative;
+	border: none;
+	background: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	line-height: 1;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container td div button.button
+{
+	font-size: inherit;
+	line-height: 1;
+	height: 17px;
+	padding: 4px;
+	position: relative;
+	width: auto;
+	margin: 0;
+	bottom: auto;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container select
+{
+	width: 100%;
+	height: 100%;
+	top: 0;
+	bottom: 0;
+	position: absolute;
+	margin: 0;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container label
+{
+	color: #222;
+	font-weight: bold;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	height: 10px;
+	margin: auto;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container td div button.button.wfu_folder_browser_cancel
+{
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	margin: 0;
+	padding: 0;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container td div div.wfu_folder_browser_loading_container
+{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	bottom: 0;
+	margin: 0;
+	padding: 0;
+	background-color: rgba(255,255,255,0.9);
+	text-align: center;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container td div div.wfu_folder_browser_loading_container label
+{
+	position: relative;
+	display: block;
+}
+
+table.wfu_subfolder_tools td div.wfu_subfolders_browser_container td div div.wfu_folder_browser_loading_container img
+{
+	position: relative;
+}
+
+.button.wfu_folder_browser_cancel img
+{
+	vertical-align: top;
+	margin-top: 2px;
+}
+
 div.wfu_rolelist_checkall
 {
 	display: inline-block;
@@ -570,4 +884,19 @@ span.wfu_save_label_fail
 	box-shadow: 1px 1px 1px;
 	font-size: smaller;
 	opacity: 0;
+}
+
+div.wfu_global_dialog_container
+{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	z-index: 1;
+	display: none;
 }

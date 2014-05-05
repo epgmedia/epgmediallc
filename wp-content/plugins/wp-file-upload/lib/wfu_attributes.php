@@ -34,7 +34,7 @@ function wfu_component_definitions() {
 			"id"		=> "subfolders",
 			"name"		=> "Subfolders",
 			"mode"		=> "free",
-			"dimensions"	=> array("subfolders_label/Subfolders Label", "subfolders_select/Subfolders List"),
+			"dimensions"	=> array("uploadfolder_label/Upload Folder Label", "subfolders_label/Subfolders Label", "subfolders_select/Subfolders List"),
 			"help"		=> "Allows the user to select the upload folder from a dropdown list."
 		),
 		array(
@@ -48,7 +48,7 @@ function wfu_component_definitions() {
 			"id"		=> "userdata",
 			"name"		=> "User Fields",
 			"mode"		=> "free",
-			"dimensions"	=> null,
+			"dimensions"	=> array("userdata/User Fields", "userdata_label/User Fields Label", "userdata_value/User Fields Value"),
 			"help"		=> "Displays additional fields that the user must fill-in together with the uploaded files."
 		),
 		array(
@@ -123,7 +123,7 @@ function wfu_attribute_definitions() {
 			"subcategory"	=> "Basic Functionalities",
 			"parent"	=> "",
 			"dependencies"	=> null,
-			"variables"	=> array("%username%", "%blogid%"),
+			"variables"	=> array("%userid%", "%username%", "%blogid%", "%pageid%", "%pagetitle%", "%userdataXXX%"),
 			"help"		=> "This is the folder where the files will be uploaded. The path is relative to wp-contents folder of your Wordpress website. The path can be dynamic by including variables such as %username% or %blogid%. Please check Documentation on how to use variables inside uploadpath."
 		),
 		array(
@@ -248,14 +248,14 @@ function wfu_attribute_definitions() {
 			"category"	=> "general",
 			"subcategory"	=> "Upload Path and Files",
 			"parent"	=> "",
-			"dependencies"	=> array("subfoldertree"),
+			"dependencies"	=> array("subfoldertree", "subfolderlabel"),
 			"variables"	=> null,
 			"help"		=> "If enabled then user can select the upload folder from a drop down list. The list is defined in subfoldertree attribute. The folder paths are relative to the path defined in uploadpath."
 		),
 		array(
 			"name"		=> "List of Subfolders",
 			"attribute"	=> "subfoldertree",
-			"type"		=> "text",
+			"type"		=> "folderlist",
 			"listitems"	=> null,
 			"value"		=> WFU_SUBFOLDERTREE,
 			"mode"		=> "free",
@@ -449,6 +449,20 @@ function wfu_attribute_definitions() {
 			"help"		=> "This is the label before the upload folder path, if the path is selected to be shown using the showtargetfolder attribute."
 		),
 		array(
+			"name"		=> "Select Subfolder Label",
+			"attribute"	=> "subfolderlabel",
+			"type"		=> "text",
+			"listitems"	=> null,
+			"value"		=> WFU_SUBFOLDERLABEL,
+			"mode"		=> "free",
+			"category"	=> "labels",
+			"subcategory"	=> "Upload Folder",
+			"parent"	=> "",
+			"dependencies"	=> null,
+			"variables"	=> null,
+			"help"		=> "This is the label of the subfolder dropdown list. It is active when askforsubfolders attribute is on."
+		),
+		array(
 			"name"		=> "Success Upload Message",
 			"attribute"	=> "successmessage",
 			"type"		=> "ltext",
@@ -529,7 +543,7 @@ function wfu_attribute_definitions() {
 			"subcategory"	=> "Email Notifications",
 			"parent"	=> "notify",
 			"dependencies"	=> null,
-			"variables"	=> array("%useremail%", "%n%"),
+			"variables"	=> array("%useremail%", "%userdataXXX%", "%n%", "%dq%"),
 			"help"		=> "Defines the recipients of the email notification. Can be dynamic by using variables. Please check Documentation on how to use variables in atributes."
 		),
 		array(
@@ -543,7 +557,7 @@ function wfu_attribute_definitions() {
 			"subcategory"	=> "Email Notifications",
 			"parent"	=> "notify",
 			"dependencies"	=> null,
-			"variables"	=> array("%n%"),
+			"variables"	=> array("%n%", "%dq%"),
 			"help"		=> "Defines additional email headers, in case you want to sent an HTML message, or use Bcc list, or use a different From address and name or other more advanced email options."
 		),
 		array(
@@ -571,7 +585,7 @@ function wfu_attribute_definitions() {
 			"subcategory"	=> "Email Notifications",
 			"parent"	=> "notify",
 			"dependencies"	=> null,
-			"variables"	=> array("%username%", "%useremail%", "%filename%", "%filepath%", "%userdataXXX%", "%n%"),
+			"variables"	=> array("%username%", "%useremail%", "%filename%", "%filepath%", "%userdataXXX%", "%n%", "%dq%"),
 			"help"		=> "Defines the email body. Can be dynamic by using variables. Please check Documentation on how to use variables in atributes."
 		),
 		array(
@@ -736,12 +750,27 @@ function wfu_attribute_definitions() {
 			"value"		=> WFU_MEDIALINK,
 			"mode"		=> "free",
 			"category"	=> "interoperability",
-			"subcategory"	=> "Connection With Other Plugins or Functions",
+			"subcategory"	=> "Connection With Other Wordpress Features",
 			"parent"	=> "",
 			"dependencies"	=> null,
 			"variables"	=> null,
-			"help"		=> "If enabled then the WP Filebase Plugin will be informed about new file uploads."
-		)
+			"help"		=> "If enabled then the uploaded files will be added to the Media library of your Wordpress website. Please note that the upload path must be inside the wp-content/uploads directory (which is the default upload path)."
+		),
+		array(
+			"name"		=> "Attach Uploaded Files To Post",
+			"attribute"	=> "postlink",
+			"type"		=> "onoff",
+			"listitems"	=> null,
+			"value"		=> WFU_POSTLINK,
+			"mode"		=> "free",
+			"category"	=> "interoperability",
+			"subcategory"	=> "Connection With Other Wordpress Features",
+			"parent"	=> "",
+			"dependencies"	=> null,
+			"variables"	=> null,
+			"help"		=> "If enabled then the uploaded files will be added to the current post as attachments. Please note that the upload path must be inside the wp-content/uploads directory (which is the default upload path)."
+		),
+		null
 	);
 
 	wfu_array_remove_nulls($defs);

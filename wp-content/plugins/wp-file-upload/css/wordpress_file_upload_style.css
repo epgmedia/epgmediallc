@@ -397,6 +397,12 @@ select.file_item_clean:disabled
 	color: silver;
 }
 
+select.file_item_clean option
+{
+	background: white;
+	color: black;
+}
+
 span.file_title_clean
 {
 	margin: 0px;
@@ -422,7 +428,7 @@ label.file_userdata_label
 
 input[type="text"].file_userdata_message, input[type="text"].file_userdata_message_required
 {
-	width: 60% !important;
+	width: 60%;
 	height: 25px;
 	margin: 0px;
 	padding: 0px;
@@ -434,7 +440,7 @@ input[type="text"].file_userdata_message, input[type="text"].file_userdata_messa
 
 input[type="text"].file_userdata_message:disabled, input[type="text"].file_userdata_message_required:disabled
 {
-	width: 60% !important;
+	width: 60%;
 	height: 25px;
 	margin: 0px;
 	padding: 0px;
@@ -446,7 +452,7 @@ input[type="text"].file_userdata_message:disabled, input[type="text"].file_userd
 
 input[type="text"].file_userdata_message_required_empty
 {
-	width: 60% !important;
+	width: 60%;
 	height: 25px;
 	margin: 0px;
 	padding: 0px;

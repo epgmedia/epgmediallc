@@ -4,79 +4,60 @@
 function wfu_prepare_subfolders_block($params, $widths, $heights) {
 	$sid = $params["uploadid"];
 	$selectsubdir = 'selectsubdir_'.$sid;
+	$defaultvalue = 'selectsubdirdefault_'.$sid;
 	$hiddeninput = 'hiddeninput_'.$sid;
 	$subfolders_item = null;
 	$styles1 = "";
-	if ( $widths["subfolders_label"] != "" ) $styles1 .= 'width: '.$widths["subfolders_label"].'; ';
-	if ( $heights["subfolders_label"] != "" ) $styles1 .= 'height: '.$heights["subfolders_label"].'; ';
+	$styles2 = "";
+	if ( $widths["uploadfolder_label"] != "" ) $styles1 .= 'width: '.$widths["uploadfolder_label"].'; display:inline-block;';
+	if ( $heights["uploadfolder_label"] != "" ) $styles1 .= 'height: '.$heights["uploadfolder_label"].'; ';
 	if ( $styles1 != "" ) $styles1 = ' style="'.$styles1.'"';
-	$styles2 = "border: 1px solid; border-color: #BBBBBB;";
-	if ( $widths["subfolders_select"] != "" ) $styles2 .= 'width: '.$widths["subfolders_select"].'; ';
-	if ( $heights["subfolders_select"] != "" ) $styles2 .= 'height: '.$heights["subfolders_select"].'; ';
-	$styles2 = ' style="'.$styles2.'"';
+	if ( $widths["subfolders_label"] != "" ) $styles2 .= 'width: '.$widths["subfolders_label"].'; display:inline-block;';
+	if ( $heights["subfolders_label"] != "" ) $styles2 .= 'height: '.$heights["subfolders_label"].'; ';
+	if ( $styles2 != "" ) $styles2 = ' style="'.$styles2.'"';
+	$styles3 = "border: 1px solid; border-color: #BBBBBB;";
+	if ( $widths["subfolders_select"] != "" ) $styles3 .= 'width: '.$widths["subfolders_select"].'; ';
+	if ( $heights["subfolders_select"] != "" ) $styles3 .= 'height: '.$heights["subfolders_select"].'; ';
+	$styles3 = ' style="'.$styles3.'"';
 	$subfolder_paths = array ( );
-	if ( $params["testmode"] == "true" ) {
+	$linebr = "";
+	if ( $params["showtargetfolder"] == "true" || $params["askforsubfolders"] == "true" ) {
+		$linebr = '<br />';
 		$subfolders_item["title"] = 'wordpress_file_upload_subfolders_'.$sid;
 		$subfolders_item["hidden"] = false;
-		$subfolders_item["line1"] = '<span class="file_item_clean"'.$styles1.'>'.$params["targetfolderlabel"].' </span>';
-		$subfolders_item["line2"] = '<select class="file_item_clean"'.$styles2.' id="'.$selectsubdir.'" onchange="javascript: document.getElementById(\''.$hiddeninput.'\').value = document.getElementById(\''.$selectsubdir.'\').selectedIndex;">';
-
-		$subfolders_item["line3"] = "\t".'<option>'.WFU_NOTIFY_TESTMODE.'</option>';
-		$subfolders_lastline = 4;
-		$subfolders_item["line".$subfolders_lastline] = '</select>';
 	}
-	elseif ( $params["askforsubfolders"] == "true" ) {
-		$subfolders = explode(",", $params["subfoldertree"]);
-		if ( count($subfolders) == 0 ) { $subfolders = array ( wfu_upload_plugin_directory($params["uploadpath"]) ); }
-		if ( count($subfolders) == 1 && trim($subfolders[0]) == "" ) { $subfolders = array ( wfu_upload_plugin_directory($params["uploadpath"]) ); }
-		$subfolders_item["title"] = 'wordpress_file_upload_subfolders_'.$sid;
-		$subfolders_item["hidden"] = false;
-		$subfolders_item["line1"] = '<span class="file_item_clean"'.$styles1.'>'.$params["targetfolderlabel"].' </span>';
-		$subfolders_item["line2"] = '<select class="file_item_clean"'.$styles2.' id="'.$selectsubdir.'" onchange="javascript: document.getElementById(\''.$hiddeninput.'\').value = document.getElementById(\''.$selectsubdir.'\').selectedIndex;">';
-		$subfolders_lastline = 3;
-		$dir_levels = array ( wfu_upload_plugin_directory($params["uploadpath"]) );
-		$prev_level = 0;
-		foreach ($subfolders as $subfolder) {
-			$subfolder = trim($subfolder);			
-			$star_count = 0;
-			$start_spaces = "";
-			while ( $star_count < strlen($subfolder) ) {
-				if ( substr($subfolder, $star_count, 1) == "*" ) {
-					$star_count ++;
-					$start_spaces .= "&nbsp;&nbsp;&nbsp;";
-				}
-				else break;
-			}
-			if ( $star_count - $prev_level <= 1 ) {
-				$subfolder = substr($subfolder, $star_count, strlen($subfolder) - $star_count);
-				$subfolder_items = explode('/', $subfolder);
-				if ( $subfolder_items[1] != "" ) {
-					$subfolder_dir = $subfolder_items[0];
-					$subfolder_label = $subfolder_items[1];
-				}
-				else {
-					$subfolder_dir = $subfolder;
-					$subfolder_label = $subfolder;
-				}
-				if ( count($dir_levels) > $star_count ) $dir_levels[$star_count] = $subfolder_dir;
-				else array_push($dir_levels, $subfolder_dir);
-				$subfolder_path = "";
-				for ( $i_count = 1; $i_count <= $star_count; $i_count++) {
-					$subfolder_path .= $dir_levels[$i_count].'/';
-				}
-				array_push($subfolder_paths, $subfolder_path);
-				$subfolders_item["line".$subfolders_lastline] = "\t".'<option>'.$start_spaces.$subfolder_label.'</option>';
-				$subfolders_lastline ++;
-				$prev_level = $star_count;
-			}
-		}
-		$subfolders_item["line".$subfolders_lastline] = '</select>';
-	}
-	else if ( $params["showtargetfolder"] == "true" ) {
+	$i = 1;
+	if ( $params["showtargetfolder"] == "true" ) {
 		$upload_directory = wfu_upload_plugin_directory($params["uploadpath"]);
-		$subfolders_item["title"] = 'wordpress_file_upload_subfolders_'.$sid;
-		$subfolders_item["hidden"] = false;
-		$subfolders_item["line1"] = '<span'.$styles1.'>'.$params["targetfolderlabel"].': <strong>'.$upload_directory.'</strong></span>';
+		$subfolders_item["line".$i++] = '<span'.$styles1.'>'.$params["targetfolderlabel"].': <strong>'.$upload_directory.'</strong></span>'.$linebr;
+	}
+	if ( $params["askforsubfolders"] == "true" ) {
+		$subfolders_item["line".$i++] = '<span class="file_item_clean"'.$styles2.'>'.$params["subfolderlabel"].' </span>';
+		$subfolders_item["line".$i++] = '<select class="file_item_clean"'.$styles3.' id="'.$selectsubdir.'" onchange="wfu_selectsubdir_check('.$sid.');">';
+		if ( $params["testmode"] == "true" ) {
+			$subfolders_item["line".$i++] = "\t".'<option>'.WFU_NOTIFY_TESTMODE.'</option>';
+		}
+		else {
+			$zeroind = $i;
+			$subfolders_item["line".$i++] = "\t".'<option>'.WFU_SUBDIR_SELECTDIR.'</option>';
+			array_push($subfolder_paths, "");
+			$subfolders = wfu_parse_folderlist($params["subfoldertree"]);
+			if ( count($subfolders['path']) == 0 ) {
+				array_push($subfolders['path'], "");
+				array_push($subfolders['label'], wfu_upload_plugin_directory($params["uploadpath"]));
+				array_push($subfolders['level'], 0);
+				array_push($subfolders['default'], false);
+			}
+			$default = -1;
+			foreach ($subfolders['path'] as $ind => $subfolder) {
+				array_push($subfolder_paths, $subfolder);
+				if ( $subfolders['default'][$ind] ) $default = intval($ind) + 1;
+				$subfolders_item["line".$i++] = "\t".'<option'.( $subfolders['default'][$ind] ? ' selected="selected"' : '' ).'>'.str_repeat("&nbsp;&nbsp;&nbsp;", intval($subfolders['level'][$ind])).$subfolders['label'][$ind].'</option>';
+			}
+			if ( $default != -1 ) $subfolders_item["line".$zeroind] = "\t".'<option style="display:none;">'.WFU_SUBDIR_SELECTDIR.'</option>';
+		}
+		$subfolders_item["line".$i++] = '</select>';
+		$subfolders_item["line".$i++] = '<input id="'.$defaultvalue.'" type="hidden" value="'.$default.'" />';
 	}
 
 	$subfolders['item'] = $subfolders_item;
@@ -147,6 +128,7 @@ function wfu_prepare_uploadform_block($params, $widths, $heights, $clickaction, 
 	else
 		$uploadform_item["line".$i++] = "\t".'<input type="file" class="file_input_hidden" name="'.$uploadedfile.'" id="'.$upfile.'" tabindex="1" onchange="wfu_selectbutton_changed('.$sid.', '.$usefilearray.');" onmouseout="javascript: document.getElementById(\''.$input.'\').className = \'file_input_button\'" onmouseover="javascript: document.getElementById(\''.$input.'\').className = \'file_input_button_hover\'" onclick="wfu_selectbutton_clicked('.$sid.');"'.' />';
 	$uploadform_item["line".$i++] = "\t".'<input type="hidden" id="hiddeninput_'.$sid.'" name="hiddeninput_'.$sid.'" value="" />';
+	$uploadform_item["line".$i++] = "\t".'<input type="hidden" id="uniqueuploadid_'.$sid.'" name="uniqueuploadid_'.$sid.'" value="" />';
 	$uploadform_item["line".$i++] = "\t".'<input type="hidden" id="adminerrorcodes_'.$sid.'" name="adminerrorcodes_'.$sid.'" value="" />';
 	foreach ($params["userdata_fields"] as $userdata_key => $userdata_field)
 		$uploadform_item["line".$i++] = "\t".'<input type="hidden" id="hiddeninput_'.$sid.'_userdata_'.$userdata_key.'" name="hiddeninput_'.$sid.'_userdata_'.$userdata_key.'" value="" />';
@@ -219,19 +201,28 @@ function wfu_prepare_userdata_block($params, $widths, $heights) {
 
 	$userdata_item["title"] = 'wordpress_file_upload_userdata_'.$sid;
 	$userdata_item["hidden"] = false;
-	$styles = "";
-	if ( $widths["userdata"] != "" ) $styles .= 'width: '.$widths["userdata"].'; ';
-	if ( $heights["userdata"] != "" ) $styles .= 'height: '.$heights["userdata"].'; ';
-	if ( $styles != "" ) $styles = ' style="'.$styles.'"';
+	$styles1 = "";
+	if ( $widths["userdata"] != "" ) $styles1 .= 'width: '.$widths["userdata"].'; ';
+	if ( $heights["userdata"] != "" ) $styles1 .= 'height: '.$heights["userdata"].'; ';
+	if ( $styles1 != "" ) $styles1 = ' style="'.$styles1.'"';
+	$styles2 = "";
+	if ( $widths["userdata_label"] != "" ) $styles2 .= 'width: '.$widths["userdata_label"].'; ';
+	if ( $heights["userdata_label"] != "" ) $styles2 .= 'height: '.$heights["userdata_label"].'; ';
+	if ( $styles2 != "" ) $styles2 = ' style="'.$styles2.'"';
+	$styles3 = "";
+	if ( $widths["userdata_value"] != "" ) $styles3 .= 'width: '.$widths["userdata_value"].'; ';
+	if ( $heights["userdata_value"] != "" ) $styles3 .= 'height: '.$heights["userdata_value"].'; ';
+	if ( $styles3 != "" ) $styles3 = ' style="'.$styles3.'"';
 	$i = 1;
 	foreach ($params["userdata_fields"] as $userdata_key => $userdata_field) {
-		$userdata_item["line".$i++] = '<div id="'.$userdata.'_'.$userdata_key.'" class="file_userdata_container"'.$styles.'>';
-		$userdata_item["line".$i++] = "\t".'<label id="'.$userdata.'_label_'.$userdata_key.'" for="'.$userdata.'_message_'.$userdata_key.'" class="file_userdata_label">'.$userdata_field["label"].'</label>';
+		$userdata_item["line".$i++] = '<div id="'.$userdata.'_'.$userdata_key.'" class="file_userdata_container"'.$styles1.'>';
+		$userdata_item_label = $userdata_field["label"].( $userdata_field["required"] == "true" ? WFU_USERDATA_REQUIREDLABEL : "" );
+		$userdata_item["line".$i++] = "\t".'<label id="'.$userdata.'_label_'.$userdata_key.'" for="'.$userdata.'_message_'.$userdata_key.'" class="file_userdata_label"'.$styles2.'>'.$userdata_item_label.'</label>';
 		$userdata_item_class = ( $userdata_field["required"] == "true" ? "file_userdata_message_required" : "file_userdata_message" );
 		if ( $params["testmode"] == "true" )
-			$userdata_item["line".$i++] = "\t".'<input type="text" id="'.$userdata.'_message_'.$userdata_key.'" class="'.$userdata_item_class.'" value="Test message" readonly="readonly" />';
+			$userdata_item["line".$i++] = "\t".'<input type="text" id="'.$userdata.'_message_'.$userdata_key.'" class="'.$userdata_item_class.'" value="Test message" readonly="readonly"'.$styles3.' />';
 		else
-			$userdata_item["line".$i++] = "\t".'<input type="text" id="'.$userdata.'_message_'.$userdata_key.'" class="'.$userdata_item_class.'" value="" onchange="javascript: document.getElementById(\''.$hiddeninput.'_userdata_'.$userdata_key.'\').value = this.value;" onfocus="javascript: if (this.className == \'file_userdata_message_required_empty\') {this.value = \'\'; this.className = \'file_userdata_message_required\';}" />';
+			$userdata_item["line".$i++] = "\t".'<input type="text" id="'.$userdata.'_message_'.$userdata_key.'" class="'.$userdata_item_class.'" value=""'.$styles3.' onchange="javascript: document.getElementById(\''.$hiddeninput.'_userdata_'.$userdata_key.'\').value = this.value;" onfocus="javascript: if (this.className == \'file_userdata_message_required_empty\') {this.value = \'\'; this.className = \'file_userdata_message_required\';}" />';
 		$userdata_item["line".$i++] = '</div>';
 	} 
 

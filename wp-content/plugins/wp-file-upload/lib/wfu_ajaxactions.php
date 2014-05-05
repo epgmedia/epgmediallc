@@ -109,4 +109,112 @@ function wfu_ajax_action_save_shortcode() {
 	die("save_shortcode_success"); 
 }
 
+function wfu_ajax_action_read_subfolders() {
+	if ( !isset($_POST['folder1']) || !isset($_POST['folder2']) ) die();
+	$temp_params = array( 'uploadpath' => wfu_plugin_decode_string($_POST['folder1']), 'accessmethod' => 'normal', 'ftpinfo' => '', 'useftpdomain' => 'false' );
+	$path = wfu_upload_plugin_full_path($temp_params);
+
+	if ( !is_dir($path) ) die("error:Parent folder is not valid! Cannot retrieve subfolder list.");
+
+	$path2 = wfu_plugin_decode_string($_POST['folder2']);
+	$dirlist = "";
+	if ( $handle = opendir($path) ) {
+		$blacklist = array('.', '..');
+		while ( false !== ($file = readdir($handle)) )
+			if ( !in_array($file, $blacklist) ) {
+				$filepath = $path.$file;
+				if ( is_dir($filepath) ) {
+					if ( $file == $path2 ) $file = '[['.$file.']]';
+					$dirlist .= ( $dirlist == "" ? "" : "," ).$file;
+				}
+			}
+		closedir($handle);
+	}
+	if ( $path2 != "" ) {
+		$dirlist2 = $path2;
+		$path .= $path2."/";
+		if ( is_dir($path) ) {
+			if ( $handle = opendir($path) ) {
+				$blacklist = array('.', '..');
+				while ( false !== ($file = readdir($handle)) )
+					if ( !in_array($file, $blacklist) ) {
+						$filepath = $path.$file;
+						if ( is_dir($filepath) )
+							$dirlist2 .= ",*".$file;
+					}
+				closedir($handle);
+			}
+		}
+		$dirlist = str_replace('[['.$path2.']]', $dirlist2, $dirlist);
+	}
+
+	die("success:".wfu_plugin_encode_string($dirlist));
+}
+
+function wfu_ajax_action_download_file() {
+	$file_enc = (isset($_POST['file']) ? $_POST['file'] : (isset($_GET['file']) ? $_GET['file'] : ''));
+	$dataid = (isset($_POST['dataid']) ? $_POST['dataid'] : (isset($_GET['dataid']) ? $_GET['dataid'] : '-1'));
+	if ( $file_enc == '' || $dataid == '-1' ) die();
+
+	$filepath = wfu_plugin_decode_string($file_enc);
+
+	//check if user is allowed to perform this action
+	$user = wfu_current_user_allowed_action('download', $filepath);
+	if ( $user == null ) die();
+
+	//check that file exists
+	if ( !file_exists($filepath) ) die('<script language="javascript">alert("Error! File does not exist.");</script>');
+
+	$file_parts = pathinfo($filepath);
+	$fname = $file_parts['basename'];
+	$fsize = filesize($filepath);
+	$contents = "";
+	//send headers
+	header("Pragma: public");
+	header("Expires: 0");
+	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+	header("Cache-Control: public");
+	header("Content-Description: File Transfer");
+	header("Content-Type: application/octet-stream");
+	header("Content-Disposition: attachment; filename=\"".$fname."\"");
+	header("Content-Transfer-Encoding: binary");
+	header("Content-Length: ".$fsize);
+	flush();
+	//send file contents
+	$failed = false;
+	$file = @fopen($filepath,"rb");
+	if ( $file ) {
+		while( !feof($file) ) {
+			print fread($file, 1024*8);
+			flush();
+			if ( connection_status() != 0 ) {
+				$failed = true;
+				break;
+			}
+		}
+		@fclose($file);
+	}
+	else $failed = true;
+
+	if ( !$failed ) {
+		wfu_log_action('download', $filepath, $user->ID, '', 0, '', null);
+		die();
+	}
+	else die('<script language="javascript">alert("Error! Could not download file.");</script>');
+}
+
+function wfu_ajax_action_notify_wpfilebase() {
+	$params_index = (isset($_POST['params_index']) ? $_POST['params_index'] : (isset($_GET['params_index']) ? $_GET['params_index'] : ''));
+	$session_token = (isset($_POST['session_token']) ? $_POST['session_token'] : (isset($_GET['session_token']) ? $_GET['session_token'] : ''));
+	if ( $params_index == '' || $session_token == '' ) die();
+
+	$arr = wfu_get_params_fields_from_index($params_index);
+	//check referer using server sessions to avoid CSRF attacks
+	if ( $_SESSION["wfu_token_".$arr['shortcode_id']] != $session_token ) die();
+
+	do_action('wpfilebase_sync');
+
+	die();
+}
+
 ?>

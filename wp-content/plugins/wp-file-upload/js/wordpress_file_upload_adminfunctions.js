@@ -336,6 +336,707 @@ function wfu_admin_recreate_placements_panel(placements_text) {
 	wfu_attach_separator_dragdrop_events();
 }
 
+function wfu_subfolders_input_changed(e) {
+	e = e || window.event;
+	var item = e.target;
+	var key = item.id.replace("wfu_subfolders_path_", "");
+	key = key.replace("wfu_subfolders_label_", "");
+
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0 ) return;
+	var tools_path = document.getElementById('wfu_subfolders_path_' + key);
+	var tools_label = document.getElementById('wfu_subfolders_label_' + key);
+	var tools_ok = document.getElementById('wfu_subfolders_ok_' + key);
+	var old_path_value, old_label_value;
+	var isnewitem = (document.getElementById('wfu_subfolders_isnewitem_' + key).value == "1");
+	if (isnewitem) {
+		old_path_value = "";
+		old_label_value = "";
+	}
+	else {
+		var items = list.data;	
+		item = items[list.selectedIndex];
+		old_path_value = item.path;
+		old_label_value = item.label;
+	}
+	if (tools_path.value == old_path_value && tools_label.value == old_label_value) {
+		tools_ok.disabled = true;
+		if (!isnewitem) wfu_subfolders_update_nav(key);
+	}
+	else {
+		tools_ok.disabled = false;
+		var navs = document.getElementsByName('wfu_subfolder_nav_' + key);
+		for (var i = 0; i < navs.length; i++) navs[i].disabled = true;
+	}
+}
+
+function wfu_subfolders_up_clicked(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0 ) return;
+	var items = list.data;	
+	item = items[list.selectedIndex];
+	// find previous sibling
+	var prevind = item.index - 1;
+	if (prevind < 0) return;
+	var prevpos = -1;
+	var curind = list.selectedIndex - 1;
+	while (curind >= 0) {
+		if (items[curind].level == item.level && items[curind].index == prevind) {
+			prevpos = curind;
+			break;
+		}
+		else curind --;
+	}
+	if (prevpos == -1) return;
+	// find number of children
+	var children_count = 0;
+	curind = list.selectedIndex + 1;
+	while (curind < items.length) {
+		if (items[curind].level > item.level) {
+			children_count ++;
+			curind ++;
+		}
+		else break;
+	}
+	// update list indices
+	items[prevpos].index = item.index;
+	item.index = prevind;
+	// restructure data list
+	list.data = items.slice(0, prevpos).concat(items.slice(list.selectedIndex, list.selectedIndex + 1 + children_count)).
+		concat(items.slice(prevpos, list.selectedIndex)).concat(items.slice(list.selectedIndex + 1 + children_count));
+	// update option contents to match list
+	var val = wfu_update_subfolder_list(key);
+	// move current selection to new position
+	list.selectedIndex = prevpos;
+	// update tool and nav items
+	wfu_subfolders_update_toolnav(key);
+	// update shortcode
+	item = list;
+	if (val !== item.oldVal) {
+		item.oldVal = val;
+		document.getElementById("wfu_attribute_value_" + key).value = val;
+		wfu_generate_shortcode();
+	}
+}
+
+function wfu_subfolders_down_clicked(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0 ) return;
+	var items = list.data;	
+	item = items[list.selectedIndex];
+	// find next sibling
+	var nextind = item.index + 1;
+	var nextpos = -1;
+	curind = list.selectedIndex + 1;
+	while (curind < items.length) {
+		if (items[curind].level == item.level) {
+			nextpos = curind;
+			break;
+		}
+		else if (items[curind].level < item.level) break;
+		else curind ++;
+	}
+	if (nextpos == -1) return;
+	// find number of children of next
+	var next_children_count = 0;
+	curind = nextpos + 1;
+	while (curind < items.length) {
+		if (items[curind].level > item.level) {
+			next_children_count ++;
+			curind ++;
+		}
+		else break;
+	}
+	// update list indices
+	items[nextpos].index = item.index;
+	item.index = nextind;
+	// restructure data list
+	list.data = items.slice(0, list.selectedIndex).concat(items.slice(nextpos, nextpos + 1 + next_children_count)).
+		concat(items.slice(list.selectedIndex, nextpos)).concat(items.slice(nextpos + 1 + next_children_count));
+	// update option contents to match list
+	var val = wfu_update_subfolder_list(key);
+	// move current selection to new position
+	list.selectedIndex = list.selectedIndex + next_children_count + 1;
+	// update tool and nav items
+	wfu_subfolders_update_toolnav(key);
+	// update shortcode
+	item = list;
+	if (val !== item.oldVal) {
+		item.oldVal = val;
+		document.getElementById("wfu_attribute_value_" + key).value = val;
+		wfu_generate_shortcode();
+	}
+}
+
+function wfu_subfolders_left_clicked(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0 ) return;
+	var items = list.data;	
+	item = items[list.selectedIndex];
+	// find and reduce level of children
+	curind = list.selectedIndex + 1;
+	while (curind < items.length) {
+		if (items[curind].level > item.level) {
+			items[curind].level --;
+			curind ++;
+		}
+		else break;
+	}
+	item.level --;
+	// update option contents to match list
+	var val = wfu_update_subfolder_list(key);
+	// update list indices
+	list.data = wfu_decode_subfolder_list(key);
+	// update tool and nav items
+	wfu_subfolders_update_toolnav(key);
+	// update shortcode
+	item = list;
+	if (val !== item.oldVal) {
+		item.oldVal = val;
+		document.getElementById("wfu_attribute_value_" + key).value = val;
+		wfu_generate_shortcode();
+	}
+}
+
+function wfu_subfolders_right_clicked(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0 ) return;
+	var items = list.data;	
+	item = items[list.selectedIndex];
+	// find and increase level of children
+	curind = list.selectedIndex + 1;
+	while (curind < items.length) {
+		if (items[curind].level > item.level) {
+			items[curind].level ++;
+			curind ++;
+		}
+		else break;
+	}
+	item.level ++;
+	// update option contents to match list
+	var val = wfu_update_subfolder_list(key);
+	// update list indices
+	list.data = wfu_decode_subfolder_list(key);
+	// update tool and nav items
+	wfu_subfolders_update_toolnav(key);
+	// update shortcode
+	item = list;
+	if (val !== item.oldVal) {
+		item.oldVal = val;
+		document.getElementById("wfu_attribute_value_" + key).value = val;
+		wfu_generate_shortcode();
+	}
+}
+
+function wfu_subfolders_def_clicked(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0 ) return;
+	var items = list.data;	
+	item = items[list.selectedIndex];
+	if (item.default) item.default = false;
+	else {
+		for (var i = 0; i < items.length; i++)
+			items[i].default = false;
+		item.default = true;
+	}
+	// update option contents to match list
+	var val = wfu_update_subfolder_list(key);
+	// update tool and nav items
+	wfu_subfolders_update_toolnav(key);
+	// update shortcode
+	item = list;
+	if (val !== item.oldVal) {
+		item.oldVal = val;
+		document.getElementById("wfu_attribute_value_" + key).value = val;
+		wfu_generate_shortcode();
+	}
+}
+
+function wfu_subfolders_ok_clicked(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0 ) return;
+	var tools_path = document.getElementById('wfu_subfolders_path_' + key);
+	var tools_label = document.getElementById('wfu_subfolders_label_' + key);
+	if (tools_path.value == "" || tools_label.value == "") {
+		alert("Path or label cannot be empty!");
+		return;
+	}
+	var items = list.data;	
+	var isnewitem = (document.getElementById('wfu_subfolders_isnewitem_' + key).value == "1");
+	if (isnewitem) {
+		var newlevel = parseInt(document.getElementById('wfu_subfolders_newitemlevel_' + key).value);
+		var newitem = {label:tools_label.value, path:tools_path.value, level:newlevel, default:false};
+		var newpos = parseInt(document.getElementById('wfu_subfolders_newitemindex_' + key).value);
+		if (newpos >= items.length) items.push(newitem);
+		else items.splice(newpos, 0, newitem);
+	}
+	else {
+		item = items[list.selectedIndex];
+		item.path = tools_path.value;
+		item.label = tools_label.value;
+	}
+	// update option contents to match list
+	var val = wfu_update_subfolder_list(key);
+	// update list indices
+	list.data = wfu_decode_subfolder_list(key);
+	// update tool and nav items
+	wfu_subfolders_update_toolnav(key);
+	// update shortcode
+	item = list;
+	if (val !== item.oldVal) {
+		item.oldVal = val;
+		document.getElementById("wfu_attribute_value_" + key).value = val;
+		wfu_generate_shortcode();
+	}
+}
+
+function wfu_subfolders_del_clicked(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0 ) return;
+	var items = list.data;	
+	item = items[list.selectedIndex];
+	// find number of children
+	var children_count = 0;
+	curind = list.selectedIndex + 1;
+	while (curind < items.length) {
+		if (items[curind].level > item.level) {
+			children_count ++;
+			curind ++;
+		}
+		else break;
+	}
+	if (children_count > 0)
+		if (!confirm("Children items will be deleted as well. Proceed?")) return;
+	// remove items from list
+	items.splice(list.selectedIndex, 1 + children_count);
+	// update option contents to match list
+	var val = wfu_update_subfolder_list(key);
+	// update list indices
+	list.data = wfu_decode_subfolder_list(key);
+	// update tool and nav items
+	wfu_subfolders_update_toolnav(key);
+	// update shortcode
+	item = list;
+	if (val !== item.oldVal) {
+		item.oldVal = val;
+		document.getElementById("wfu_attribute_value_" + key).value = val;
+		wfu_generate_shortcode();
+	}
+}
+
+function wfu_subfolders_add_clicked(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0 ) return;
+	var items = list.data;
+	var curpos = list.selectedIndex;
+	item = items[curpos];
+	var opts = list.options;
+	var opt = document.createElement("option");
+	opt.value = "";
+	opt.innerHTML = "";
+	opts.add(opt, curpos);
+	list.selectedIndex = curpos;
+	
+	var tools_container = document.getElementById('wfu_subfolder_tools_' + key);
+	var tools_path = document.getElementById('wfu_subfolders_path_' + key);
+	var tools_label = document.getElementById('wfu_subfolders_label_' + key);
+	var tools_ok = document.getElementById('wfu_subfolders_ok_' + key);
+	var tools_browse = document.getElementById('wfu_subfolders_browse_' + key);
+	tools_container.className = "wfu_subfolder_tools_container";
+	tools_label.disabled = false;
+	tools_ok.disabled = true;
+	document.getElementById('wfu_subfolders_isnewitem_' + key).value = "1";
+	document.getElementById('wfu_subfolders_newitemindex_' + key).value = curpos;
+	document.getElementById('wfu_subfolders_newitemlevel_' + key).value = item.level;
+	document.getElementById('wfu_subfolders_newitemlevel2_' + key).value = "";
+	tools_path.disabled = (item.level == 0);
+	tools_browse.disabled = (item.level == 0);
+	if (item.level == 0) {
+		tools_path.value = "{root}";
+		tools_label.value = "{upload folder}";
+	}
+	else {
+		tools_path.value = "";
+		tools_label.value = "";
+	}
+	var navs = document.getElementsByName('wfu_subfolder_nav_' + key);
+	for (var i = 0; i < navs.length; i++) navs[i].disabled = true;
+}
+
+function wfu_subfolders_browse_clicked(key) {
+	var xhr = wfu_GetHttpRequestObject();
+	if (xhr == null) return;
+	var fd = null;
+	try {
+		var fd = new FormData();
+	}
+	catch(e) {}
+	if (fd == null) return;
+
+	var container = document.getElementById('wfu_global_dialog_container');
+	var dialog = document.getElementById('wfu_subfolders_browser_' + key);
+	var btn = document.getElementById('wfu_subfolders_browse_' + key);
+	var shadow = document.getElementById('wfu_subfolders_inner_shadow_' + key);
+	var msgcont = document.getElementById('wfu_subfolders_browser_msgcont_' + key);
+	var msg = document.getElementById('wfu_subfolders_browser_msg_' + key);
+	var img = document.getElementById('wfu_subfolders_browser_img_' + key);
+	var ok = document.getElementById('wfu_subfolders_browser_ok_' + key);
+	var list = document.getElementById('wfu_subfolders_browser_list_' + key);
+
+	while (list.options.length > 0) list.options.remove(0);
+	ok.disabled = true;
+	ok.onclick = function() {wfu_folder_browser_cancel_clicked(key);}
+	msg.innerHTML = "loading folder contents...";
+	img.style.display = "inline";
+	msgcont.style.display = "block";
+	container.style.display = "block";
+	dialog.style.display = "block";
+	dialog.style.left = (btn.offsetLeft + btn.offsetWidth - dialog.offsetWidth) + 'px';
+	dialog.style.top = (btn.offsetTop + btn.offsetHeight - dialog.offsetHeight) + 'px';
+	shadow.style.display = "block";
+	container.onclick = function() {wfu_folder_browser_cancel_clicked(key)};
+
+	var path = document.getElementById('wfu_attribute_uploadpath').value;
+	if (path.substr(path.length - 1) == "/") path = path.substr(0, path.length - 1);
+	var paths = wfu_get_relative_path(key).split(",");
+	var path1 = path + paths[0];
+	if (path1.substr(0) != "/") path1 = "/" + path1;
+	var path2 = "";
+	if (paths.length == 2) path2 = paths[1];
+	
+	fd.append("action", "wfu_ajax_action_read_subfolders");
+	fd.append("folder1", wfu_plugin_encode_string(path1));
+	fd.append("folder2", wfu_plugin_encode_string(path2));
+	xhr.key = key;
+	xhr.addEventListener("load", wfu_readfolderComplete, false);
+	xhr.addEventListener("error", wfu_readfolderFailed, false);
+	xhr.addEventListener("abort", wfu_readfolderCanceled, false);
+
+	xhr.open("POST", AdminParams.wfu_ajax_url);
+	xhr.send(fd);
+}
+
+function wfu_readfolderComplete(evt) {
+	var key = evt.target.key;
+	var msgcont = document.getElementById('wfu_subfolders_browser_msgcont_' + key);
+	var msg = document.getElementById('wfu_subfolders_browser_msg_' + key);
+	var img = document.getElementById('wfu_subfolders_browser_img_' + key);
+	var list = document.getElementById('wfu_subfolders_browser_list_' + key);
+	var ok = document.getElementById('wfu_subfolders_browser_ok_' + key);
+	var tools_path = document.getElementById('wfu_subfolders_path_' + key);
+	var tools_label = document.getElementById('wfu_subfolders_label_' + key);
+
+	var txt = evt.target.responseText;
+	if (txt != -1) {
+		var pos = txt.indexOf(":");
+		var txt_header = txt.substr(0, pos);
+		var txt_value = txt.substr(pos + 1, txt.length - pos - 1);
+		if (txt_header == 'success') {
+			var filelist = wfu_plugin_decode_string(txt_value);
+			var flist = filelist.split(",");
+			var fcount = 0;
+			var opt;
+			for (var i = 0; i < flist.length; i++) {
+				if (flist[i] != "") {
+					opt = document.createElement("option");
+					opt.value = flist[i];
+					opt.innerHTML = flist[i].replace("*", "&nbsp;&nbsp;&nbsp;");
+					list.add(opt);
+					fcount ++;
+				}
+			}
+			if (fcount == 0) {
+				opt = document.createElement("option");
+				opt.value = "";
+				opt.innerHTML = "{empty}";
+				opt.disabled = true;
+				list.add(opt);
+			}
+			list.selectedIndex = -1;
+			ok.onclick = function() {
+				var val = list.options[list.selectedIndex].value;
+				var level = parseInt(document.getElementById('wfu_subfolders_newitemlevel_' + key).value);
+				if (val.substr(0, 1) == "*" || level == 0) {
+					document.getElementById('wfu_subfolders_newitemlevel_' + key).value = level + 1;
+					if (level > 0) val = val.substr(1);
+				}
+				tools_path.value = val;
+				tools_label.value = val;
+				wfu_folder_browser_cancel_clicked(key);
+				wfu_subfolders_ok_clicked(key);
+			}
+			msgcont.style.display = "none";
+		}
+		else if (txt_header == 'error') {
+			msg.innerHTML = txt_value;
+			img.style.display = "none";
+			ok.disabled = false;
+		}
+		else {
+			msg.innerHTML = 'Unknown error';
+			img.style.display = "none";
+			ok.disabled = false;
+		}
+	}
+}
+
+function wfu_readfolderFailed(evt) {
+	var key = evt.target.key;
+	var msg = document.getElementById('wfu_subfolders_browser_msg_' + key);
+	var img = document.getElementById('wfu_subfolders_browser_img_' + key);
+	var ok = document.getElementById('wfu_subfolders_browser_ok_' + key);
+	msg.innerHTML = 'Unknown error';
+	img.style.display = "none";
+	ok.disabled = false;
+}
+
+function wfu_readfolderCanceled(evt) {
+	var key = evt.target.key;
+	var msg = document.getElementById('wfu_subfolders_browser_msg_' + key);
+	var img = document.getElementById('wfu_subfolders_browser_img_' + key);
+	var ok = document.getElementById('wfu_subfolders_browser_ok_' + key);
+	msg.innerHTML = 'Unknown error';
+	img.style.display = "none";
+	ok.disabled = false;
+}
+
+function wfu_subfolders_browser_list_changed(key) {
+	var list = document.getElementById('wfu_subfolders_browser_list_' + key);
+	var ok = document.getElementById('wfu_subfolders_browser_ok_' + key);
+	ok.disabled = (list.selectedIndex < 0);
+}
+
+function wfu_folder_browser_cancel_clicked(key) {
+	var container = document.getElementById('wfu_global_dialog_container');
+	var dialog = document.getElementById('wfu_subfolders_browser_' + key);
+	var btn = document.getElementById('wfu_subfolders_browse_' + key);
+	var shadow = document.getElementById('wfu_subfolders_inner_shadow_' + key);
+
+	container.onclick = null;
+	shadow.style.display = "none";
+	dialog.style.display = "none";
+	container.style.display = "none";
+}
+
+function wfu_get_relative_path(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	if (list.selectedIndex < 0) return;
+	var items = list.data;
+	var isnewitem = (document.getElementById('wfu_subfolders_isnewitem_' + key).value == "1");
+	var level;
+	if (isnewitem) level = parseInt(document.getElementById('wfu_subfolders_newitemlevel_' + key).value);
+	else level = items[list.selectedIndex].level;
+	var relpath = "/";
+	var curpos = list.selectedIndex - 1;
+	var curlevel = level;
+	while (curpos >= 0 && curlevel > 1) {
+		if (items[curpos].level < curlevel) {
+			relpath = "/" + items[curpos].path + relpath;
+			curlevel = items[curpos].level;
+		}
+		curpos --;
+	}
+	if (isnewitem && document.getElementById('wfu_subfolders_newitemlevel2_' + key).value == "1" && level > 0 && list.selectedIndex > 0)
+		relpath += "," + items[list.selectedIndex - 1].path;
+
+	return relpath;
+}
+
+function wfu_subfolders_changed(key) {
+	wfu_update_subfolder_list(key);
+	wfu_subfolders_update_toolnav(key);
+}
+
+function wfu_subfolders_update_toolnav(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	var items, item, ind, nextind, prevlevel;
+	var tools_container = document.getElementById('wfu_subfolder_tools_' + key);
+	var tools_path = document.getElementById('wfu_subfolders_path_' + key);
+	var tools_label = document.getElementById('wfu_subfolders_label_' + key);
+	var tools_ok = document.getElementById('wfu_subfolders_ok_' + key);
+	var tools_browse = document.getElementById('wfu_subfolders_browse_' + key);
+	document.getElementById('wfu_subfolders_isnewitem_' + key).value = "";
+	document.getElementById('wfu_subfolders_newitemindex_' + key).value = "";
+	document.getElementById('wfu_subfolders_newitemlevel_' + key).value = "";
+	document.getElementById('wfu_subfolders_newitemlevel2_' + key).value = "";
+	if (list.data == null) {
+		items = wfu_decode_subfolder_list(key);
+		list.data = items;
+	}
+	else items = list.data;
+	if (list.selectedIndex < 0) {
+		tools_container.className = "wfu_subfolder_tools_container wfu_subfolder_tools_disabled";
+		tools_path.disabled = true;
+		tools_label.disabled = true;
+		tools_ok.disabled = true;
+		tools_browse.disabled = true;
+		tools_label.value = "";
+		tools_path.value = "";
+	}
+	else if (list.selectedIndex >= list.options.length - 1) {
+		tools_container.className = "wfu_subfolder_tools_container";
+		tools_label.disabled = false;
+		tools_ok.disabled = true;
+		document.getElementById('wfu_subfolders_isnewitem_' + key).value = "1";
+		document.getElementById('wfu_subfolders_newitemindex_' + key).value = items.length;
+		var level;
+		if (items.length == 0) level = 0;
+		else if (items[items.length - 1].level == 0) level = 1;
+		else level = items[items.length - 1].level;
+		document.getElementById('wfu_subfolders_newitemlevel_' + key).value = level;
+		document.getElementById('wfu_subfolders_newitemlevel2_' + key).value = "1";
+		tools_path.disabled = (level == 0);
+		tools_browse.disabled = false;
+		if (level == 0) {
+			tools_path.value = "{root}";
+			tools_label.value = "{upload folder}";
+		}
+		else {
+			tools_path.value = "";
+			tools_label.value = "";
+		}
+	}
+	else {
+		tools_container.className = "wfu_subfolder_tools_container";
+		tools_label.disabled = false;
+		tools_ok.disabled = true;
+		item = items[list.selectedIndex];
+		tools_path.disabled = (item.level == 0);
+		tools_browse.disabled = (item.level == 0);
+		tools_label.value = item.label;
+		tools_path.value = item.path;
+	}
+	var navs = document.getElementsByName('wfu_subfolder_nav_' + key);
+	if (list.selectedIndex < 0 || list.selectedIndex >= list.options.length - 1) {
+		for (var i = 0; i < navs.length; i++) navs[i].disabled = true;
+	}
+	else {
+		wfu_subfolders_update_nav(key);
+	}
+}
+
+function wfu_subfolders_update_nav(key) {
+	var list = document.getElementById('wfu_attribute_' + key);
+	var navs_up = document.getElementById('wfu_subfolders_up_' + key);
+	var navs_down = document.getElementById('wfu_subfolders_down_' + key);
+	var navs_left = document.getElementById('wfu_subfolders_left_' + key);
+	var navs_right = document.getElementById('wfu_subfolders_right_' + key);
+	var navs_add = document.getElementById('wfu_subfolders_add_' + key);
+	var navs_def = document.getElementById('wfu_subfolders_def_' + key);
+	var navs_del = document.getElementById('wfu_subfolders_del_' + key);
+	var items = list.data;
+	var item = items[list.selectedIndex];
+	navs_up.disabled = (item.index <= 0);
+	ind = list.selectedIndex + 1;
+	nextind = 0;
+	while (ind < items.length) {
+		if (items[ind].level == item.level) {
+			nextind = items[ind].index;
+			break;
+		}
+		else if (items[ind].level < item.level) break;
+		else ind ++;
+	}
+	navs_down.disabled = (item.level == 0 || nextind == 0);
+	navs_left.disabled = ((list.selectedIndex == 0 && item.level < 1) || (list.selectedIndex > 0 && item.level <= 1));
+	if (list.selectedIndex >= 1) prevlevel = items[list.selectedIndex - 1].level;
+	else prevlevel = 0;
+	navs_right.disabled = (item.level - prevlevel > 0);
+	navs_add.disabled = (item.level == 0);
+	navs_def.disabled = false;
+	navs_def.className = "button" + (item.default ? " wfu_subfolder_nav_pressed" : "");
+	navs_del.disabled = false;
+}
+
+function wfu_decode_subfolder(data) {
+	var ret = {label:"", path:"", level:0, default:false};
+	data = data.trim();
+	var star_count = 0;
+	var is_default = false;
+	while (star_count < data.length) {
+		if (data.substr(star_count, 1) == "*") star_count ++;
+		else break;
+	}
+	data = data.substr(star_count, data.length - star_count);
+	if (data.substr(0, 1) == '&') {
+		data = data.substr(1);
+		is_default = true;
+	}
+	ret.level = star_count;
+	ret.default = is_default;
+	var data_raw = data.split('/');
+	if (data_raw.length == 1) {
+		ret.path = data_raw[0];
+		ret.label = data_raw[0];
+	}
+	else if (data_raw.length > 1) {
+		ret.path = data_raw[0];
+		ret.label = data_raw[1];
+	}
+	if (star_count == 0) {
+		ret.path = "{root}";
+		if (ret.label == "") ret.label = "{upload folder}";
+	}
+	return ret;
+}
+
+function wfu_decode_subfolder_list(key) {
+	var opts = document.getElementById('wfu_attribute_' + key).options;
+	var list = Array();
+	var dir_levels = ['root'];
+	var last_index = [0];
+	var subfolder_path;
+	var prev_level = -1;
+	for (var i = 0; i < opts.length - 1; i++) {
+		list.push(wfu_decode_subfolder(wfu_plugin_decode_string(opts[i].value)));
+		if (dir_levels.length > list[i].level) dir_levels[list[i].level] = list[i].path;
+		else dir_levels.push(list[i].path);
+		subfolder_path = "";
+		for ( j = 1; j <= list[i].level; j++) {
+			subfolder_path += dir_levels[j] + '/';
+		}
+		list[i].fullpath = subfolder_path;
+		if (last_index.length <= list[i].level) last_index.push(0);
+		if (list[i].level > prev_level) list[i].index = 0;
+		else list[i].index = last_index[list[i].level] + 1;
+		last_index[list[i].level] = list[i].index;
+		prev_level = list[i].level;
+	}
+	return list;
+}
+
+function wfu_update_subfolder_list(key) {
+	var opts = document.getElementById('wfu_attribute_' + key).options;
+	var list = document.getElementById('wfu_attribute_' + key);
+	var items = list.data;
+	if (items == null) return;
+	var value_raw, text_raw;
+	var global_raw = "";
+	opts.length = items.length + 1;
+	for (var i = 0; i < items.length; i ++) {
+		value_raw = "";
+		text_raw = "";
+		for (j = 0; j < items[i].level; j ++) {
+			value_raw += "*";
+			text_raw += "&nbsp;&nbsp;&nbsp;";
+		}
+		if (items[i].default) {
+			value_raw += "&";
+			opts[i].className = "wfu_select_folders_option_default";
+		}
+		else opts[i].className = "";
+		value_raw += items[i].path + '/' + items[i].label;
+		text_raw += items[i].label;
+		opts[i].value = wfu_plugin_encode_string(value_raw);
+		opts[i].innerHTML = text_raw;
+		if (global_raw != "") global_raw += ",";
+		global_raw += value_raw;
+	}
+	opts[items.length].value = "";
+	opts[items.length].innerHTML = "";
+	return global_raw;
+}
+
 function wfu_userdata_edit_field(line, label, required) {
 	var item;
 	for (var i = 0; i < line.childNodes.length; i ++) {
@@ -409,10 +1110,11 @@ function wfu_update_text_value(e) {
 	var item = e.target;
 	var attribute = item.id.replace("wfu_attribute_", "");
 	var val = item.value;
-	//if it is a multiline element, then replace line breaks with %n%
-	if (item.tagName == "TEXTAREA") {
-		val = val.replace(/(\r\n|\n|\r)/gm,"%n%");
-	}
+	//encode some characters not allowed in shortcode, such as line breaks, double quotes (") and brackets ([])
+	val = val.replace(/(\r\n|\n|\r)/gm,"%n%");
+	val = val.replace(/\"/gm,"%dq%");
+	val = val.replace(/\[/gm,"%brl%");
+	val = val.replace(/\]/gm,"%brr%");
 	if (val !== item.oldVal) {
 		item.oldVal = val;
 		document.getElementById("wfu_attribute_value_" + attribute).value = val;
@@ -572,7 +1274,10 @@ function wfu_Attach_Admin_Events() {
 	for (var i = 0; i < dimension_elements.length; i++) wfu_attach_element_handlers(dimension_elements[i], wfu_update_dimension_value);
 	var userfield_elements = document.getElementsByName("wfu_userfield_elements");
 	for (var i = 0; i < userfield_elements.length; i++) wfu_attach_element_handlers(userfield_elements[i], wfu_update_userfield_value);
+	var subfolder_input_elements = document.getElementsByName("wfu_subfolder_tools_input");
+	for (var i = 0; i < subfolder_input_elements.length; i++) wfu_attach_element_handlers(subfolder_input_elements[i], wfu_subfolders_input_changed);
 }
+
 
 function wfu_insert_variable(obj) {
 	var attr = obj.className.replace("wfu_variable wfu_variable_", "");
@@ -615,6 +1320,7 @@ function wfu_GetHttpRequestObject() {
 			xmlhttp = window.createRequest();
 		}
 		catch (e) {}
+
 	}
 	return xhr;
 }
@@ -632,6 +1338,22 @@ function wfu_plugin_encode_string(str) {
 		hex = num.toString(16);
 		if (hex.length == 1 || hex.length == 3 || hex.length == 5) hex = "0" + hex; 
 		newstr += hex;
+	}
+	return newstr;
+}
+
+//wfu_plugin_decode_string: function that decodes an encoded string
+function wfu_plugin_decode_string(str) {
+	var i = 0;
+	var newstr = "";
+	var num, val;
+	while (i < str.length) {
+		num = parseInt(str.substr(i, 2), 16);
+		if (num < 128) val = num;
+		else if (num < 224) val = ((num & 31) << 6) + (parseInt(str.substr((i += 2), 2), 16) & 63);
+		else val = ((num & 15) << 12) + ((parseInt(str.substr((i += 2), 2), 16) & 63) << 6) + (parseInt(str.substr((i += 2), 2), 16) & 63);
+		newstr += String.fromCharCode(val);
+		i += 2;
 	}
 	return newstr;
 }
@@ -718,7 +1440,11 @@ function wfu_apply_value(attribute, type, value) {
 	}
 	else if (type == "text" || type == "ltext" || type == "integer" || type == "float" || type == "mtext" || type == "color" ) {
 		var item = document.getElementById("wfu_attribute_" + attribute);
-		if (item.tagName == "TEXTAREA") value = value.replace(/\%n\%/gm,"\n");
+		//decode some characters not allowed in shortcode, such as line breaks, double quotes (") and brackets ([])
+		value = value.replace(/\%n\%/gm,"\n");
+		value = value.replace(/\%dq\%/gm,"\"");
+		value = value.replace(/\%brl\%/gm,"[");
+		value = value.replace(/\%brr\%/gm,"]");
 		if (type == "color") {
 			var rgb = colourNameToHex(value);
 			if (!rgb) rgb = value;
@@ -739,6 +1465,11 @@ function wfu_apply_value(attribute, type, value) {
 		wfu_admin_radio_clicked(attribute);
 	}
 	else if (type == "ptext" ) {
+		//decode some characters not allowed in shortcode, such as line breaks, double quotes (") and brackets ([])
+		value = value.replace(/\%n\%/gm,"\n");
+		value = value.replace(/\%dq\%/gm,"\"");
+		value = value.replace(/\%brl\%/gm,"[");
+		value = value.replace(/\%brr\%/gm,"]");
 		var parts = value.split("/");
 		var singular = parts.length < 1 ? "" : parts[0];
 		var plural = parts.length < 2 ? singular : parts[1];
@@ -836,6 +1567,122 @@ function wfu_apply_value(attribute, type, value) {
 		document.getElementById("wfu_attribute_" + attribute + "_borcolor").value = colors[2];
 		wfu_update_triplecolor_value({target:item});
 	}
+	else if (type == "folderlist") {
+		var items = wfu_parse_folderlist_js(value);
+		var opts = document.getElementById('wfu_attribute_' + attribute).options;
+		while (opts.length > 0) opts.remove(0);
+		var opt, subfolder, subfolder_raw, text, stars, subvalue;
+		for (var i = 0; i < items.path.length; i++) {
+			subfolder = items.path[i];
+			if (subfolder.substr(subfolder.length, 1) == '/') subfolder = subfolder.substr(0, subfolder.length - 1);
+			subfolder_raw = subfolder.split("/");
+			subfolder = subfolder_raw[subfolder_raw.length - 1];
+			stars = parseInt(items.level[i]);
+			text = "";
+			subvalue = "";
+			for (var j = 0; j < stars; j++) {
+				text += "&nbsp;&nbsp;&nbsp;";
+				subvalue += "*";
+			}
+			text += items.label[i];
+			if (items.default[i]) subvalue += "&";
+			if (subfolder == "") subvalue += "{root}/" + items.label[i];
+			else subvalue += subfolder + items.label[i];
+
+			opt = document.createElement("option");
+			if (items.default[i]) opt.className = "wfu_select_folders_option_default";
+			else opt.className = "";
+			opt.value = wfu_plugin_encode_string(subvalue);
+			opt.innerHTML = text;
+			opts.add(opt);
+		}
+		opt = document.createElement("option");
+		opt.value = "";
+		opt.innerHTML = "";
+		opts.add(opt);
+		var list = document.getElementById('wfu_attribute_' + attribute);
+		// update list indices
+		list.data = wfu_decode_subfolder_list(attribute);
+		// update tool and nav items
+		wfu_subfolders_update_toolnav(attribute);
+		// update shortcode
+		item = list;
+		if (value !== item.oldVal) {
+			item.oldVal = value;
+			document.getElementById("wfu_attribute_value_" + attribute).value = value;
+			wfu_generate_shortcode();
+		}
+	}
+}
+
+function wfu_parse_folderlist_js(list) {
+	var ret = Object();
+	ret.path = Array();
+	ret.label = Array();
+	ret.level = Array();
+	ret.default = Array();
+
+	var subfolders = list.split(",");
+	if (subfolders.length == 0) return ret;
+	if (subfolders.length == 1 && subfolders[0].trim() == "") return ret;
+	var dir_levels = ["root"];
+	var prev_level = 0;
+	var level0_count = 0;
+	var _default = -1;
+	var subfolder, star_count, start_spaces, is_default, subfolder_dir, subfolder_label, subfolder_path;
+	for (var i = 0; i < subfolders.length; i++) {
+		subfolder = subfolders[i].trim();
+		star_count = 0;
+		start_spaces = "";
+		is_default = false;
+		// check for folder level
+		while (star_count < subfolder.length) {
+			if ( subfolder.substr(star_count, 1) == "*" ) {
+				star_count ++;
+				start_spaces += "&nbsp;&nbsp;&nbsp;";
+			}
+			else break;
+		}
+		if (star_count - prev_level <= 1 && (star_count > 0 || level0_count == 0)) {
+			subfolder = subfolder.substr(star_count, subfolder.length - star_count);
+			// check for default value
+			if (subfolder.substr(0, 1) == '&') {
+				subfolder = subfolder.substr(1);
+				is_default = true;
+			}
+			//split item in folder path and folder name
+			subfolder_items = subfolder.split("/");
+			if (subfolder_items.length < 2) subfolder_items.push("");
+			if (subfolder_items[1] != "") {
+				subfolder_dir = subfolder_items[0];
+				subfolder_label = subfolder_items[1];
+			}
+			else {
+				subfolder_dir = subfolder;
+				subfolder_label = subfolder;
+			}
+			if (subfolder_dir != "") {
+				// set is_default flag to true only for the first default item
+				if (is_default && _default == -1) _default = ret.path.length;
+				else is_default = false;
+				// set flag that root folder has been included (so that it is not included it again)
+				if (star_count == 0) level0_count = 1;
+				if (dir_levels.length > star_count) dir_levels[star_count] = subfolder_dir;
+				else dir_levels.push(subfolder_dir);
+				subfolder_path = "";
+				for (var i_count = 1; i_count <= star_count; i_count++) {
+					subfolder_path += dir_levels[i_count] + '/';
+				}
+				ret.path.push(subfolder_path);
+				ret.label.push(subfolder_label);
+				ret.level.push(star_count);
+				ret.default.push(is_default);
+				prev_level = star_count;
+			}
+		}
+	}
+
+	return ret;
 }
 
 function colourNameToHex(colour)
@@ -870,4 +1717,31 @@ function colourNameToHex(colour)
 	return colours[colour.toLowerCase()];
 
 	return false;
+}
+
+function wfu_download_file(ajaxurl_enc, filepath_enc, dataid) {
+	var url = wfu_plugin_decode_string(ajaxurl_enc) + '?action=wfu_ajax_action_download_file&file=' + filepath_enc + '&dataid=' + dataid;
+	var IF = document.getElementById("wfu_download_frame"); 
+	IF.src = url;
+}
+
+function wfu_filedetails_userdata_changed(e) {
+	var userdata_elements = document.getElementsByName("wfu_filedetails_userdata");
+	var def, subm;
+	var changed = false;
+	for (var i = 0; i < userdata_elements.length; i++) {
+		def = document.getElementById(userdata_elements[i].id.replace("wfu_filedetails_userdata_value_", "wfu_filedetails_userdata_default_"));
+		subm = document.getElementById(userdata_elements[i].id.replace("wfu_filedetails_userdata_value_", "wfu_filedetails_userdata_"));
+		subm.value = userdata_elements[i].value;
+		if (userdata_elements[i].value != def.value) {
+			changed = true;
+			break;
+		}
+	}
+	document.getElementById("dp_filedetails_submit_fields").disabled = !changed;
+}
+
+function wfu_Attach_FileDetails_Admin_Events() {
+	var userdata_elements = document.getElementsByName("wfu_filedetails_userdata");
+	for (var i = 0; i < userdata_elements.length; i++) wfu_attach_element_handlers(userdata_elements[i], wfu_filedetails_userdata_changed);
 }

@@ -1,6 +1,6 @@
 <?php
 
-//********************* String Functions *******************************************************************************************************
+//********************* String Functions ***************************************************************************************************
 
 function wfu_upload_plugin_clean($label) {
 	/**
@@ -12,6 +12,7 @@ function wfu_upload_plugin_clean($label) {
 	$replace = array ('e','a','i','u','o','c','-');
 	$label =  preg_replace($search, $replace, $label);
 	$label = strtolower($label); // Convert in lower case
+//	$label =  preg_replace('/[\\/\?%\*:\|\"<>]/', '-', $label);
 	return $label;
 }
 
@@ -74,7 +75,7 @@ function wfu_create_string($size) {
 	return $str;
 }
 
-//********************* Array Functions *****************************************************************************************************
+//********************* Array Functions ****************************************************************************************************
 
 function wfu_encode_array_to_string($arr) {
 	$arr_str = json_encode($arr);
@@ -194,12 +195,13 @@ function wfu_array_sort($array, $on, $order=SORT_ASC) {
     return $new_array;
 }
 
-//********************* Plugin Options Functions ************************************************************************************************
+//********************* Plugin Options Functions *******************************************************************************************
 
 function wfu_encode_plugin_options($plugin_options) {
 	$encoded_options = 'version='.$plugin_options['version'].';';
 	$encoded_options .= 'shortcode='.wfu_plugin_encode_string($plugin_options['shortcode']).';';
-    $encoded_options .= 'basedir='.wfu_plugin_encode_string($plugin_options['basedir']);
+	$encoded_options .= 'hashfiles='.$plugin_options['hashfiles'].';';
+	$encoded_options .= 'basedir='.wfu_plugin_encode_string($plugin_options['basedir']);
 	return $encoded_options;
 }
 
@@ -285,7 +287,74 @@ function wfu_delTree($dir) {
 	return rmdir($dir);
 }
 
-//********************* User Functions *********************************************************************************************************
+function wfu_parse_folderlist($subfoldertree) {
+	$ret['path'] = array();
+	$ret['label'] = array();
+	$ret['level'] = array();
+	$ret['default'] = array();
+
+	$subfolders = explode(",", $subfoldertree);
+	if ( count($subfolders) == 0 ) return $ret;
+	if ( count($subfolders) == 1 && trim($subfolders[0]) == "" ) return $ret;
+	$dir_levels = array ( "root" );
+	$prev_level = 0;
+	$level0_count = 0;
+	$default = -1;
+	foreach ($subfolders as $subfolder) {
+		$subfolder = trim($subfolder);			
+		$star_count = 0;
+		$start_spaces = "";
+		$is_default = false;
+		//check for folder level
+		while ( $star_count < strlen($subfolder) ) {
+			if ( substr($subfolder, $star_count, 1) == "*" ) {
+				$star_count ++;
+				$start_spaces .= "&nbsp;&nbsp;&nbsp;";
+			}
+			else break;
+		}
+		if ( $star_count - $prev_level <= 1 && ( $star_count > 0 || $level0_count == 0 ) ) {
+			$subfolder = substr($subfolder, $star_count, strlen($subfolder) - $star_count);
+			// check for default value
+			if ( substr($subfolder, 0, 1) == '&' ) {
+				$subfolder = substr($subfolder, 1);
+				$is_default = true;
+			}
+			//split item in folder path and folder name
+			$subfolder_items = explode('/', $subfolder);
+			if ( $subfolder_items[1] != "" ) {
+				$subfolder_dir = $subfolder_items[0];
+				$subfolder_label = $subfolder_items[1];
+			}
+			else {
+				$subfolder_dir = $subfolder;
+				$subfolder_label = $subfolder;
+			}
+			if ( $subfolder_dir != "" ) {
+				// set is_default flag to true only for the first default item
+				if ( $is_default && $default == -1 ) $default = count($ret['path']);
+				else $is_default = false;
+				// set flag that root folder has been included (so that it is not included it again)
+				if ( $star_count == 0 ) $level0_count = 1;
+				if ( count($dir_levels) > $star_count ) $dir_levels[$star_count] = $subfolder_dir;
+				else array_push($dir_levels, $subfolder_dir);
+				$subfolder_path = "";
+				for ( $i_count = 1; $i_count <= $star_count; $i_count++) {
+					$subfolder_path .= $dir_levels[$i_count].'/';
+				}
+				array_push($ret['path'], $subfolder_path);
+				array_push($ret['label'], $subfolder_label);
+				array_push($ret['level'], $star_count);
+				array_push($ret['default'], $is_default);
+				$prev_level = $star_count;
+			}
+		}
+	}
+
+	return $ret;
+}
+
+//********************* User Functions *****************************************************************************************************
 
 function wfu_get_user_role($user, $param_roles) {
 	if ( !empty( $user->roles ) && is_array( $user->roles ) ) {
@@ -310,7 +379,383 @@ function wfu_get_user_role($user, $param_roles) {
 	return $result_role;		
 }
 
-//********************* Shortcode Options Functions ************************************************************************************************
+//*********************** DB Functions *****************************************************************************************************
+
+//log action to database
+function wfu_log_action($action, $filepath, $userid, $uploadid, $pageid, $sid, $userdata) {
+	global $wpdb;
+	$table_name1 = $wpdb->prefix . "wfu_log";
+	$table_name2 = $wpdb->prefix . "wfu_userdata";
+	$plugin_options = wfu_decode_plugin_options(get_option( "wordpress_file_upload_options" ));
+
+	if ( !file_exists($filepath) && substr($action, 0, 5) != 'other' ) return;
+	$parts = pathinfo($filepath);
+	$relativepath = str_replace(ABSPATH, '', $filepath);
+	if ( substr($relativepath, 0, 1) != '/' ) $relativepath = '/'.$relativepath;
+	
+	$retid = 0;
+	if ( $action == 'upload' ) {
+		// calculate and store file hash if this setting is enabled from Settings
+		$filehash = '';
+		if ( $plugin_options['hashfiles'] == '1' ) $filehash = md5_file($filepath);
+		// calculate file size
+		$filesize = filesize($filepath);
+		// first make obsolete records having the same file path because the old file has been replaced
+		$wpdb->update($table_name1,
+			array( 'date_to' => date('Y-m-d H:i:s') ),
+			array( 'filepath' => $relativepath ),
+			array( '%s'),
+			array( '%s')
+		);
+		// attempt to create new log record
+		$now_date = date('Y-m-d H:i:s');
+		if ( $wpdb->insert($table_name1,
+			array(
+				'userid' 	=> $userid,
+				'uploaduserid' 	=> $userid,
+				'filepath' 	=> $relativepath,
+				'filehash' 	=> $filehash,
+				'filesize' 	=> $filesize,
+				'uploadid' 	=> $uploadid,
+				'pageid' 	=> $pageid,
+				'sid' 		=> $sid,
+				'date_from' 	=> $now_date,
+				'date_to' 	=> 0,
+				'action' 	=> 'upload'
+			),
+			array(
+				'%d',
+				'%d',
+				'%s',
+				'%s',
+				'%d',
+				'%s',
+				'%d',
+				'%s',
+				'%s',
+				'%s',
+				'%s'
+			)) !== false ) {
+			$retid = $wpdb->insert_id;
+			// if new log record has been created, also create user data records
+			if ( $userdata != null && $uploadid != '' ) {
+				foreach ( $userdata as $userdata_key => $userdata_field ) {
+					$existing = $wpdb->get_row('SELECT * FROM '.$table_name2.' WHERE uploadid = \''.$uploadid.'\' AND property = \''.$userdata_key.'\'');
+					if ($existing == null)
+						$wpdb->insert($table_name2,
+							array(
+								'uploadid' 	=> $uploadid,
+								'property' 	=> $userdata_field['label'],
+								'propkey' 	=> $userdata_key,
+								'propvalue' 	=> $userdata_field['value'],
+								'date_from' 	=> $now_date,
+								'date_to' 	=> 0
+							),
+							array(
+								'%s',
+								'%s',
+								'%d',
+								'%s',
+								'%s',
+								'%s'
+							)
+						);
+				}
+			}
+		}
+	}
+	//for rename action the $action variable is of the form: $action = 'rename:'.$newfilepath; in order to pass the new file path
+	elseif ( substr($action, 0, 6) == 'rename' ) {
+		//get new filepath
+		$newfilepath = substr($action, 7);
+		$relativepath = str_replace(ABSPATH, '', $newfilepath);
+		if ( substr($relativepath, 0, 1) != '/' ) $relativepath = '/'.$relativepath;
+		//get stored file data from database without user data
+		$filerec = wfu_get_file_rec($filepath, false);
+		//log action only if there are previous stored file data
+		if ( $filerec != null ) {
+			$now_date = date('Y-m-d H:i:s');
+			//make previous record obsolete
+			$wpdb->update($table_name1,
+				array( 'date_to' => $now_date ),
+				array( 'idlog' => $filerec->idlog ),
+				array( '%s' ),
+				array( '%d' )
+			);
+			//insert new rename record
+			if ( $wpdb->insert($table_name1,
+				array(
+					'userid' 	=> $userid,
+					'uploaduserid' 	=> $filerec->uploaduserid,
+					'filepath' 	=> $relativepath,
+					'filehash' 	=> $filerec->filehash,
+					'filesize' 	=> $filerec->filesize,
+					'uploadid' 	=> $filerec->uploadid,
+					'pageid' 	=> $filerec->pageid,
+					'sid' 		=> $filerec->sid,
+					'date_from' 	=> $now_date,
+					'date_to' 	=> 0,
+					'action' 	=> 'rename',
+					'linkedto' 	=> $filerec->idlog
+				),
+				array( '%d','%d', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%d' ) ) !== false )
+				$retid = $wpdb->insert_id;
+		}
+	}
+	elseif ( $action == 'delete' ) {
+		//get stored file data from database without user data
+		$filerec = wfu_get_file_rec($filepath, false);
+		//log action only if there are previous stored file data
+		if ( $filerec != null ) {
+			$now_date = date('Y-m-d H:i:s');
+			//make previous record obsolete
+			$wpdb->update($table_name1,
+				array( 'date_to' => $now_date ),
+				array( 'idlog' => $filerec->idlog ),
+				array( '%s' ),
+				array( '%d' )
+			);
+			//insert new delete record
+			if ( $wpdb->insert($table_name1,
+				array(
+					'userid' 	=> $userid,
+					'uploaduserid' 	=> $filerec->uploaduserid,
+					'filepath' 	=> $filerec->filepath,
+					'filehash' 	=> $filerec->filehash,
+					'filesize' 	=> $filerec->filesize,
+					'uploadid' 	=> $filerec->uploadid,
+					'pageid' 	=> $filerec->pageid,
+					'sid' 		=> $filerec->sid,
+					'date_from' 	=> $now_date,
+					'date_to' 	=> $now_date,
+					'action' 	=> 'delete',
+					'linkedto' 	=> $filerec->idlog
+				),
+				array( '%d','%d', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%d' )) != false )
+				$retid = $wpdb->insert_id;
+		}
+	}
+	elseif ( $action == 'download' ) {
+		//get stored file data from database without user data
+		$filerec = wfu_get_file_rec($filepath, false);
+		//log action only if there are previous stored file data
+		if ( $filerec != null ) {
+			$now_date = date('Y-m-d H:i:s');
+			//make previous record obsolete
+			$wpdb->update($table_name1,
+				array( 'date_to' => $now_date ),
+				array( 'idlog' => $filerec->idlog ),
+				array( '%s' ),
+				array( '%d' )
+			);
+			//insert new download record
+			if ( $wpdb->insert($table_name1,
+				array(
+					'userid' 	=> $userid,
+					'uploaduserid' 	=> $filerec->uploaduserid,
+					'filepath' 	=> $filerec->filepath,
+					'filehash' 	=> $filerec->filehash,
+					'filesize' 	=> $filerec->filesize,
+					'uploadid' 	=> $filerec->uploadid,
+					'pageid' 	=> $filerec->pageid,
+					'sid' 		=> $filerec->sid,
+					'date_from' 	=> $now_date,
+					'date_to' 	=> 0,
+					'action' 	=> 'download',
+					'linkedto' 	=> $filerec->idlog
+				),
+				array( '%d','%d', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%d' )) != false )
+				$retid = $wpdb->insert_id;
+		}
+	}
+	//for modify action the $action variable is of the form: $action = 'modify:'.$now_date; in order to pass the exact modify date
+	elseif ( substr($action, 0, 6) == 'modify' ) {
+		$now_date = substr($action, 7);
+		//get stored file data from database without user data
+		$filerec = wfu_get_file_rec($filepath, false);
+		//log action only if there are previous stored file data
+		if ( $filerec != null ) {
+			//make previous record obsolete
+			$wpdb->update($table_name1,
+				array( 'date_to' => $now_date ),
+				array( 'idlog' => $filerec->idlog ),
+				array( '%s' ),
+				array( '%d' )
+			);
+			//insert new modify record
+			if ( $wpdb->insert($table_name1,
+				array(
+					'userid' 	=> $userid,
+					'uploaduserid' 	=> $filerec->uploaduserid,
+					'filepath' 	=> $filerec->filepath,
+					'filehash' 	=> $filerec->filehash,
+					'filesize' 	=> $filerec->filesize,
+					'uploadid' 	=> $filerec->uploadid,
+					'pageid' 	=> $filerec->pageid,
+					'sid' 		=> $filerec->sid,
+					'date_from' 	=> $now_date,
+					'date_to' 	=> 0,
+					'action' 	=> 'modify',
+					'linkedto' 	=> $filerec->idlog
+				),
+				array( '%d','%d', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%d' )) != false )
+				$retid = $wpdb->insert_id;
+		}
+	}
+	elseif ( substr($action, 0, 5) == 'other' ) {
+		$info = substr($action, 6);
+		$now_date = date('Y-m-d H:i:s');
+		//insert new download record
+		if ( $wpdb->insert($table_name1,
+			array(
+				'userid' 	=> $userid,
+				'uploaduserid' 	=> -1,
+				'filepath' 	=> $info,
+				'filehash' 	=> '',
+				'filesize' 	=> 0,
+				'uploadid' 	=> '',
+				'pageid' 	=> 0,
+				'sid' 		=> '',
+				'date_from' 	=> $now_date,
+				'date_to' 	=> $now_date,
+				'action' 	=> 'other',
+				'linkedto' 	=> -1
+			),
+			array( '%d','%d', '%s', '%s', '%d', '%s', '%d', '%s', '%s', '%s', '%s', '%d' )) != false )
+			$retid = $wpdb->insert_id;
+	}
+	return $retid;
+}
+
+//revert previously saved action
+function wfu_revert_log_action($idlog) {
+	global $wpdb;
+	$table_name1 = $wpdb->prefix . "wfu_log";
+
+	$filerec = $wpdb->get_row('SELECT * FROM '.$table_name1.' WHERE idlog = '.$idlog);
+	if ( $filerec != null ) {
+		$prevfilerec = $wpdb->get_row('SELECT * FROM '.$table_name1.' WHERE idlog = '.$filerec->idlog);
+		if ( $prevfilerec != null ) {
+			$wpdb->update($table_name1,
+				array( 'date_to' => date('Y-m-d H:i:s') ),
+				array( 'idlog' => $filerec->idlog ),
+				array( '%s' ),
+				array( '%d' )
+			);
+			$wpdb->update($table_name1,
+				array( 'date_to' => 0 ),
+				array( 'idlog' => $prevfilerec->idlog ),
+				array( '%s' ),
+				array( '%d' )
+			);
+		}
+	}
+}
+
+//find user by its id and return a non-empty username
+function wfu_get_username_by_id($id) {
+	$user = get_user_by('id', $id);
+	if ( $user == false && $id > 0 ) $username = 'unknown';
+	elseif ( $user == false ) $username = 'guest';
+	else $username = $user->user_login;
+	return $username;
+}
+
+//get the most current database record for file $filepath and also include any userdata if $include_userdata is true
+function wfu_get_file_rec($filepath, $include_userdata) {
+	global $wpdb;
+	$table_name1 = $wpdb->prefix . "wfu_log";
+	$table_name2 = $wpdb->prefix . "wfu_userdata";
+	$plugin_options = wfu_decode_plugin_options(get_option( "wordpress_file_upload_options" ));
+
+	if ( !file_exists($filepath) ) return null;
+
+	$relativepath = str_replace(ABSPATH, '', $filepath);
+	if ( substr($relativepath, 0, 1) != '/' ) $relativepath = '/'.$relativepath;
+	//if file hash is enabled, then search file based on its path and hash, otherwise find file based on its path and size
+	if ( $plugin_options['hashfiles'] == '1' ) {
+		$filehash = md5_file($filepath);
+		$filerec = $wpdb->get_row('SELECT * FROM '.$table_name1.' WHERE filepath = \''.$relativepath.'\' AND filehash = \''.$filehash.'\' AND date_to = 0 ORDER BY date_from DESC');
+	}
+	else {
+		$stat = stat($filepath);
+		$filerec = $wpdb->get_row('SELECT * FROM '.$table_name1.' WHERE filepath = \''.$relativepath.'\' AND filesize = '.$stat['size'].' AND date_to = 0 ORDER BY date_from DESC');
+	}
+	//get user data
+	if ( $filerec != null && $include_userdata ) {
+		$filerec->userdata = null;
+		if ( $filerec->uploadid != '' ) {
+			$filerec->userdata = $wpdb->get_results('SELECT * FROM '.$table_name2.' WHERE uploadid = \''.$filerec->uploadid.'\' AND date_to = 0');
+		}
+	}
+	return $filerec;
+}
+
+//reassign file hashes for all valid files in the database
+function wfu_reassign_hashes() {
+	global $wpdb;
+	$table_name1 = $wpdb->prefix . "wfu_log";
+	$plugin_options = wfu_decode_plugin_options(get_option( "wordpress_file_upload_options" ));
+	if ( $plugin_options['hashfiles'] == '1' ) {
+		$filerecs = $wpdb->get_results('SELECT * FROM '.$table_name1.' WHERE filehash = \'\' AND date_to = 0');
+		foreach( $filerecs as $filerec ) {
+			//calculate full file path
+			$filepath = ABSPATH;
+			if ( substr($filepath, -1) == '/' ) $filepath = substr($filepath, 0, -1);
+			$filepath .= $filerec->filepath;
+			if ( file_exists($filepath) ) {
+				$filehash = md5_file($filepath);
+				$wpdb->update($table_name1,
+					array( 'filehash' => $filehash ),
+					array( 'idlog' => $filerec->idlog ),
+					array( '%s' ),
+					array( '%d' )
+				);
+			}
+		}
+	}
+}
+
+//update database to reflect the current status of files
+function wfu_sync_database() {
+	global $wpdb;
+	$table_name1 = $wpdb->prefix . "wfu_log";
+	$plugin_options = wfu_decode_plugin_options(get_option( "wordpress_file_upload_options" ));
+
+	$filerecs = $wpdb->get_results('SELECT * FROM '.$table_name1.' WHERE action <> \'other\' AND date_to = 0');
+	$obsolete_count = 0;
+	foreach( $filerecs as $filerec ) {
+		$obsolete = true;
+		//calculate full file path
+		$filepath = ABSPATH;
+		if ( substr($filepath, -1) == '/' ) $filepath = substr($filepath, 0, -1);
+		$filepath .= $filerec->filepath;
+		if ( file_exists($filepath) ) {
+			if ( $plugin_options['hashfiles'] == '1' ) {
+				$filehash = md5_file($filepath);
+				if ( $filehash == $filerec->filehash ) $obsolete = false;
+			}
+			else {
+				$filesize = filesize($filepath);
+				if ( $filesize == $filerec->filesize ) $obsolete = false;
+			}
+		}
+		if ( $obsolete ) {
+			$now_date = date('Y-m-d H:i:s');
+			//make previous record obsolete
+			$wpdb->update($table_name1,
+				array( 'date_to' => $now_date ),
+				array( 'idlog' => $filerec->idlog ),
+				array( '%s' ),
+				array( '%d' )
+			);
+			$obsolete_count ++;
+		}
+	}
+	return $obsolete_count;
+}
+
+//********************* Shortcode Options Functions ****************************************************************************************
 
 function wfu_generate_current_params_index($shortcode_id, $user_login) {
 	global $post;
@@ -363,6 +808,7 @@ function wfu_get_params_fields_from_index($params_index) {
 function wfu_decode_dimensions($dimensions_str) {
 	$components = wfu_component_definitions();
 	$dimensions = array();
+
 	foreach ( $components as $comp ) {
 		if ( $comp['dimensions'] == null ) $dimensions[$comp['id']] = "";
 		else foreach ( $comp['dimensions'] as $dimraw ) {
@@ -381,7 +827,7 @@ function wfu_decode_dimensions($dimensions_str) {
 	return $dimensions;
 }
 
-//********************* Plugin Design Functions *********************************************************************************************************
+//********************* Plugin Design Functions ********************************************************************************************
 
 function wfu_add_div() {
 	$items_count = func_num_args();
@@ -420,7 +866,7 @@ function wfu_add_div() {
 	return $div;
 }
 
-//********************* Email Functions **************************************************************************************************************
+//********************* Email Functions ****************************************************************************************************
 
 function wfu_send_notification_email($user, $only_filename_list, $target_path_list, $attachment_list, $userdata_fields, $params) {
 	if ( 0 == $user->ID ) {
@@ -454,71 +900,25 @@ function wfu_send_notification_email($user, $only_filename_list, $target_path_li
 	return ( $notify_sent ? "" : WFU_WARNING_NOTIFY_NOTSENT_UNKNOWNERROR );
 }
 
-//********************* Media Functions **************************************************************************************************************
+//********************* Media Functions ****************************************************************************************************
 
 // function wfu_process_media_insert contribution from Aaron Olin
-function wfu_process_media_insert($file_path){   
-	$file_no_ext = preg_replace("/ /", "_", pathinfo($file_path, PATHINFO_FILENAME) );
-	$ext = strtolower( pathinfo($file_path, PATHINFO_EXTENSION) );
-
-	switch($ext){
-		case 'pdf':
-			$filetype = 'application/pdf';
-		break;        
-		// images
-		case 'bmp':        
-			$filetype = 'image/bmp';
-		break;
-		case 'gif':
-			$filetype = 'image/gif';
-		break;
-		case ( preg_match('~\b(jpg|jpeg)\b~i', $ext) ) ? true : false :
-			$filetype = 'image/jpeg';
-		break;
-		case 'png':
-			$filetype = 'image/png';
-		break;
-		// office apps
-		case ( preg_match('~\b(doc|docx)\b~i', $ext) ) ? true : false :
-			$filetype = 'application/msword';		
-		break;
-		case ( preg_match('~\b(ppt|pptx)\b~i', $ext) ) ? true : false :
-			$filetype = 'application/vnd.ms-powerpoint';
-		break;
-		case ( preg_match('~\b(xls|xlsx)\b~i', $ext) ) ? true : false :
-			$filetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-		break;
-		// compression
-		case 'zip':
-			$filetype = 'application/zip';
-		break;
-		case 'rar':
-			$filetype = 'application/rar';
-		break;
-
-		default:
-			$filetype = 'application/msword';		
-		break;	}
+function wfu_process_media_insert($file_path, $page_id){   
+	$filetype = wp_check_filetype( basename( $file_path ), null );
 
 	$attachment = array(
-	    'guid' => $guid,
-	    'post_mime_type' => $filetype,
-	    'post_title' => $file_no_ext,
-	    'post_content' => '',
-	    'post_status' => 'inherit'
+		'post_mime_type' => $filetype['type'],
+		'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_path ) ),
+		'post_content'   => '',
+		'post_status'    => 'inherit'
 	);
 
-
-	$attach_id = wp_insert_attachment( $attachment, $file_path); 
+	$attach_id = wp_insert_attachment( $attachment, $file_path, $page_id ); 
 	
 	// If file is an image, process the default thumbnails for previews
-	$image_types = array('gif','png','bmp','jpeg','jpg');	
-	if ( in_array($ext, $image_types) ) {
-		require_once(ABSPATH . 'wp-admin/includes/image.php');
-		require_once(ABSPATH . 'wp-admin/includes/media.php');
-		$attach_data = wp_generate_attachment_metadata( $attach_id, $file_path );
-		$update_attach = wp_update_attachment_metadata( $attach_id, $attach_data );
-	}
+	require_once(ABSPATH . 'wp-admin/includes/image.php');
+	$attach_data = wp_generate_attachment_metadata( $attach_id, $file_path );
+	$update_attach = wp_update_attachment_metadata( $attach_id, $attach_data );
 
 	return $attach_id;	
 }

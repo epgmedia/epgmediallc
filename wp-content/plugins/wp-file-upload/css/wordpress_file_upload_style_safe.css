@@ -192,7 +192,7 @@ input.file_input_hidden
 /* Userdata styles */
 input.file_userdata_message, input.file_userdata_message_required
 {
-	width: 60% !important;
+	width: 60%;
 	height: 25px;
 	margin: 0px;
 	padding: 0px;
@@ -204,7 +204,7 @@ input.file_userdata_message, input.file_userdata_message_required
 
 input.file_userdata_message:disabled, input.file_userdata_message_required:disabled
 {
-	width: 60% !important;
+	width: 60%;
 	height: 25px;
 	margin: 0px;
 	padding: 0px;
@@ -216,7 +216,7 @@ input.file_userdata_message:disabled, input.file_userdata_message_required:disab
 
 input.file_userdata_message_required_empty
 {
-	width: 60% !important;
+	width: 60%;
 	height: 25px;
 	margin: 0px;
 	padding: 0px;
