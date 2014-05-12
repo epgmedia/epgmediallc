@@ -4,7 +4,9 @@ jQuery(document).ready(function ($) {
     Float Labels
     */
     $('input.floatlabel').floatlabel({
-        labelEndTop:0
+        labelStartTop: '10px',
+        labelEndTop: '0',
+        transitionDuration: 0.1
     });
     /*
     Document Focus

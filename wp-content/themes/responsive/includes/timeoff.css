@@ -75,7 +75,7 @@ h1 span {
 .timeOffWrap input:not([type="submit"]):not([type="radio"]):not([type="reset"]),
 .techRequestWrap input:not([type="submit"]):not([type="radio"]):not([type="reset"]) {
     width:100%;
-    padding:4px;
+    padding: 10px 4px 4px;
     margin-bottom:0.5em;
 }
 
