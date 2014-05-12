@@ -77,8 +77,6 @@ get_header(); ?>
                     could help find a solution.
                 </p>
                 <textarea name="reason" placeholder="About the issue." class="floatlabel"></textarea>
-                <h3>Supporting Attachments</h3>
-                <input class="floatlabel" type="file" name="file" id="file" />
                 <h3>
                     <input type="submit" value="Submit your request"> <input type="reset" value="Clear form">
                 </h3>

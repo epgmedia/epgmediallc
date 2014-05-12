@@ -135,11 +135,6 @@ EmailData;
 
     $mail->Body = $emailMessage; // body
 
-    if (isset($_FILES)) {
-        $mail->AddAttachment($_FILES['file']['tmp_name'],$_FILES['file']['name']); // attach uploaded file
-    }
-
-
 } ?>
     <h1>Support Request <span>confirmation</span></h1>
     <div class="timeOffWrap">
