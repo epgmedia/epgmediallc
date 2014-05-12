@@ -126,6 +126,8 @@ EmailData;
 
     $mail = new PHPMailer();
 
+    $mail->IsSMTP();
+
     //Deal with the email
     $mail->From = $employeeEmail; // from
 
@@ -139,22 +141,25 @@ EmailData;
         $mail->AddAttachment($_FILES['file']['tmp_name'],$_FILES['file']['name']); // attach uploaded file
     }
 
-
-} ?>
+    if(!$mail->Send()) {
+        echo "Mailer Error: " . $mail->ErrorInfo;
+    } else { ?>
     <h1>Support Request <span>confirmation</span></h1>
-    <div class="timeOffWrap">
-        <h2>Thank You</h2>
-        <div class="innerwrap">
-            <h3>
-                Your request has been received.
-            </h3>
-            <p>
-                Thank You!
-            </p>
-            <p>
-                <a href="javascript:history.go(-1);">To Return to form</a>
-            </p>
+        <div class="timeOffWrap">
+            <h2>Thank You</h2>
+            <div class="innerwrap">
+                <h3>
+                    Your request has been received.
+                </h3>
+                <p>
+                    Thank You!
+                </p>
+                <p>
+                    <a href="javascript:history.go(-1);">To Return to form</a>
+                </p>
+            </div>
         </div>
-    </div>
+    <?php }
+}
 
-<?php get_footer(); ?>
+get_footer();
