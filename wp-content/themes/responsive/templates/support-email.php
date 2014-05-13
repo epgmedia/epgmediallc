@@ -10,7 +10,7 @@ include_once ( ABSPATH . '/wp-includes/class-phpmailer.php' );
 /** The Mail */
 $mail = new epg_phpmailer();
 $mail->IsHTML(FALSE);
-//$mail->IsSMTP();
+$mail->IsSMTP();
 $mail->ContentType = 'text/plain';
 $mail->AddAddress('christophergerber+o8ixesre9a8zmcwzldaf@boards.trello.com');
 $mail->from_address($_POST['email']);

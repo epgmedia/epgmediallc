@@ -4,8 +4,6 @@ Template Name: Support Request
  */
 if (!defined( 'ABSPATH' )) { exit; }
 
-//include_once ( get_template_directory() . '/templates/test-data.php' );
-
 get_header(); ?>
 
     <div id="content" class="grid col-940">

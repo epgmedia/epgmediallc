@@ -1,3 +1,11 @@
+<?php
+/**
+ *
+ */
+$_GET['submit'] = 'success';
+
+?>
+
 <h1>
     Support Request <span>confirmation</span>
 </h1>
