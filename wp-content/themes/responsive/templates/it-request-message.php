@@ -4,31 +4,24 @@ if ( !defined('ABSPATH')) exit;
 ?>
 
 <table width="600" align="center" cellpadding="10" style="border-top:1px solid black;border-bottom:1px solid black;">
-
     <tr>
-
         <td align="left">
-
-            <h1>
+            <h3>
                 IT Request Form
-            </h1>
-
+            </h3>
             <p>
-                Date submitted: <?php echo $_POST['date_submitted']; ?>
-                <br />
+                Date submitted: <?php echo date( 'Y-m-d', $_POST['date_submitted'] ); ?>
             </p>
-
             <h2>
                 From:
             </h2>
-
             <table border="0" cellpadding="2">
                 <tr>
                     <td align="left">
-                        <p>Employee Name:</p>
+                        Employee Name:
                     </td>
                     <td align="left">
-                        <p><?php echo $_POST['employee']; ?></p>
+                        <?php echo $_POST['employee']; ?>
                     </td>
                 </tr>
                 <tr>
@@ -36,53 +29,48 @@ if ( !defined('ABSPATH')) exit;
                         <p>Email:</p>
                     </td>
                     <td align="left">
-                        <p><?php echo $_POST['email']; ?></p>
+                        <?php echo $_POST['email']; ?>
                     </td>
                 </tr>
                 <tr>
                     <td align="left">
-                        <p>Phone Number:</p>
+                        Phone Number:
                     </td>
                     <td align="left">
-                        <p><?php echo $_POST['phoneNumber']; ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="left">
-                        <p>Office Location:</p>
-                    </td>
-                    <td align="left">
-                        <p><?php echo $_POST['location']; ?></p>
+                        <?php echo $_POST['phoneNumber']; ?>
                     </td>
                 </tr>
                 <tr>
                     <td align="left">
-                        <p>Computer Type:</p>
+                        Office Location:
                     </td>
                     <td align="left">
-                        <p><?php echo $_POST['computerType']; ?></p>
+                        <?php echo $_POST['location']; ?>
                     </td>
                 </tr>
                 <tr>
                     <td align="left">
-                        <p>Supervisor:</p>
+                        Computer Type:
                     </td>
                     <td align="left">
-                        <p><?php echo $_POST['supervisor']; ?></p>
+                        <?php echo $_POST['computerType']; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                    	Supervisor:
+                    </td>
+                    <td align="left">
+                        <?php echo $_POST['supervisor']; ?>
                     </td>
                 </tr>
             </table>
-
             <h2>
-                The reason for this request:
+                Description:
             </h2>
-
             <p>
                 <?php echo stripslashes($_POST['reason']); ?>
             </p>
-
         </td>
-
     </tr>
-
 </table>

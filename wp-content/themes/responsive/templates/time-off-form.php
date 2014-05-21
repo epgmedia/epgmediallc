@@ -2,7 +2,7 @@
 // Exit if accessed directly
 if ( !defined('ABSPATH')) exit;
 ?>
-<div class="timeOffWrap">
+<div class="epg_form_wrap">
     <form enctype="multipart/form-data" onsubmit="return validate()" method="POST" name="MyForm" action="">
         <h2>
             TIME OFF REQUEST FORM
@@ -66,20 +66,20 @@ if ( !defined('ABSPATH')) exit;
             <p>
                 <select name="supervisor">
                     <option selected value="none">Select Supervisor</option>
-                    <option value="mminor@specialtyim.com">Marion Minor</option>
-                    <option value="acollins@boatingindustry.com">Amy Collins</option>
-                    <option value="cperschmann@epgmediallc.com">Cherri Perschmann</option>
-                    <option value="dmcmahon@powersportsbusiness.com">Dave McMahon</option>
-                    <option value="jjuda@specialtyim.com">Joanne Juda-Prainito</option>
-                    <option value="jpatterson@epgmediallc.com">Jeff Patterson</option>
-                    <option value="jprusak@snowgoer.com">John Prusak</option>
-                    <option value="troorda@epgmediallc.com">Terry Roorda</option>
-                    <option value="aschmieg@epgmediallc.com">Angela Schmieg</option>
-                    <option value="ssutherland@thunderpress.net">Stuart Sutherland</option>
-                    <option value="jsweet@boatingindustry.com">Jonathan Sweet</option>
-                    <option value="mtuttle@ridermagazine.com">Mark Tuttle</option>
-                    <option value="dvoll@ridermagazine.com">Dave Voll</option>
-                    <option value="bwohlman@epgmediallc.com">Bernadette Wohlman</option>
+					<option value="acollins@boatingindustry.com">Amy Collins</option>
+					<option value="dmcmahon@powersportsbusiness.com">Dave McMahon</option>
+					<option value="mminor@specialtyim.com">Marion Minor</option>
+					<option value="jpatterson@epgmediallc.com">Jeff Patterson</option>
+					<option value="cperschmann@epgmediallc.com">Cherri Perschmann</option>
+					<option value="jjuda@specialtyim.com">Joanne Juda-Prainito</option>
+					<option value="jprusak@snowgoer.com">John Prusak</option>
+					<option value="troorda@epgmediallc.com">Terry Roorda</option>
+					<option value="aschmieg@epgmediallc.com">Angela Schmieg</option>
+					<option value="ssutherland@thunderpress.net">Stuart Sutherland</option>
+					<option value="jsweet@boatingindustry.com">Jonathan Sweet</option>
+					<option value="mtuttle@ridermagazine.com">Mark Tuttle</option>
+					<option value="dvoll@ridermagazine.com">Dave Voll</option>
+					<option value="bwohlman@epgmediallc.com">Bernadette Wohlman</option>
                 </select>
             </p>
             <h3>
