@@ -31,11 +31,11 @@ $brand       = ( isset( $_POST['brand'] ) ? $_POST['brand'] : NULL);
 $realm       = ( isset( $_POST['realm'] ) ? $_POST['realm'] : NULL);
 
 $mail->Body = <<<email_body
-## Subject:
+# Details:
+
 $reason
 
 ------------------------------
-
 **Requested By:**
 
 * Name: **[$employee]($email)**
@@ -63,7 +63,15 @@ if(!$mail->Send()) {
 	$user_mail->AddAddress( 'cgerber@epgmediallc.com', 'Christopher Gerber' );
 	$user_mail->setFrom( $email , $employee );
 	$user_mail->email_subject( $_POST['shortReason'], $_POST['issuetype'] );
-	$email_body = get_include_contents( get_template_directory() . '/templates/support-message.php' );
+	$email_data = array(
+		'reason' => $reason,
+		'email' => $email,
+		'employee' => $employee,
+		'phoneNumber' => $phoneNumber,
+		'brand' => $brand,
+		'realm' => $realm,
+	);
+	$email_body = get_include_contents( get_template_directory() . '/templates/support-message.php', $email_data );
 	$user_mail->msgHTML( $email_body );
 	$user_mail->Send();
 

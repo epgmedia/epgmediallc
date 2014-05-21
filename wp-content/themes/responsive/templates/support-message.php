@@ -13,7 +13,7 @@ if (!defined( 'ABSPATH' )) { exit; }
 	Subject:
 </h3>
 <h4>
-	<?php echo stripslashes( $_POST['shortReason'] ); ?> - <?php echo stripslashes( $_POST['issuetype'] ); ?>
+	<?php echo stripslashes( $_POST['issuetype'] ); ?> - <?php echo stripslashes( $_POST['shortReason'] ); ?>
 </h4>
 <p>
 	<?php echo $reason ?>

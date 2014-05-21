@@ -9,12 +9,10 @@ if (
     !isset($_POST['employee']) ||
 	!isset($_POST['email']) ||
     !isset($_POST['supervisor']) ||
-    !isset($_POST['shortReasonText']) ||
-	!isset($_POST['shortReasonItem']) ||
-    !isset($_POST['reason']) ||
-	!isset($_POST['reason'])
+	( !isset($_POST['shortReasonText']) || !isset($_POST['shortReasonItem']) ) ||
+    !isset($_POST['reason'])
 ) {
-    died('We are sorry, but there appears to be a problem with the form you submitted.');
+    died('You are missing some required fields.');
 }
 
 /** Recipients */
@@ -35,7 +33,6 @@ foreach ( $email_addresses as $type => $email ) {
         unset($email_addresses[$type]);
     }
 }
-
 /** Recipients */
 $mail->AddAddress( 'cntadmin@epgmediallc.com', 'CNT Admin' );
 $mail->AddCC( 'jprusak@epgmediallc.com', 'John Prusak' );
@@ -51,11 +48,9 @@ if ( in_array($_POST['email'], $email_addresses ) ) {
 }
 
 $short_reason = 'IT Request';
-
 if ( isset( $_POST['shortReasonText'] ) ) {
 	$short_reason .= ' - ' . $_POST['shortReasonText'];
 }
-
 if ( isset( $_POST['shortReasonItem'] ) ) {
 	$short_reason .= ' - ' . $_POST['shortReasonItem'];
 }
