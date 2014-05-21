@@ -30,7 +30,7 @@ $_GET['submit'] = 'success';
         </p>
 
         <p>
-            <?php echo $email_body; ?>
+            <?php echo wpautop( $email_body ); ?>
         </p>
 
         <p>

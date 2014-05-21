@@ -16,7 +16,7 @@ if (!defined( 'ABSPATH' )) { exit; }
 	<?php echo stripslashes( $_POST['issuetype'] ); ?> - <?php echo stripslashes( $_POST['shortReason'] ); ?>
 </h4>
 <p>
-	<?php echo $reason ?>
+	<?php echo stripslashes( esc_textarea( wpautop( $reason ) ) ); ?>
 </p>
 <hr />
 <h2>

@@ -26,7 +26,7 @@ $mail->email_subject( $_POST['shortReason'], $_POST['issuetype'], $_POST['realm'
 $employee    = ( isset( $_POST['employee'] ) ? $_POST['employee'] : NULL );
 $email       = ( isset($_POST['email'] ) ? $_POST['email'] : NULL );
 $phoneNumber = ( isset( $_POST['phoneNumber'] ) ? $_POST['phoneNumber'] : NULL );
-$reason      = ( isset( $_POST['reason'] ) ? esc_textarea( $_POST['reason'] ) : NULL );
+$reason      = ( isset( $_POST['reason'] ) ? stripslashes( $_POST['reason'] ) : NULL );
 $brand       = ( isset( $_POST['brand'] ) ? $_POST['brand'] : NULL);
 $realm       = ( isset( $_POST['realm'] ) ? $_POST['realm'] : NULL);
 
