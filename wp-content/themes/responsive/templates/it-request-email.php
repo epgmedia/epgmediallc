@@ -34,8 +34,8 @@ foreach ( $email_addresses as $type => $email ) {
     }
 }
 /** Recipients */
-//$mail->AddAddress( 'cntadmin@epgmediallc.com', 'CNT Admin' );
-//$mail->AddCC( 'jprusak@snowgoer.com', 'John Prusak' );
+$mail->AddAddress( 'cntadmin@epgmediallc.com', 'CNT Admin' );
+$mail->AddCC( 'jprusak@snowgoer.com', 'John Prusak' );
 $jp = 'jprusak@snowgoer.com';
 if ( $_POST['supervisor'] != $jp ) {
     $mail->AddCC( $_POST['supervisor'] );
