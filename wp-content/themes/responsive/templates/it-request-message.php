@@ -69,7 +69,7 @@ if ( !defined('ABSPATH')) exit;
                 Description:
             </h2>
             <p>
-                <?php echo stripslashes($_POST['reason']); ?>
+                <?php echo esc_textarea( $_POST['reason'] ); ?>
             </p>
         </td>
     </tr>

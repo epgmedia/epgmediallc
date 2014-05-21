@@ -60,7 +60,7 @@ if ( !defined('ABSPATH')) exit;
 			<h2>Details</h2>
 			<div class="header half-width">
 				<h3>What is the nature of the request?</h3>
-				<input class="floatlabel" type="text" maxlength="35" name="shortReasonText" placeholder="Short Description of Request" data-label="Ex. Printer Problem - Limited to 35 Characters">
+				<input class="floatlabel full-width" type="text" maxlength="35" name="shortReasonText" placeholder="Short Description of Request" data-label='Ex. "Printer not working" - Limit: 35 Characters'>
 			</div>
 			<div class="header half-width center">
 				<h3>Or choose from the list:</h3>

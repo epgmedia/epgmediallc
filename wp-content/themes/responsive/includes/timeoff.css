@@ -1,9 +1,9 @@
 @charset "UTF-8";
 
 body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
+	margin: 0;
+	padding: 0;
+	width: 100%;
 }
 
 /********************************************************
@@ -12,15 +12,14 @@ body {
  * 
  *******************************************************/
 
-
 .epg_form_wrap h1,
 .epg_form_wrap h2,
 .epg_form_wrap h3,
 .epg_form_wrap h4,
 .epg_form_wrap h5,
 .epg_form_wrap h6 {
-    font-family: Helvetica, Arial, sans-serif;
-    margin-top: 0.2em;
+	font-family: Helvetica, Arial, sans-serif;
+	margin-top: 0.2em;
 }
 
 .epg_form_wrap h1,
@@ -39,31 +38,36 @@ body {
 .epg_form_wrap span,
 .epg_form_wrap input,
 .epg_form_wrap textarea {
-    font: 16px Times, "Times New Roman", serif;
-    margin-top: 0;
-    padding-top: 3px;
+	font: 16px Times, "Times New Roman", serif;
+	margin-top: 0;
+	padding-top: 3px;
 }
 
 .epg_form_wrap h1 span {
-    display: block;
-    font-weight: 100;
-    text-transform: uppercase;
-    font-size: 90%;
-    line-height: 1.0em;
+	display: block;
+	font-weight: 100;
+	text-transform: uppercase;
+	font-size: 90%;
+	line-height: 1.0em;
 }
 
 .epg_form_wrap h2 {
-    color: #ffffff;
-    background-color: #1C445C;
-    padding: 3px 10px;
+	color: #ffffff;
+	text-transform: uppercase;
+	background-color: #1C445C;
+	padding: 3px 10px;
+}
+
+.epg_form_wrap .innerwrap h2 {
+	font-size: 180%;
 }
 
 .epg_form_wrap h3 {
-    display: inline-block;
-    font-size: 130%;
-    margin-bottom: 5px;
-    padding-bottom: 0;
-    border-bottom: 1px solid #000000;
+	display: inline-block;
+	font-size: 130%;
+	margin-bottom: 5px;
+	padding-bottom: 0;
+	border-bottom: 1px solid #000000;
 }
 
 .epg_form_wrap h3 em {
@@ -72,29 +76,30 @@ body {
 }
 
 .epg_form_wrap p span {
-    font-weight: bold;
-    text-decoration: underline;
-    font-style: oblique;
+	font-weight: bold;
+	text-decoration: underline;
+	font-style: oblique;
 }
 
 .epg_form_wrap label {
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 2px;
-    padding: 2px;
+	font-size: 12px;
+	font-weight: bold;
+	margin-bottom: 2px;
+	padding: 2px;
 }
 
 .epg_form_wrap .header {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .epg_form_wrap input[type="radio"] {
-    font-size: 18px;
+	font-size: 18px;
 }
+
 .epg_form_wrap .full-width {
-    width: 100%;
-    padding: 10px 4px 4px;
-    margin-bottom: 0.5em;
+	width: 100%;
+	padding: 10px 4px 4px;
+	margin-bottom: 0.5em;
 }
 
 .epg_form_wrap .half-width {
@@ -119,16 +124,16 @@ body {
  * 
  *******************************************************/
 .epg_form_wrap {
-    border: 2px solid #1C445C;
-    margin: 0 auto 40px;
-    max-width: 700px;
+	border: 2px solid #1C445C;
+	margin: 0 auto 40px;
+	max-width: 700px;
 }
 
 .epg_form_wrap .innerwrap {
-    margin: 20px;
+	margin: 20px;
 }
 
 .epg_form_wrap textarea {
-    height: 50px;
-    width: 100%;
+	height: 50px;
+	width: 100%;
 }

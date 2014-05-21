@@ -2,7 +2,7 @@
 
     <form enctype="multipart/form-data" onsubmit="return validate()" method="POST" name="MyForm" action="">
         <h2>
-            SUPPORT REQUEST
+            Web Request
         </h2>
         <div class="innerwrap">
 			<p>
@@ -13,26 +13,20 @@
             </p>
 			<div class="header half-width">
 				<h3>Employee Name:</h3>
-				<input autofocus type="text" maxLength="29" name="employee" class="floatlabel" placeholder="Enter your name" >
+				<input autofocus class="floatlabel full-width" type="text" maxLength="29" name="employee" placeholder="Enter your name" >
 			</div>
 			<div class="header half-width">
 				<h3>Your E-mail Address:</h3>
-				<input class="floatlabel" type="email" name="email" placeholder="Enter your email address" data-label="Make sure you enter your email address correctly">
+				<input class="floatlabel full-width" type="email" name="email" placeholder="Enter your email address" data-label="Make sure you enter your email address correctly">
 			</div>
-            <div class="header">
-                <h3>Phone Number: <em>optional</em></h3>
-                <input class="floatlabel" type="text" name="phoneNumber" placeholder="Enter your phone number" data-label="Be sure to include your area code">
-            </div>
-        </div>
-        <h2>Description</h2>
-        <div class="innerwrap">
+			<h2>Description</h2>
             <p>
                 Please fill out as many fields as possible. The more information that you provide, the easier it
                 will be to troubleshoot.
             </p>
 			<div class="header half-width">
 				<h3>Brief Description:</h3>
-				<input class="floatlabel" type="text" maxLength="35" name="shortReason" placeholder="What is the issue?" data-label="Short description of request (Limit 35 characters)">
+				<input class="floatlabel full-width" type="text" maxLength="35" name="shortReason" placeholder="What is the issue?" data-label="Short description of request (Limit 35 characters)">
 			</div>
 			<div class="header half-width">
 				<h3>This is related to: <em>optional</em></h3>
@@ -44,21 +38,21 @@
             	<h3>Brand: <em>optional</em></h3>
             	<select name="brand">
 					<option selected disabled>Choose a brand</option>
-					<option value="EPG">EPG Media and Specialty Information</option>
-					<option value="ARA">Arbor Age</option>
-					<option value="BDX">Beverage Dynamics</option>
-					<option value="BST">Beverage Insights</option>
-					<option value="BIN">Boating Industry</option>
-					<option value="CHR">Cheers</option>
-					<option value="FON">Fuel Oil News</option>
-					<option value="LAI">Landscape & Irrigation</option>
-					<option value="OPE">Outdoor Power Equipment</option>
-					<option value="PSB">Powersports Business</option>
-					<option value="RDR">Rider</option>
-					<option value="SNG">Snow Goer</option>
-					<option value="STF">SportsTurf</option>
-					<option value="SWY">StateWays</option>
-					<option value="TPZ">Thunder Press</option>
+					<option>EPG Media and Specialty Information</option>
+					<option>Arbor Age</option>
+					<option>Beverage Dynamics</option>
+					<option>Beverage Insights</option>
+					<option>Boating Industry</option>
+					<option>Cheers</option>
+					<option>Fuel Oil News</option>
+					<option>Landscape & Irrigation</option>
+					<option>Outdoor Power Equipment</option>
+					<option>Powersports Business</option>
+					<option>Rider</option>
+					<option>Snow Goer</option>
+					<option>SportsTurf</option>
+					<option>StateWays</option>
+					<option>Thunder Press</option>
 				</select>
 			</div>
 			<div class="header half-width">
