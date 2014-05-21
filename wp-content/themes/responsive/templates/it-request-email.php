@@ -28,7 +28,7 @@ $email_addresses = array(
 /** The Mail */
 $mail = new epg_phpmailer();
 $mail->IsHTML();
-/$mail->IsSMTP();
+$mail->IsSMTP();
 // Validate the email addresses
 foreach ( $email_addresses as $type => $email ) {
     if($mail->validateAddress($email) === FALSE) {

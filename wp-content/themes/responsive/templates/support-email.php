@@ -61,7 +61,7 @@ if(!$mail->Send()) {
 	$user_mail->IsHTML();
 	$user_mail->IsSMTP();
 	$user_mail->AddAddress( 'cgerber@epgmediallc.com', 'Christopher Gerber' );
-	$user_mail->from_address( $_POST['email'], $employee );
+	$user_mail->setFrom( $email , $employee );
 	$user_mail->email_subject( $_POST['shortReason'], $_POST['issuetype'] );
 	$email_body = get_include_contents( get_template_directory() . '/templates/support-message.php' );
 	$user_mail->msgHTML( $email_body );

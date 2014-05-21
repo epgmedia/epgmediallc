@@ -16,13 +16,13 @@ class epg_phpmailer extends phpmailer {
     public function email_subject ( $subject = NULL, $issuetype = NULL, $realm = NULL ) {
         $subject_line = '';
         /** Default Subject / Title */
-        if ( NULL === $subject ) {
+        if ( NULL !== $subject ) {
             $subject_line = $subject;
         }
         /** Set the Issue Label */
         $subject_line .= $this->issue_type_label( $issuetype, $subject_line );
         /** Set type label */
-        if ( NULL === $realm ) {
+        if ( NULL !== $realm ) {
             $subject_line .= ' #' . $realm;
         }
         /** If string isn't blank, prepare for title */
