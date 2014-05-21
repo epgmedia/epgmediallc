@@ -10,7 +10,7 @@ if ( !defined('ABSPATH')) exit;
                 IT Request Form
             </h3>
             <p>
-                Date submitted: <?php echo date( 'Y-m-d', $_POST['date_submitted'] ); ?>
+                Date submitted: <?php echo $_POST['date_submitted']; ?>
             </p>
             <h2>
                 From:

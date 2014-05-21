@@ -9,9 +9,9 @@ if (!defined( 'ABSPATH' )) { exit; }
 	<a href="https://trello.com/b/MNr7er6C/epg-web-requests">Support Page</a>
 </h4>
 <hr />
-<h3>
+<h1>
 	Subject:
-</h3>
+</h1>
 <h4>
 	<?php echo stripslashes( $_POST['issuetype'] ); ?> - <?php echo stripslashes( $_POST['shortReason'] ); ?>
 </h4>
@@ -19,9 +19,9 @@ if (!defined( 'ABSPATH' )) { exit; }
 	<?php echo $reason ?>
 </p>
 <hr />
-<h4>
+<h2>
 	Requested By:
-</h4>
+</h2>
 <dl>
 	<dt>
 		Name:

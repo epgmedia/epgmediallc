@@ -14,10 +14,10 @@ class epg_phpmailer extends phpmailer {
 
     /** Creates the full email subject */
     public function email_subject ( $subject = NULL, $issuetype = NULL, $realm = NULL ) {
-        $subject_line = '';
+        $subject_line = 'Ticket: ';
         /** Default Subject / Title */
         if ( NULL !== $subject ) {
-            $subject_line = $subject;
+            $subject_line .= $subject;
         }
         /** Set the Issue Label */
         $subject_line .= $this->issue_type_label( $issuetype );

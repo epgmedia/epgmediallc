@@ -34,17 +34,15 @@ foreach ( $email_addresses as $type => $email ) {
     }
 }
 /** Recipients */
-$mail->AddAddress( 'cntadmin@epgmediallc.com', 'CNT Admin' );
-$mail->AddCC( 'jprusak@epgmediallc.com', 'John Prusak' );
-$jp = 'jprusak@epgmediallc.com';
+//$mail->AddAddress( 'cntadmin@epgmediallc.com', 'CNT Admin' );
+//$mail->AddCC( 'jprusak@snowgoer.com', 'John Prusak' );
+$jp = 'jprusak@snowgoer.com';
 if ( $_POST['supervisor'] != $jp ) {
     $mail->AddCC( $_POST['supervisor'] );
 }
 if ( in_array($_POST['email'], $email_addresses ) ) {
+	$mail->setFrom( $_POST['email'], $_POST['employee'] );
     $mail->AddCC( $_POST['email'], $_POST['employee'] );
-}
-if ( in_array($_POST['email'], $email_addresses ) ) {
-    $mail->from_address( $_POST['email'], $_POST['employee'] );
 }
 
 $short_reason = 'IT Request';

@@ -19,7 +19,7 @@ if ( !defined('ABSPATH')) exit;
 			</p>
 			<div class="header">
 				<h3><span>Date Submitted:</span></h3>
-				<input class="" type="date" maxLength="8" name="date_submitted" value="<?php echo date('Y-m-d'); ?>" disabled>
+				<input class="" type="date" maxLength="8" name="date_submitted" value="<?php echo date('Y-m-d'); ?>">
 			</div>
             <div class="header half-width">
                 <h3>Full Name:</h3>

@@ -44,20 +44,21 @@
             	<h3>Brand: <em>optional</em></h3>
             	<select name="brand">
 					<option selected disabled>Choose a brand</option>
-					<option>EPG Media and Specialty Information</option>
-					<option>Arbor Age</option>
-					<option>Beverage Dynamics</option>
-					<option>Boating Industry</option>
-					<option>Cheers</option>
-					<option>Fuel Oil News</option>
-					<option>Landscape & Irrigation</option>
-					<option>Outdoor Power Equipment</option>
-					<option>Powersports Business</option>
-					<option>Rider</option>
-					<option>Snow Goer</option>
-					<option>SportsTurf</option>
-					<option>StateWays</option>
-					<option>Thunder Press</option>
+					<option value="EPG">EPG Media and Specialty Information</option>
+					<option value="ARA">Arbor Age</option>
+					<option value="BDX">Beverage Dynamics</option>
+					<option value="BST">Beverage Insights</option>
+					<option value="BIN">Boating Industry</option>
+					<option value="CHR">Cheers</option>
+					<option value="FON">Fuel Oil News</option>
+					<option value="LAI">Landscape & Irrigation</option>
+					<option value="OPE">Outdoor Power Equipment</option>
+					<option value="PSB">Powersports Business</option>
+					<option value="RDR">Rider</option>
+					<option value="SNG">Snow Goer</option>
+					<option value="STF">SportsTurf</option>
+					<option value="SWY">StateWays</option>
+					<option value="TPZ">Thunder Press</option>
 				</select>
 			</div>
 			<div class="header half-width">
