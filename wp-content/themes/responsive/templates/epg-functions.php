@@ -20,7 +20,7 @@ class epg_phpmailer extends phpmailer {
             $subject_line = $subject;
         }
         /** Set the Issue Label */
-        $subject_line .= $this->issue_type_label( $issuetype, $subject_line );
+        $subject_line .= $this->issue_type_label( $issuetype );
         /** Set type label */
         if ( NULL !== $realm ) {
             $subject_line .= ' #' . $realm;
@@ -34,32 +34,36 @@ class epg_phpmailer extends phpmailer {
         return FALSE;
     }
 
-    protected function issue_type_label($issuetype = NULL, $subject_line = NULL) {
+    protected function issue_type_label($issuetype = NULL) {
         /** Determines the label via $issuetype */
+		if ( NULL === $issuetype ) {
+
+			return NULL;
+		}
         switch ($issuetype) :
             case 'Bug':
-                $subject_line .= ' #Bug/Issue';
+                $label = ' #Bug/Issue';
                 break;
 
             case 'Issue':
-                $subject_line .= ' #Bug/Issue';
+				$label = ' #Bug/Issue';
                 break;
 
             case 'Request':
-                $subject_line .= ' #Request/Idea';
+				$label = ' #Request/Idea';
                 break;
 
             case 'Idea':
-                $subject_line .= ' #Request/Idea';
+				$label = ' #Request/Idea';
                 break;
 
             default:
-                $subject_line .= '';
+				$label = '';
                 break;
 
         endswitch;
 
-        return $subject_line;
+        return $label;
     }
 
 
