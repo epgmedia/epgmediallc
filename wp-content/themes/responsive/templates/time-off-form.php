@@ -22,50 +22,57 @@ if ( !defined('ABSPATH')) exit;
             </p>
         </div>
         <div class="innerwrap">
-            <div class="header">
+            <div class="header half-width">
                 <h3>Employee Name:</h3>
-                <input type="text" maxLength="21" name="employee" class="floatlabel" placeholder="Enter your name">
+                <input class="floatlabel full-width" type="text" maxLength="21" name="employee" placeholder="Enter your name">
             </div>
-            <div class="header">
+            <div class="header half-width">
                 <h3>Your E-mail Account:</h3>
-                <input class="floatlabel" type="text" name="email" placeholder="Enter your email address" data-label="Make sure you enter your email address correctly">
+                <input class="floatlabel full-width" type="text" name="email" placeholder="Enter your email address" data-label="Make sure you enter your email address correctly">
             </div>
-            <div class="header">
+            <div class="header half-width">
                 <h3>Date Submitted:</h3>
-                <input class="floatlabel date_submitted" type="text" maxLength="8" value="01/01/14" name="date_submitted" placeholder="Format: mm/dd/yy">
+                <input class="floatlabel full-width date_submitted" type="text" maxLength="8" value="01/01/14" name="date_submitted" placeholder="Format: mm/dd/yy">
             </div>
             <p>
                 Please fill out all areas that apply to your request. Any incomplete forms will be sent back. Your cooperation is appreciated
             </p>
-        </div>
-        <h2>
-            REQUEST:
-        </h2>
-        <div class="innerwrap">
-            <h3>
-                Please indicate time-off type:
-            </h3>
-            <p>
-                <input type="radio" value="vacation" name="pay_type"> Vacation <br />
-                <input type="radio" value="float" name="pay_type"> Floating Holiday <br />
-                <input type="radio" value="sick" name="pay_type"> Sick <br />
-                <input type="radio" value="unpaid" name="pay_type"> Unpaid <br />
-            </p>
-            <div class="header">
+			<h2>
+				REQUEST
+			</h2>
+			<div class="header half-width">
+				<h3>
+					Please indicate time-off type:
+				</h3>
+				<select name="pay_type">
+					<option selected disabled>Select</option>
+					<option value="vacation">Vacation</option>
+					<option value="float">Floating Holiday</option>
+					<option value="sick">Sick</option>
+					<option value="unpaid">Unpaid</option>
+				</select>
+			</div>
+            <div class="header half-width">
                 <h3>Number of hour(s) requested:</h3>
-                <input class="floatlabel" type="text" maxLength="4" name="requesting" placeholder="Number of hours" data-label="Example: 7.5">
+                <input class="floatlabel full-width" type="text" maxLength="4" name="requesting" placeholder="Number of hours" data-label="Example: 7.5">
             </div>
-            <h3>Date(s) Requested (Please indicate month, day and year)</h3>
-            <p>
-                From: <input class="floatlabel" type="text" maxLength="8" name="datefrom" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
-                To: <input class="floatlabel" type="text" maxLength="8" name="dateto" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
-            </p>
-            <h3>Reason for request:</h3>
-            <textarea name="reason" placeholder="Reason for request..." class="floatlabel"></textarea>
-            <h3>Send To:</h3>
-            <p>
-                <select name="supervisor">
-                    <option selected value="none">Select Supervisor</option>
+			<div class="header full-width">
+				<h3>Date(s) Requested (Please indicate month, day and year)</h3>
+			</div>
+			<div class="header half-width">
+				From: <input class="floatlabel full-width" type="text" maxLength="8" name="datefrom" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
+			</div>
+			<div class="header half-width">
+				To: <input class="floatlabel full-width" type="text" maxLength="8" name="dateto" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
+			</div>
+			<div class="header full-width">
+				<h3>Reason for request:</h3>
+				<textarea name="reason" placeholder="Reason for request..." class="floatlabel"></textarea>
+			</div>
+			<div class="header half-width">
+				<h3>Send To:</h3>
+				<select name="supervisor">
+					<option selected value="none">Select Supervisor</option>
 					<option value="acollins@boatingindustry.com">Amy Collins</option>
 					<option value="dmcmahon@powersportsbusiness.com">Dave McMahon</option>
 					<option value="mminor@specialtyim.com">Marion Minor</option>
@@ -80,11 +87,13 @@ if ( !defined('ABSPATH')) exit;
 					<option value="mtuttle@ridermagazine.com">Mark Tuttle</option>
 					<option value="dvoll@ridermagazine.com">Dave Voll</option>
 					<option value="bwohlman@epgmediallc.com">Bernadette Wohlman</option>
-                </select>
-            </p>
-            <h3>
-                <input type="submit" value="Submit your request"> <input type="reset" value="Clear form">
-            </h3>
+				</select>
+			</div>
+			<div class="header important-submit">
+				<h3>
+					<input type="submit" value="Submit your request"> <input type="reset" value="Clear form">
+				</h3>
+			</div>
         </div>
     </form>
 </div>

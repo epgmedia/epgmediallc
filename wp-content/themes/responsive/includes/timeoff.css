@@ -97,14 +97,16 @@ body {
 }
 
 .epg_form_wrap .full-width {
+	margin: auto;
 	width: 100%;
 	padding: 10px 4px 4px;
 	margin-bottom: 0.5em;
 }
 
 .epg_form_wrap .half-width {
+	margin: auto;
 	display: inline-block;
-	width: 49%;
+	width: 49.4%;
 }
 
 .epg_form_wrap .important-submit {
@@ -128,6 +130,17 @@ body {
 	margin: 0 auto 40px;
 	max-width: 700px;
 }
+
+.epg_form_wrap *,
+.epg_form_wrap input,
+.epg_form_wrap select,
+.epg_form_wrap textarea {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+
+}
+
 
 .epg_form_wrap .innerwrap {
 	margin: 20px;

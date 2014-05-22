@@ -26,7 +26,7 @@ $email_addresses = array(
 /** The Mail */
 $mail = new epg_phpmailer();
 $mail->IsHTML();
-//$mail->IsSMTP();
+$mail->IsSMTP();
 // Validate the email addresses
 foreach ( $email_addresses as $type => $email ) {
     if($mail->validateAddress($email) === FALSE) {
@@ -42,10 +42,8 @@ if (in_array($_POST['supervisor'], $email_addresses)) {
     $mail->AddCC( $_POST['supervisor'] );
 }
 if (in_array($_POST['email'], $email_addresses)) {
-    $mail->AddCC( $_POST['email'], $_POST['employee'] );
-}
-if (in_array($_POST['email'], $email_addresses)) {
-    $mail->from_address( $_POST['email'], $_POST['employee'] );
+	$mail->setFrom( $_POST['email'], $_POST['employee'] );
+	$mail->AddCC( $_POST['email'], $_POST['employee'] );
 }
 
 /** Subject */
