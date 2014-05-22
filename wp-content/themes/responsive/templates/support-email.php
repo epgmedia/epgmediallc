@@ -67,7 +67,7 @@ if(!$mail->Send()) {
 			'name' => 'Christopher Gerber'
 		)
 	);
-	$mail->it_request_recipients( $email_addresses );
+	$user_mail->it_request_recipients( $email_addresses );
 	$user_mail->email_subject( $_POST['shortReason'], $_POST['issuetype'] );
 	$email_data = array(
 		'reason' => $reason,
@@ -81,6 +81,6 @@ if(!$mail->Send()) {
 	$user_mail->msgHTML( $email_body );
 	$user_mail->Send();
 
-    include( get_template_directory() . '/templates/support-confirm.php');
+    include( get_template_directory() . '/templates/support-confirm.php' );
 
 }
