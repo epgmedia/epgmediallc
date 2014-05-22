@@ -13,11 +13,10 @@ include_once ( ABSPATH . '/wp-includes/class-phpmailer.php' );
  * Sends plain-text version to Trello and HTML to users
  */
 $mail = new epg_phpmailer();
-$mail->IsHTML(FALSE);
 $mail->IsSMTP();
 $mail->ContentType = 'text/plain';
 $mail->AddAddress( 'christophergerber+o8ixesre9a8zmcwzldaf@boards.trello.com' );
-$mail->from_address($_POST['email']);
+$mail->setFrom( $mail->from_address( $_POST['email'] ), $employee );
 
 /** email_subject function */
 $mail->email_subject( $_POST['shortReason'], $_POST['issuetype'], $_POST['realm'] );
@@ -60,8 +59,15 @@ if(!$mail->Send()) {
 	$user_mail = new epg_phpmailer();
 	$user_mail->IsHTML();
 	$user_mail->IsSMTP();
-	$user_mail->AddAddress( 'cgerber@epgmediallc.com', 'Christopher Gerber' );
 	$user_mail->setFrom( $email , $employee );
+	$email_addresses = array(
+		array(
+			'kind' => 'to',
+			'address' => 'cgerber@epgmediallc.com',
+			'name' => 'Christopher Gerber'
+		)
+	);
+	$mail->it_request_recipients( $email_addresses );
 	$user_mail->email_subject( $_POST['shortReason'], $_POST['issuetype'] );
 	$email_data = array(
 		'reason' => $reason,

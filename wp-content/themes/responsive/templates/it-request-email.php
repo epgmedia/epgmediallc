@@ -1,59 +1,66 @@
 <?php
+/**
+ * IT Request Form Email
+ * Form to send an email to necessary people for IT request
+ */
 if (!defined( 'ABSPATH' )) { exit; }
+
+/** Checks if values are set before continuing */
+if (
+	!isset($_POST['date_submitted']) ||
+	!isset($_POST['employee']) ||
+	!isset($_POST['email']) ||
+	!isset($_POST['supervisor']) ||
+	( !isset($_POST['shortReasonText']) || !isset($_POST['shortReasonItem']) ) ||
+	!isset($_POST['reason'])
+) {
+	died('You are missing some required fields.');
+}
 
 include_once ( ABSPATH . '/wp-includes/class-phpmailer.php' );
 
-/** vars for later */
-if (
-    !isset($_POST['date_submitted']) ||
-    !isset($_POST['employee']) ||
-	!isset($_POST['email']) ||
-    !isset($_POST['supervisor']) ||
-	( !isset($_POST['shortReasonText']) || !isset($_POST['shortReasonItem']) ) ||
-    !isset($_POST['reason'])
-) {
-    died('You are missing some required fields.');
-}
-
-/** Recipients */
-$email_addresses = array(
-    'to' => 'cntadmin@epgmediallc.com',
-    'ma' => 'jprusak@epgmediallc.com',
-    'su' => $_POST['supervisor'],
-    'cc' => $_POST['email']
-);
-
-/** The Mail */
+/**
+ * The Mail
+ *
+ * Sends email to requestor, supe, JP, and RJ.
+ */
 $mail = new epg_phpmailer();
 $mail->IsHTML();
-$mail->IsSMTP();
-// Validate the email addresses
-foreach ( $email_addresses as $type => $email ) {
-    if($mail->validateAddress($email) === FALSE) {
-        unset($email_addresses[$type]);
-    }
-}
-/** Recipients */
-$mail->AddAddress( 'cntadmin@epgmediallc.com', 'CNT Admin' );
-$mail->AddCC( 'jprusak@snowgoer.com', 'John Prusak' );
-$jp = 'jprusak@snowgoer.com';
-if ( $_POST['supervisor'] != $jp ) {
-    $mail->AddCC( $_POST['supervisor'] );
-}
-if ( in_array($_POST['email'], $email_addresses ) ) {
-	$mail->setFrom( $_POST['email'], $_POST['employee'] );
-    $mail->AddCC( $_POST['email'], $_POST['employee'] );
-}
+//$mail->IsSMTP();
 
+/** To and From */
+$mail->setFrom( $_POST['email'], $_POST['employee'] );
+$email_addresses = array(
+    array(
+		'kind' => 'to',
+		'address' => 'cntadmin@epgmediallc.com',
+		'name' => 'CNTAdmin'
+	),
+    array(
+		'kind' => 'cc',
+		'address' => 'jprusak@snowgoer.com',
+		'name' => 'John Prusak'
+	),
+    array(
+		'kind' => 'cc',
+		'address' => $_POST['supervisor']
+	),
+    array(
+		'kind' => 'bcc',
+		'address' => $_POST['email'],
+		'name' =>  $_POST['employee']
+	),
+);
+$mail->it_request_recipients( $email_addresses );
+
+/** Subject */
 $short_reason = 'IT Request';
 if ( isset( $_POST['shortReasonText'] ) ) {
-	$short_reason .= ' - ' . $_POST['shortReasonText'];
+	$short_reason .= ': ' . $_POST['shortReasonText'];
 }
 if ( isset( $_POST['shortReasonItem'] ) ) {
 	$short_reason .= ' - ' . $_POST['shortReasonItem'];
 }
-
-/** Subject */
 $mail->Subject = $short_reason;
 
 /** Email Content */

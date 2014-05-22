@@ -12,6 +12,15 @@ class epg_phpmailer extends phpmailer {
         return str_replace($bad,"",$this->From);
     }
 
+	/**
+	 * @param array $email_array
+	 */
+	public function it_request_recipients ( $email_array ) {
+		foreach ( $email_array as $recipient ) {
+			$this->addAnAddress( $recipient['kind'], $recipient['address'], $recipient['name'] );
+		}
+	}
+
     /** Creates the full email subject */
     public function email_subject ( $subject = NULL, $issuetype = NULL, $realm = NULL ) {
         $subject_line = 'Ticket: ';

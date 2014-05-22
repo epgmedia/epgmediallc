@@ -35,26 +35,26 @@ if ( !defined('ABSPATH')) exit;
             <table border="0" cellpadding="2">
                 <tr>
                     <td align="left">
-                        <p>Employee Name:</p>
+                        Employee Name:
                     </td>
                     <td align="left">
-                        <p><?php echo $_POST['employee']; ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="left">
-                        <p>Email:</p>
-                    </td>
-                    <td align="left">
-                        <p><?php echo $_POST['email']; ?></p>
+                        <?php echo $_POST['employee']; ?>
                     </td>
                 </tr>
                 <tr>
                     <td align="left">
-                        <p>Date submitted:</p>
+                        Email:
                     </td>
                     <td align="left">
-                        <p><?php echo $_POST['date_submitted']; ?></p>
+                        <?php echo $_POST['email']; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        Date submitted:
+                    </td>
+                    <td align="left">
+                        <?php echo $_POST['date_submitted']; ?>
                     </td>
                 </tr>
             </table>
