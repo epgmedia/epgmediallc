@@ -3,16 +3,14 @@
 if ( !defined('ABSPATH')) exit;
 ?>
 <div class="epg_form_wrap">
-    <form enctype="multipart/form-data" onsubmit="return validate()" method="POST" name="MyForm" action="">
+    <form enctype="multipart/form-data" onsubmit="return validate()" method="POST" name="it-request-form" action="">
         <h2>
             IT REQUEST FORM
         </h2>
-        <div class="innerwrap">
-            <p>
-                Please fill out all areas that apply to your request. Any incomplete forms will be sent back. Your cooperation is appreciated.
-            </p>
-		</div>
 		<div class="innerwrap">
+			<p>
+				Please fill out all areas that apply to your request. Any incomplete forms will be sent back. Your cooperation is appreciated.
+			</p>
 			<h2>Contact Info</h2>
 			<p>
 				Please enter your information below.
@@ -23,7 +21,7 @@ if ( !defined('ABSPATH')) exit;
 			</div>
             <div class="header half-width">
                 <h3>Full Name:</h3>
-                <input autofocus type="text" maxLength="35" name="employee" class="floatlabel full-width" placeholder="Enter your name" >
+                <input autofocus class="floatlabel full-width" type="text" maxLength="35" name="employee" placeholder="Enter your name" >
             </div>
             <div class="header half-width">
                 <h3>E-mail Address:</h3>
@@ -42,6 +40,7 @@ if ( !defined('ABSPATH')) exit;
 				<select name="supervisor" class="full-width">
 					<option selected disabled value="none">Select Supervisor</option>
 					<option value="acollins@boatingindustry.com">Amy Collins</option>
+					<option value="aesham@specialtyim.com">Andrew Esham</option>
 					<option value="dmcmahon@powersportsbusiness.com">Dave McMahon</option>
 					<option value="mminor@specialtyim.com">Marion Minor</option>
 					<option value="jpatterson@epgmediallc.com">Jeff Patterson</option>
@@ -59,21 +58,21 @@ if ( !defined('ABSPATH')) exit;
         <div class="innerwrap">
 			<h2>Details</h2>
 			<div class="header half-width">
-				<h3>What is the nature of the request?</h3>
+				<h3>Subject of the Request</h3>
 				<input class="floatlabel full-width" type="text" maxlength="35" name="shortReasonText" placeholder="Short Description of Request" data-label='Ex. "Printer not working" - Limit: 35 Characters'>
 			</div>
-			<div class="header half-width center">
+			<div class="header half-width">
 				<h3>Or choose from the list:</h3>
 				<select name="shortReasonItem" class="full-width">
 					<option selected disabled value="none">Type of Issue</option>
-					<option value="">Internet</option>
-					<option value="">Email</option>
-					<option value="">Printers</option>
-					<option value="">Malware</option>
-					<option value="">Telephones</option>
-					<option value="">Remote Access</option>
-					<option value="">Files (Saving/Transfering)</option>
-					<option value="">Other (Please describe)</option>
+					<option value="Internet">Internet</option>
+					<option value="Email">Email</option>
+					<option value="Printers">Printers</option>
+					<option value="Malware">Malware</option>
+					<option value="Telephones">Telephones</option>
+					<option value="Remote Access">Remote Access</option>
+					<option value="Files">Files (Saving/Transfering)</option>
+					<option value="Other">Other Request</option>
 				</select>
 			</div>
 			<div class="header">

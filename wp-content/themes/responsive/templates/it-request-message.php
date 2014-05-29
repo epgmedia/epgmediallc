@@ -69,7 +69,7 @@ if ( !defined('ABSPATH')) exit;
                 Description:
             </h2>
             <p>
-                <?php echo esc_textarea( $_POST['reason'] ); ?>
+                <?php echo wpautop( esc_textarea( $_POST['reason'] ) ); ?>
             </p>
         </td>
     </tr>

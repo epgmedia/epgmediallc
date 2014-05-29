@@ -13,15 +13,6 @@ if ( !defined('ABSPATH')) exit;
                 to the "planned" day(s) off. Requested time off is subject to manager's approval, and priority is
                 given on a "<span>First Come First Serve Basis</span>".
             </p>
-            <h3>
-                SCHEDULED AND UNSCHEDULED
-            </h3>
-            <p>
-                If you have <span>not yet accrued</span> or have used all of your <strong>PAID TIME OFF</strong>,
-                you may request <strong>UNPAID TIME OFF</strong>. This is subject to management approval.
-            </p>
-        </div>
-        <div class="innerwrap">
             <div class="header half-width">
                 <h3>Employee Name:</h3>
                 <input class="floatlabel full-width" type="text" maxLength="21" name="employee" placeholder="Enter your name">
@@ -30,50 +21,12 @@ if ( !defined('ABSPATH')) exit;
                 <h3>Your E-mail Account:</h3>
                 <input class="floatlabel full-width" type="text" name="email" placeholder="Enter your email address" data-label="Make sure you enter your email address correctly">
             </div>
-            <div class="header half-width">
-                <h3>Date Submitted:</h3>
-                <input class="floatlabel full-width date_submitted" type="text" maxLength="8" value="01/01/14" name="date_submitted" placeholder="Format: mm/dd/yy">
-            </div>
-            <p>
-                Please fill out all areas that apply to your request. Any incomplete forms will be sent back. Your cooperation is appreciated
-            </p>
-			<h2>
-				REQUEST
-			</h2>
-			<div class="header half-width">
-				<h3>
-					Please indicate time-off type:
-				</h3>
-				<select name="pay_type">
-					<option selected disabled>Select</option>
-					<option value="vacation">Vacation</option>
-					<option value="float">Floating Holiday</option>
-					<option value="sick">Sick</option>
-					<option value="unpaid">Unpaid</option>
-				</select>
-			</div>
-            <div class="header half-width">
-                <h3>Number of hour(s) requested:</h3>
-                <input class="floatlabel full-width" type="text" maxLength="4" name="requesting" placeholder="Number of hours" data-label="Example: 7.5">
-            </div>
-			<div class="header full-width">
-				<h3>Date(s) Requested (Please indicate month, day and year)</h3>
-			</div>
-			<div class="header half-width">
-				From: <input class="floatlabel full-width" type="text" maxLength="8" name="datefrom" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
-			</div>
-			<div class="header half-width">
-				To: <input class="floatlabel full-width" type="text" maxLength="8" name="dateto" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
-			</div>
-			<div class="header full-width">
-				<h3>Reason for request:</h3>
-				<textarea name="reason" placeholder="Reason for request..." class="floatlabel"></textarea>
-			</div>
 			<div class="header half-width">
 				<h3>Send To:</h3>
 				<select name="supervisor">
 					<option selected value="none">Select Supervisor</option>
 					<option value="acollins@boatingindustry.com">Amy Collins</option>
+					<option value="aesham@specialtyim.com">Andrew Esham</option>
 					<option value="dmcmahon@powersportsbusiness.com">Dave McMahon</option>
 					<option value="mminor@specialtyim.com">Marion Minor</option>
 					<option value="jpatterson@epgmediallc.com">Jeff Patterson</option>
@@ -88,6 +41,50 @@ if ( !defined('ABSPATH')) exit;
 					<option value="dvoll@ridermagazine.com">Dave Voll</option>
 					<option value="bwohlman@epgmediallc.com">Bernadette Wohlman</option>
 				</select>
+			</div>
+			<div class="header half-width">
+				<h3>Date Submitted:</h3>
+				<input class="floatlabel full-width date_submitted" type="text" maxLength="8" value="01/01/14" name="date_submitted" placeholder="Format: mm/dd/yy">
+			</div>
+			<h2>
+				REQUEST
+			</h2>
+			<h3>
+				SCHEDULED AND UNSCHEDULED
+			</h3>
+			<p>
+				If you have <span>not yet accrued</span> or have used all of your <strong>PAID TIME OFF</strong>,
+				you may request <strong>UNPAID TIME OFF</strong>. This is subject to management approval.
+			</p>
+			<p>
+				Please fill out all areas that apply to your request. Any incomplete forms will be sent back. Your cooperation is appreciated
+			</p>
+			<div class="header half-width">
+				<h3>Number of hour(s) requested:</h3>
+				<input class="floatlabel full-width" type="text" maxLength="4" name="requesting" placeholder="Number of hours" data-label="Example: 7.5">
+			</div>
+			<div class="header half-width">
+				<h3>Please indicate time-off type:</h3>
+				<select name="pay_type" class="full-width">
+					<option selected disabled>Select</option>
+					<option value="vacation">Vacation</option>
+					<option value="float">Floating Holiday</option>
+					<option value="sick">Sick</option>
+					<option value="unpaid">Unpaid</option>
+				</select>
+			</div>
+			<div class="header full-width">
+				<h3>Date(s) Requested (Please indicate month, day and year)</h3>
+			</div>
+			<div class="header half-width">
+				From: <input class="floatlabel full-width" type="text" maxLength="8" name="datefrom" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
+			</div>
+			<div class="header half-width">
+				To: <input class="floatlabel full-width" type="text" maxLength="8" name="dateto" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
+			</div>
+			<div class="header full-width">
+				<h3>Reason for request:</h3>
+				<textarea name="reason" placeholder="Reason for request..." class="floatlabel"></textarea>
 			</div>
 			<div class="header important-submit">
 				<h3>
