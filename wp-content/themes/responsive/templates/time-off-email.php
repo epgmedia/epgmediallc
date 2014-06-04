@@ -16,35 +16,29 @@ if(
     died('We are sorry, but there appears to be a problem with the form you submitted.');
 }
 
-/** Recipients */
-$email_addresses = array(
-    'to' => 'timeoff@epgmediallc.com',
-    'su' => $_POST['supervisor'],
-    'cc' => $_POST['email']
-);
-
 /** The Mail */
 $mail = new epg_phpmailer();
 $mail->IsHTML();
 $mail->IsSMTP();
 // Validate the email addresses
-foreach ( $email_addresses as $type => $email ) {
-    if($mail->validateAddress($email) === FALSE) {
-        unset($email_addresses[$type]);
-    }
-}
-
-/** Recipients */
-if (in_array('timeoff@epgmediallc.com', $email_addresses)) {
-    $mail->AddAddress( 'timeoff@epgmediallc.com', 'EPG Time-Off Request' );
-}
-if (in_array($_POST['supervisor'], $email_addresses)) {
-    $mail->AddCC( $_POST['supervisor'] );
-}
-if (in_array($_POST['email'], $email_addresses)) {
-	$mail->setFrom( $_POST['email'], $_POST['employee'] );
-	$mail->AddCC( $_POST['email'], $_POST['employee'] );
-}
+$mail->setFrom( $_POST['email'], $_POST['employee'] );
+$email_addresses = array(
+	array(
+		'kind' => 'to',
+		'address' => 'timeoff@epgmediallc.com',
+		'name' => 'EPG Time-Off Request'
+	),
+	array(
+		'kind' => 'cc',
+		'address' => $_POST['supervisor']
+	),
+	array(
+		'kind' => 'bcc',
+		'address' => $_POST['email'],
+		'name' =>  $_POST['employee']
+	),
+);
+$mail->it_request_recipients( $email_addresses );
 
 /** Subject */
 $mail->Subject = 'SCHEDULED AND UNSCHEDULED TIME OFF REQUEST FORM';

@@ -1,48 +1,81 @@
+######################################
+                                     #
+# New Ignore File                    #
+                                     #
+######################################
+
+# Ignore All
+
+/*
+
+# Except....
+
+!.*
+!/wp-content
+/wp-content/*
+!/wp-content/plugins
+!/wp-content/themes
+!/wp-content/uploads
+!/wp-content/maintenance.php
+!/wp-content/index.php
+
+# But continue to ignore....
+
+.DS_Store
+._*
+.idea
+*.log
+*_log.txt
+error_log
+
+
+
 ############
 # Weird Files and logs
 
-._*
-.htaccess
-.idea
-*.log
-error_log
+#._*
+#.htaccess
+#.idea
+#*.log
+#error_log
 
 ############
 # Sitemap
 
-sitemap.xml
-sitemap.xml.gz
+#sitemap.xml
+#sitemap.xml.gz
 
 ############
 # Wordpress
 
 # Admin
-wp-admin/
+#wp-admin/
 
 # Config file
-wp-config.php
+#wp-config.php
 
 # Content folders
-wp-content/advanced-cache.php
-wp-content/backups/
-wp-content/backup-db/
-wp-content/blogs.dir/
-wp-content/cache/
-wp-content/gallery/
-wp-content/upgrade/
-wp-content/uploads/
-wp-content/wp-cache-config.php
+#wp-content/advanced-cache.php
+#wp-content/backups/
+#wp-content/backup-db/
+#wp-content/blogs.dir/
+#wp-content/cache/
+#wp-content/gallery/
+#wp-content/upgrade/
+#wp-content/uploads/
+#wp-content/wp-cache-config.php
 
-# System files
-wp-includes/
-cg-bin/
-e/
-ftp/
-FTP/
-.ftpquota
-wordpress/
+## System files
+#wp-includes/
+#cg-bin/
+#e/
+#ftp/
+#FTP/
+#.ftpquota
+#wordpress/
 
 
 ############
 # Site Specific
 
+#
