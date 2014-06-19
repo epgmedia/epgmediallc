@@ -1,11 +1,5 @@
 @charset "UTF-8";
 
-body {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-}
-
 /********************************************************
  * 
  * Font Styles
@@ -156,4 +150,24 @@ body {
 .epg_form_wrap textarea {
 	height: 100px;
 	width: 100%;
+}
+
+/** Job Listings **/
+
+ul.job_listings {
+	padding: 0 !important;
+}
+
+ul.job_listings li {
+	display: list-item;
+	float: none;
+	clear: both;
+}
+
+ul.job_listings li.job_listing a div.position {
+	padding: 0 !important;
+}
+
+ul.job_listings li.job_listing a .meta {
+	width: 40% !important;
 }

@@ -25,8 +25,8 @@ include_once ( ABSPATH . '/wp-includes/class-phpmailer.php' );
  * Sends email to requestor, supe, JP, and RJ.
  */
 $mail = new epg_phpmailer();
-$mail->IsHTML();
-//$mail->IsSMTP();
+$mail->IsHTML(TRUE);
+$mail->IsSMTP();
 
 /** To and From */
 $mail->setFrom( $_POST['email'], $_POST['employee'] );

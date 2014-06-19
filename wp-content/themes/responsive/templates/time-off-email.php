@@ -18,7 +18,7 @@ if(
 
 /** The Mail */
 $mail = new epg_phpmailer();
-$mail->IsHTML();
+$mail->IsHTML(TRUE);
 $mail->IsSMTP();
 // Validate the email addresses
 $mail->setFrom( $_POST['email'], $_POST['employee'] );
