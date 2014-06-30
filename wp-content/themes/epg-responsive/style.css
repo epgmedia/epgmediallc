@@ -14,3 +14,23 @@
 
 /* =Theme customization starts here
 -------------------------------------------------------------- */
+
+
+
+
+/** Job Listings **/
+
+ul.job_listings {
+	padding: 0 !important;
+}
+
+ul.job_listings li {
+	display: list-item;
+	float: none;
+	clear: both;
+}
+
+ul.job_listings li.job_listing a .meta {
+	width: 40% !important;
+}
+
