@@ -3,50 +3,72 @@ msgstr ""
 "Project-Id-Version: Responsive Theme\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-25 13:42:58 UTC\n"
-"PO-Revision-Date: 2013-03-13 23:04+0100\n"
-"Last-Translator: Ulrich Pogson <grapplerulrich@gmail.com>\n"
+"PO-Revision-Date: 2014-05-29 17:14:21 UTC\n"
+"Last-Translator: Web Translate It <support@webtranslateit.com>\n"
 "Language-Team: Dutch, Netherlands\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: WebTranslateIt.com\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: home.php page.php landing-page.php index.php image.php full-width-page.php
-#: content-sidebar-page.php content-sidebar-half-page.php blog.php
-#: blog-excerpt.php archive.php search.php sidebar-content-half-page.php
-#: sidebar-content-page.php single.php sitemap.php
+#: page.php
+#: landing-page.php
+#: index.php
+#: image.php
+#: full-width-page.php
+#: content-sidebar-page.php
+#: content-sidebar-half-page.php
+#: blog.php
+#: blog-excerpt.php
+#: archive.php
+#: home.php
+#: search.php
+#: sidebar-content-half-page.php
+#: sidebar-content-page.php
+#: single.php
+#: sitemap.php
 msgid "Pages:"
 msgstr "Pagina&#39;s"
 
-#: loop-nav.php blog.php blog-excerpt.php sidebar-content-half-page.php
-#: sidebar-content-page.php
+#: blog-excerpt.php
+#: blog.php
+#: loop-nav.php
 msgid "&#8249; Older posts"
 msgstr "&#8249; Oudere berichten"
 
-#: loop-nav.php blog.php blog-excerpt.php sidebar-content-half-page.php
-#: sidebar-content-page.php
+#: blog-excerpt.php
+#: blog.php
+#: loop-nav.php
 msgid "Newer posts &#8250;"
 msgstr "Nieuwere berichten &#8250;"
 
-#: home.php page.php landing-page.php index.php full-width-page.php
-#: content-sidebar-page.php content-sidebar-half-page.php blog.php image.php
-#: sidebar-content-half-page.php sidebar-content-page.php single.php
-#: includes/functions.php
+#: blog.php
+#: content-sidebar-half-page.php
+#: content-sidebar-page.php
+#: full-width-page.php
+#: home.php
+#: image.php
+#: index.php
+#: landing-page.php
+#: page.php
+#: sidebar-content-half-page.php
+#: sidebar-content-page.php
+#: single.php
+#: core/includes/functions.php
 msgid "Read more &#8250;"
 msgstr "Lees meer &#8250;"
 
 #: comments.php
-msgid ""
-"This post is password protected. Enter the password to view any comments."
-msgstr ""
-"Dit bericht is beschermd met een paswoord. Geef het paswoord om reacties te "
-"zien"
+msgid "This post is password protected. Enter the password to view any comments."
+msgstr "Dit bericht is beschermd met een wachtwoord. Voer het wachtwoord in om reacties te zien."
 
+#: comments.php
 #: comments.php
 msgid "&#8249; Older comments"
 msgstr "&#8249; Oudere reacties"
 
+#: comments.php
 #: comments.php
 msgid "Newer comments &#8250;"
 msgstr "Nieuwere reacties &#8250;"
@@ -84,20 +106,12 @@ msgid "&uarr;"
 msgstr "&uarr;"
 
 #: footer.php
-msgid "http://themeid.com/responsive-theme/"
-msgstr "http://themeid.com/responsive-theme/"
-
-#: footer.php
 msgid "Responsive Theme"
-msgstr "Responsive Thema"
+msgstr "Responsive thema"
 
 #: footer.php
 msgid "powered by"
 msgstr "ondersteund door"
-
-#: footer.php
-msgid "http://wordpress.org/"
-msgstr "http://nl.wordpress.org/"
 
 #: footer.php
 msgid "WordPress"
@@ -107,68 +121,72 @@ msgstr "WordPress"
 msgid "&#8249; Return to"
 msgstr "&#8249; Keer terug naar"
 
-#: post-meta.php post-meta-page.php image.php sidebar-content-half-page.php
+#: image.php
+#: post-meta-page.php
+#: post-meta.php
+#: sidebar-content-half-page.php
 #: sidebar-content-page.php
 msgid "No Comments &darr;"
 msgstr "Geen Reacties &darr;"
 
-#: post-meta.php post-meta-page.php image.php sidebar-content-half-page.php
+#: post-meta-page.php
+#: post-meta.php
+#: image.php
+#: sidebar-content-half-page.php
 #: sidebar-content-page.php
 msgid "1 Comment &darr;"
 msgstr "1 Reactie &darr;"
 
-#: post-meta.php post-meta-page.php image.php sidebar-content-half-page.php
+#: post-meta-page.php
+#: post-meta.php
+#: image.php
+#: sidebar-content-half-page.php
 #: sidebar-content-page.php
 msgid "% Comments &darr;"
 msgstr "% Reacties &darr;"
 
-#: comments.php
-msgid "One comment on &ldquo;%2$s&rdquo;"
-msgid_plural "%1$s comments on &ldquo;%2$s&rdquo;"
-msgstr[0] "1 Reactie op &ldquo;%2$s&rdquo;"
-msgstr[1] "%1$s reacties op &ldquo;%2$s&rdquo;"
-
-#: post-data.php image.php sidebar-content-half-page.php
+#: image.php
+#: post-data.php
+#: sidebar-content-half-page.php
 #: sidebar-content-page.php
 msgid "Tagged with:"
 msgstr "Getagd met"
 
-#: post-data.php image.php sidebar-content-half-page.php
+#: image.php
+#: post-data.php
+#: sidebar-content-half-page.php
 #: sidebar-content-page.php
 msgid "Posted in %s"
 msgstr "Geplaatst in %s"
 
-#: post-data.php image.php sidebar-content-half-page.php
-#: sidebar-content-page.php sitemap.php
+#: image.php
+#: post-data.php
+#: sidebar-content-half-page.php
+#: sidebar-content-page.php
+#: sitemap.php
 msgid "Edit"
 msgstr "Bewerken"
 
-#: loop-no-posts.php image.php sidebar-content-half-page.php
-#: sidebar-content-page.php
+#: loop-no-posts.php
 msgid "404 &#8212; Fancy meeting you here!"
 msgstr "404 &#8212; Leuk om je hier tegen te komen!"
 
-#: loop-no-posts.php sidebar-content-half-page.php sidebar-content-page.php
-#: image.php
-msgid ""
-"Don&#39;t panic, we&#39;ll get through this together. Let&#39;s explore our "
-"options here."
+#: loop-no-posts.php
+msgid "Don&#39;t panic, we&#39;ll get through this together. Let&#39;s explore our options here."
 msgstr "Niet in paniek raken. Laten we kijken wat de mogelijkheden hier zijn."
 
-#: loop-no-posts.php image.php sidebar-content-half-page.php
-#: sidebar-content-page.php
+#: loop-no-posts.php
 msgid "You can return %s or search for the page you were looking for."
-msgstr "Je kan teruggaan naar %s of naar de pagina zoeken die je zocht"
+msgstr "Je kan teruggaan naar %s of zoeken naar de pagina die je wilde zien."
 
-#: loop-no-posts.php image.php sidebar-content-half-page.php
-#: sidebar-content-page.php includes/functions.php
+#: loop-no-posts.php
+#: core/includes/functions.php
 msgid "Home"
-msgstr "Thuis"
+msgstr "Home"
 
-#: loop-no-posts.php image.php sidebar-content-half-page.php
-#: sidebar-content-page.php
+#: loop-no-posts.php
 msgid "&larr; Home"
-msgstr "&larr; Thuis"
+msgstr "&larr; Home"
 
 #: loop-header.php
 msgid "Daily Archives: %s"
@@ -188,13 +206,14 @@ msgstr "Blog archief"
 
 #: loop-no-posts.php
 msgid "Your search for %s did not match any entries."
-msgstr "Je zoektocht naar %s heeft geen uitkomsten opgeleverd"
+msgstr "Je zoektocht naar %s heeft geen resultaten opgeleverd"
 
-#: post-meta.php sitemap.php
+#: sitemap.php
 msgid "Permanent Link to %s"
 msgstr "Permanente Link naar %s"
 
-#: includes/functions.php search.php
+#: core/includes/functions.php
+#: loop-header.php
 msgid "Search results for: %s"
 msgstr "Zoekresultaten voor: %s"
 
@@ -208,11 +227,11 @@ msgstr "Ga"
 
 #: sidebar-gallery.php
 msgid "Image Information"
-msgstr "Afbeelding Informatie"
+msgstr "Afbeeldingsinformatie"
 
 #: sidebar-gallery.php
 msgid "Full Size:"
-msgstr "Volledige Grootte"
+msgstr "Volledige grootte"
 
 #: sidebar-gallery.php
 msgid "Aperture: f&#47;"
@@ -238,52 +257,41 @@ msgstr "Sluiter"
 msgid "Camera:"
 msgstr "Camera"
 
-#: sidebar.php sidebar-right.php sidebar-right-half.php sidebar-left.php
-#: sidebar-left-half.php sidebar-half-left.php
+#: sidebar.php
+#: sidebar-right.php
+#: sidebar-right-half.php
+#: sidebar-left.php
+#: sidebar-left-half.php
+#: sidebar-half-left.php
 msgid "In Archive"
 msgstr "In het Archief"
 
-#: sidebar-home.php includes/functions.php
+#: core/includes/functions-sidebar.php
+#: sidebar-home.php
 msgid "Home Widget 1"
-msgstr "Thuis Widget 1"
+msgstr "Home Widget 1"
 
 #: sidebar-home.php
-msgid ""
-"This is your first home widget box. To edit please go to Appearance > "
-"Widgets and choose 6th widget from the top in area 6 called Home Widget 1. "
-"Title is also manageable from widgets as well."
-msgstr ""
-"Dit is je eerste thuis widget box. Om te bewerken ga naar Uiterlijk > "
-"Widgets en kies het 6e widget van boven in gebied 6 genaamd Thuis Widget 1. "
-"Titel is ook te bewerken vanuit de widgets. "
+msgid "This is your first home widget box. To edit please go to Appearance > Widgets and choose 6th widget from the top in area 6 called Home Widget 1. Title is also manageable from widgets as well."
+msgstr "Dit is je eerste home widget box. Om te bewerken ga naar Uiterlijk > Widgets en kies het 6e widget van boven in gebied 6 genaamd Home Widget 1. Titel is ook te bewerken vanuit de widgets."
 
-#: sidebar-home.php includes/functions.php
+#: core/includes/functions-sidebar.php
+#: sidebar-home.php
 msgid "Home Widget 2"
-msgstr "Thuis Widget 2"
+msgstr "Home Widget 2"
 
 #: sidebar-home.php
-msgid ""
-"This is your second home widget box. To edit please go to Appearance > "
-"Widgets and choose 7th widget from the top in area 7 called Home Widget 2. "
-"Title is also manageable from widgets as well."
-msgstr ""
-"Dit is je tweede thuis widget box. Om te bewerken ga naar Uiterlijk > "
-"Widgets en kies het 7e widget van boven in gebied 7 genaamd Thuis Widget 2. "
-"Titel is ook te bewerken vanuit de widgets."
+msgid "This is your second home widget box. To edit please go to Appearance > Widgets and choose 7th widget from the top in area 7 called Home Widget 2. Title is also manageable from widgets as well."
+msgstr "Dit is je tweede home widget box. Om te bewerken ga naar Uiterlijk > Widgets en kies het 7e widget van boven in gebied 7 genaamd Home Widget 2. Titel is ook te bewerken vanuit de widgets."
 
-#: sidebar-home.php includes/functions.php
+#: core/includes/functions-sidebar.php
+#: sidebar-home.php
 msgid "Home Widget 3"
-msgstr "Thuis Widget 3"
+msgstr "Home Widget 3"
 
 #: sidebar-home.php
-msgid ""
-"This is your third home widget box. To edit please go to Appearance > "
-"Widgets and choose 8th widget from the top in area 8 called Home Widget 3. "
-"Title is also manageable from widgets as well."
-msgstr ""
-"Dit is je derde thuis widget box. Om te bewerken ga naar Uiterlijk > Widgets "
-"en kies het 8e widget van boven in gebied 8 genaamd Thuis Widget 3. Titel is "
-"ook te bewerken vanuit de widgets."
+msgid "This is your third home widget box. To edit please go to Appearance > Widgets and choose 8th widget from the top in area 8 called Home Widget 3. Title is also manageable from widgets as well."
+msgstr "Dit is je derde home widget box. Om te bewerken ga naar Uiterlijk > Widgets en kies het 8e widget van boven in gebied 8 genaamd Home Widget 3. Titel is ook te bewerken vanuit de widgets."
 
 #: single.php
 msgid "About"
@@ -295,538 +303,722 @@ msgstr "Categorie&#235;n"
 
 #: sitemap.php
 msgid "Latest Posts"
-msgstr "Laatste Berichten"
+msgstr "Laatste berichten"
 
 #: sitemap.php
 msgid "Pages"
 msgstr "Pagina&#39;s"
 
-#: includes/functions.php
+#: core/includes/functions.php
 msgid "Top Menu"
 msgstr "Bovenste Menu"
 
-#: includes/functions.php
+#: core/includes/functions.php
 msgid "Header Menu"
-msgstr "Kop Menu"
+msgstr "Header Menu"
 
-#: includes/functions.php
+#: core/includes/functions.php
 msgid "Sub-Header Menu"
-msgstr "Sub-Kop Menu"
+msgstr "Subheader Menu"
 
-#: includes/functions.php
+#: core/includes/functions.php
 msgid "Footer Menu"
 msgstr "Voettekst Menu"
 
-#: includes/functions.php
+#: core/includes/functions.php
+#: core/includes/functions.php
 msgid "Page %s"
 msgstr "Pagina %s"
 
-#: includes/functions.php
-msgid ""
-"<span class=\"%1$s\">Posted on </span>%2$s<span class=\"%3$s\"> by </span>"
-"%4$s"
-msgstr ""
-"<span class=\"%1$s\">Geplaatst op </span>%2$s<span class=\"%3$s\"> door </"
-"span>%4$s"
+#: core/includes/functions.php
+msgid "<span class=\"%1$s\">Posted on </span>%2$s<span class=\"%3$s\"> by </span>%4$s"
+msgstr "<span class=\"%1$s\">Geplaatst op </span>%2$s<span class=\"%3$s\"> door </span>%4$s"
 
-#: includes/functions.php
+#: core/includes/functions.php
+#: core/includes/functions.php
 msgid "View all posts by %s"
 msgstr "Bekijk alle berichten geplaatst door %s"
 
-#: includes/functions.php
+#: core/includes/functions.php
 msgid "Archive for %s"
 msgstr "Archief voor %s"
 
-#: includes/functions.php
+#: core/includes/functions.php
 msgid "Posts tagged %s"
 msgstr "Berichten getagd met %s"
 
-#: includes/functions.php
+#: core/includes/functions.php
 msgid "Error 404"
-msgstr "Fout 404 "
+msgstr "Fout 404"
 
-#: includes/functions.php
-msgid "Page"
-msgstr "Pagina"
-
-#: includes/functions.php
-msgid "http://themeid.com/support/"
-msgstr "http://themeid.com/support/"
-
-#: includes/functions.php
-msgid "Theme Support"
-msgstr "Thema Hulp"
-
-#: includes/functions.php
-msgid "http://themeid.com/themes/"
-msgstr "http://themeid.com/themes/"
-
-#: includes/functions.php
+#: core/includes/functions.php
+#: core/includes/functions.php
 msgid "More Themes"
-msgstr "Meer Thema's"
+msgstr "Meer thema's"
 
-#: includes/functions.php
-msgid "http://themeid.com/showcase/"
-msgstr "http://themeid.com/showcase/"
-
-#: includes/functions.php
+#: core/includes/functions.php
+#: core/includes/functions.php
 msgid "Showcase"
 msgstr "Etalage"
 
-#: includes/functions.php
-msgid "http://themeid.com/donate/"
-msgstr "http://themeid.com/donate/"
-
-#: includes/functions.php
-msgid "Donate Now"
-msgstr "Doneer Nu"
-
-#: includes/functions.php
+#: core/includes/functions-sidebar.php
 msgid "Main Sidebar"
-msgstr "Hoofd Zijbalk"
+msgstr "Hoofd zijbalk"
 
-#: includes/functions.php
-msgid "Area 1 - sidebar.php"
-msgstr "Gebied Een - sidebar.php"
-
-#: includes/functions.php
+#: core/includes/functions-sidebar.php
 msgid "Right Sidebar"
-msgstr "Rechter Zijbalk"
+msgstr "Zijbalk rechts"
 
-#: includes/functions.php
-msgid "Area 2 - sidebar-right.php"
-msgstr "Gebied Twee - sidebar-right.php"
-
-#: includes/functions.php
+#: core/includes/functions-sidebar.php
 msgid "Left Sidebar"
-msgstr "Linker Zijbalk"
+msgstr "Zijbalk links"
 
-#: includes/functions.php
-msgid "Area 3 - sidebar-left.php"
-msgstr "Gebied Drie - sidebar-left.php"
-
-#: includes/functions.php
+#: core/includes/functions-sidebar.php
 msgid "Left Sidebar Half Page"
-msgstr "Linker Zijbalk Halverwege Pagina"
+msgstr "Zijbalk links halverwege pagina"
 
-#: includes/functions.php
-msgid "Area 4 - sidebar-left-half.php"
-msgstr "Gebied Vier - sidebar-left-half.php"
-
-#: includes/functions.php
+#: core/includes/functions-sidebar.php
 msgid "Right Sidebar Half Page"
-msgstr "Rechter Zijbalk Halverwege Pagina"
+msgstr "Zijbalk rechts halverwege pagina"
 
-#: includes/functions.php
-msgid "Area 5 - sidebar-right-half.php"
-msgstr "Gebied Vijf - sidebar-right-half.php"
-
-#: includes/functions.php
-msgid "Area 6 - sidebar-home.php"
-msgstr "Gebied Zes - sidebar-right-half.php"
-
-#: includes/functions.php
-msgid "Area 7 - sidebar-home.php"
-msgstr "Gebied Zeven - sidebar-home.php"
-
-#: includes/functions.php
-msgid "Area 8 - sidebar-home.php"
-msgstr "Gebied Acht - sidebar-home.php"
-
-#: includes/functions.php
+#: core/includes/functions-sidebar.php
 msgid "Gallery Sidebar"
-msgstr "Galerij Zijbalk"
+msgstr "Zijbalk Galerie"
 
-#: includes/functions.php
-msgid "Area 9 - sidebar-gallery.php"
-msgstr "Gebied Negen - sidebar-gallery.php"
-
-#: includes/functions.php
+#: core/includes/functions-sidebar.php
 msgid "Colophon Widget"
-msgstr "Colofon Widget"
+msgstr "Colofon widget"
 
-#: includes/functions.php
-msgid "Area 10 - sidebar-colophon.php"
-msgstr "Gebied Tien - sidebar-colophon.php"
-
-#: includes/functions.php
+#: core/includes/functions-sidebar.php
 msgid "Top Widget"
-msgstr "Bovenste Widget"
-
-#: includes/functions.php
-msgid "Area 11 - sidebar-top.php"
-msgstr "Gebied Elf - sidebar-top.php"
+msgstr "Bovenste widget"
 
 #: blog.php
+#. Template Name of the plugin/theme
+# INSTRUCTION: Template Name of the plugin/theme
 msgid "Blog (full posts)"
 msgstr "Blog (volledige berichten)"
 
 #: blog-excerpt.php
+#. Template Name of the plugin/theme
+# INSTRUCTION: Template Name of the plugin/theme
 msgid "Blog Excerpt (summary)"
-msgstr "Blog Fragment (samenvatting)"
+msgstr "Blogfragment (samenvatting)"
 
-#: content-sidebar-page.php includes/post-custom-meta.php
+#: content-sidebar-page.php
+#: core/includes/post-custom-meta.php
+#. Template Name of the plugin/theme
+# INSTRUCTION: Template Name of the plugin/theme
 msgid "Content/Sidebar"
-msgstr "Inhoud/Zijbalk"
+msgstr "Content/Zijbalk"
 
-#: sidebar-content-page.php includes/post-custom-meta.php
+#: sidebar-content-page.php
+#: core/includes/post-custom-meta.php
+#. Template Name of the plugin/theme
+# INSTRUCTION: Template Name of the plugin/theme
 msgid "Sidebar/Content"
-msgstr "Zijbalk/Inhoud"
+msgstr "Zijbalk/Content"
 
-#: content-sidebar-half-page.php includes/post-custom-meta.php
+#: content-sidebar-half-page.php
+#: core/includes/post-custom-meta.php
+#. Template Name of the plugin/theme
+# INSTRUCTION: Template Name of the plugin/theme
 msgid "Content/Sidebar Half Page"
-msgstr "Inhoud/Zijbalk Halverwege Pagina"
+msgstr "Content/Zijbalk halverwege pagina"
 
-#: sidebar-content-half-page.php includes/post-custom-meta.php
+#: sidebar-content-half-page.php
+#: core/includes/post-custom-meta.php
+#. Template Name of the plugin/theme
+# INSTRUCTION: Template Name of the plugin/theme
 msgid "Sidebar/Content Half Page"
-msgstr "Zijbalk/Inhoud Halverwege Pagina"
+msgstr "Zijbalk/Content halverwege pagina"
 
-#: full-width-page.php includes/post-custom-meta.php
+#: full-width-page.php
+#: core/includes/post-custom-meta.php
+#. Template Name of the plugin/theme
+# INSTRUCTION: Template Name of the plugin/theme
 msgid "Full Width Page (no sidebar)"
-msgstr "Volledige Breedte Pagina (geen zijbalk)"
+msgstr "Pagina op volledige breedte (geen zijbalk)"
 
 #: landing-page.php
+#. Template Name of the plugin/theme
+# INSTRUCTION: Template Name of the plugin/theme
 msgid "Landing Page (no menu)"
 msgstr "Landingspagina (geen menu)"
 
 #: sitemap.php
+#. Template Name of the plugin/theme
+# INSTRUCTION: Template Name of the plugin/theme
 msgid "Sitemap"
 msgstr "Sitemap"
 
-#: includes/post-custom-meta.php
+#: core/includes/post-custom-meta.php
 msgid "Layout"
 msgstr "Layout"
 
-#: includes/post-custom-meta.php
+#: core/includes/classes/Responsive_Options.php
+#: core/includes/post-custom-meta.php
 msgid "Default"
 msgstr "Standaard"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
+#: front-page.php
 msgid "Hello, World!"
-msgstr "Hallo, Wereld!"
+msgstr "Hallo wereld!"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
+#: front-page.php
 msgid "Your H2 subheadline here"
 msgstr "Je H2 subkoptekst hier"
 
-#: includes/theme-options.php
-msgid ""
-"Your title, subtitle and this very content is editable from Theme Option. "
-"Call to Action button and its destination link as well. Image on your right "
-"can be an image or even YouTube video if you like."
-msgstr ""
-"Je titel, subtitel en deze inhoud zijn te bewerken vanuit Thema Keuze. "
-"Evenals de Actie knop en de bestemmingslink. Afbeelding aan de rechterkant "
-"kan een afbeelding zijn of zelfs een Youtube video als je dat wil."
+#: core/includes/theme-options/theme-options.php
+#: front-page.php
+msgid "Your title, subtitle and this very content is editable from Theme Option. Call to Action button and its destination link as well. Image on your right can be an image or even YouTube video if you like."
+msgstr "Je titel, subtitel en deze content zijn te bewerken vanuit Themakeuze. Net als de Call-to-actionknop en de bijbehorende bestemmingslink. Afbeelding aan de rechterkant kan een afbeelding zijn of zelfs een Youtube-video als je dat wil."
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
+#: front-page.php
 msgid "Call to Action"
-msgstr "Actie"
+msgstr "Call-to-action"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Theme Options"
-msgstr "Thema Opties"
+msgstr "Thema-opties"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Options Saved"
-msgstr "Opties Bewaard"
+msgstr "Opties opgeslagen"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Theme Elements"
-msgstr "Thema Elementen"
+msgstr "Thema-elementen"
 
-#: includes/theme-options.php
-msgid "Disable Breadcrumb Lists?"
-msgstr "Schakel Kruimelpad uit"
-
-#: includes/theme-options.php
-msgid "Check to disable"
-msgstr "Selecteer om uit te schakelen"
-
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Disable Call to Action Button?"
-msgstr "Schakel Actie Knop uit"
+msgstr "Call-to-actionknop uitschakelen?"
 
-#: includes/theme-options.php
+#: core/includes/classes/Responsive_Options.php
 msgid "Save Options"
-msgstr "Bewaar Opties"
+msgstr "Bewaar opties"
 
-#: includes/theme-options.php
+#: core/includes/classes/Responsive_Options.php
 msgid "Restore Defaults"
-msgstr "Herstel de Standaard waardes"
+msgstr "Zet terug naar standaardinstellingen"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Logo Upload"
-msgstr "Logo Upload"
+msgstr "Logo uploaden"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Custom Header"
 msgstr "Aangepaste Kop"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Need to replace or remove default logo?"
-msgstr "Wil je het standaard logo vervangen of verwijderen?"
+msgstr "Wil je het standaard logo vervangen/verwijderen?"
 
-#: includes/theme-options.php
-msgid "<a href=\"%s\">Click here</a>."
-msgstr "<a href=\"%s\">Klik hier</a>."
-
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Home Page"
-msgstr "Thuis Pagina"
+msgstr "Homepagina"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Headline"
 msgstr "Koptekst"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your headline"
 msgstr "Vul je koptekst in"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Subheadline"
 msgstr "Subkoptekst"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your subheadline"
 msgstr "Vul je subkoptekst in"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Content Area"
-msgstr "Inhoud Gebied"
+msgstr "Contentblok"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your content"
-msgstr "Vul je inhoud in"
+msgstr "Voer je content (tekst e.d.) in"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Call to Action (URL)"
-msgstr "Actie (URL)"
+msgstr "Call-to-action (URL)"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your call to action URL"
-msgstr "Vul je actie URL in"
+msgstr "Voer je actie-URL in"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Call to Action (Text)"
-msgstr "Actie (Tekst)"
+msgstr "Call-to-action (tekst)"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your call to action text"
-msgstr "Vul je actie tekst in"
+msgstr "Voer je call-to-action tekst in"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Featured Content"
-msgstr "Uitgelichte Inhoud"
+msgstr "Uitgelichte content"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "See Docs"
 msgstr "Zie Docs"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Paste your shortcode, video or image source"
-msgstr "Plak je shortcode, video of afbeeldingsbron"
+msgstr "Plak hier je shortcode, video of afbeeldingsbron"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Default Layouts"
-msgstr "Standaard Layouts"
+msgstr "Standaard layouts"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Default Static Page Layout"
-msgstr "Standaard Statische Pagina Layout"
+msgstr "Standaard layout Statische pagina"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Default Single Blog Post Layout"
-msgstr "Standaard Enkel Blog Bericht Layout"
+msgstr "Standaard layout blogpost"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Default Blog Posts Index Layout"
-msgstr "Standaard Blog Berichten Index Layout"
+msgstr "Standaard layout blogpost-index"
 
-#: includes/theme-options.php
-msgid "Webmaster Tools"
-msgstr "Webmaster Gereedschap"
-
-#: includes/theme-options.php
-msgid "Google Site Verification"
-msgstr "Google Site Verificatie"
-
-#: includes/theme-options.php
-msgid "Enter your Google ID number only"
-msgstr "Vul alleen je Google ID nummer in"
-
-#: includes/theme-options.php
-msgid "Bing Site Verification"
-msgstr "Bing Site Verificatie"
-
-#: includes/theme-options.php
-msgid "Enter your Bing ID number only"
-msgstr "Vul alleen je Bing ID nummer in"
-
-#: includes/theme-options.php
-msgid "Yahoo Site Verification"
-msgstr "Yahoo Site Verificatie"
-
-#: includes/theme-options.php
-msgid "Enter your Yahoo ID number only"
-msgstr "Vul alleen je Yahoo ID nummer in"
-
-#: includes/theme-options.php
-msgid "Site Statistics Tracker"
-msgstr "Site Statistieken Tracker"
-
-#: includes/theme-options.php
-msgid "Leave blank if plugin handles your webmaster tools"
-msgstr "Laat leeg als een plugin je webmaster gereedschap afhandelt"
-
-#: includes/theme-options.php
-msgid "Google Analytics, StatCounter, any other or all of them."
-msgstr "Google Analytics, StatCounter, een andere of ze allemaal"
-
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Social Icons"
-msgstr "Sociale Icons"
+msgstr "Social media iconen"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "Twitter"
 msgstr "Twitter"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your Twitter URL"
-msgstr "Vul je Twitter URL in"
+msgstr "Voer je Twitter URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "Facebook"
 msgstr "Facebook"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your Facebook URL"
-msgstr "Vul je Facebook URL in"
+msgstr "Voer je Facebook URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "LinkedIn"
 msgstr "LinkedIn"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your LinkedIn URL"
-msgstr "Vul je LinkedIn URL in"
+msgstr "Voer je LinkedIn URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "YouTube"
 msgstr "YouTube"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your YouTube URL"
-msgstr "Vul je YouTube URL in"
+msgstr "Voer je YouTube URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "StumbleUpon"
 msgstr "StumbleUpon"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your StumbleUpon URL"
-msgstr "Vul je StumbleUpon URL in"
+msgstr "Voer je StumbleUpon URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "RSS Feed"
 msgstr "RSS Feed"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your RSS Feed URL"
-msgstr "Vul je RSS Feed URL in"
+msgstr "Voer je RSS Feed URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "Google+"
 msgstr "Google+"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your Google+ URL"
-msgstr "Vul je Google+ URL in"
+msgstr "Voer je Google+ URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "Instagram"
 msgstr "Instagram"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your Instagram URL"
-msgstr "Vul je Instagram URL in"
+msgstr "Voer je Instagram URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "Pinterest"
 msgstr "Pinterest"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your Pinterest URL"
-msgstr "Vul je Pinterest URL in"
+msgstr "Voer je Pinterest URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "Yelp!"
 msgstr "Yelp!"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your Yelp! URL"
-msgstr "Vul je Yelp! URL in"
+msgstr "Voer je Yelp! URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "Vimeo"
 msgstr "Vimeo"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your Vimeo URL"
-msgstr "Vul je Vimeo URL in"
+msgstr "Voer je Vimeo URL in"
 
-#: includes/theme-options.php
+#: core/includes/functions.php
+#: core/includes/theme-options/theme-options.php
 msgid "foursquare"
 msgstr "foursquare"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your foursquare URL"
-msgstr "Vul je foursquare URL in"
+msgstr "Voer je foursquare URL in"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Custom CSS Styles"
-msgstr "Custom CSS Styles"
+msgstr "Aangepaste CSS-stijlen"
 
-#: includes/theme-options.php
-msgid "https://developer.mozilla.org/en/CSS"
-msgstr "https://developer.mozilla.org/nl/CSS"
-
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "CSS Tutorial"
-msgstr "CSS Leerprogramma"
+msgstr "CSS leerprogramma"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your custom CSS styles."
-msgstr "Vul je aangepaste CSS stijlen in"
+msgstr "Voer je aangepaste CSS-stijlen in"
 
-#: includes/theme-options.php
-msgid "Custom Scripts"
-msgstr "Aangepaste Scripts"
-
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Custom Scripts for Header and Footer"
-msgstr "Aangepaste Scripts voor Header en Footer"
+msgstr "Aangepaste scripts voor Header en Voettekst"
 
-#: includes/theme-options.php
-msgid "http://codex.wordpress.org/Using_Javascript"
-msgstr "http://codex.wordpress.org/Using_Javascript"
-
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Quick Tutorial"
-msgstr "Snelle Handleiding"
+msgstr "Snelle handleiding"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Embeds to header.php &darr;"
 msgstr "Wordt ingesloten in header.php &darr;"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your custom header script."
-msgstr "Vul je aangepaste header script in."
+msgstr "Voer je aangepaste headerscript in."
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Embeds to footer.php &darr;"
 msgstr "Wordt ingesloten in footer.php &darr;"
 
-#: includes/theme-options.php
+#: core/includes/theme-options/theme-options.php
 msgid "Enter your custom footer script."
-msgstr "Vul je aangepaste footer script in."
+msgstr "Vul je aangepaste voettekstscript in."
+
+#: core/includes/functions.php
+msgid "Activate Add Ons"
+msgstr "Schakel add-ons in"
+
+#: core/includes/functions.php
+msgid "All plugins installed and activated successfully. %s"
+msgstr "Alle plugins werden met succes geïnstalleerd en geactiveerd. %s"
+
+msgid "All theme settings will be lost!"
+msgstr "Alle thema-instellingen zullen verloren gaan!"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 10 - sidebar-colophon.php, 100% width Footer widgets"
+msgstr "Gebied 10 - sidebar-colophon.php, footer widget van volledige (100%) breedte"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 11 - sidebar-top.php - Displays on the right of the header"
+msgstr "Gebied 11 - sidebar-top.php - Wordt rechts van de header weergegeven"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 12 - sidebar-footer.php - Maximum of 3 widgets per row"
+msgstr "Gebied 12 - sidebar-footer.php - Maximaal 3 widgets per rij"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 1 - sidebar.php - Displays on Default, Blog, Blog Excerpt page templates"
+msgstr "Gebied 1 - sidebar.php - Wordt weergegeven op standaard sjablonen, blogpaginasjablonen en op uittreksels van blogpaginasjablonen"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 2 - sidebar-right.php - Displays on Content/Sidebar page templates"
+msgstr "Gebied 2 - sidebar-right - Wordt weergegeven op inhoud/zijbalk paginasjablonen"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 3 - sidebar-left.php - Displays on Sidebar/Content page templates"
+msgstr "Gebied 3 - sidebar-left.php - Wordt weergegeven op zijbalk/inhoud paginasjablonen"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 4 - sidebar-left-half.php - Displays on Sidebar Half Page/Content page templates"
+msgstr "Gebied 4 - sidebar-left-half.php - Wordt weergegeven op de Zijbalk halve paginabreedte/Inhoud paginasjablonen"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 5 - sidebar-right-half.php - Displays on Content/Sidebar Half Page page templates"
+msgstr "Gebied 5 - sidebar-right-half.php - Wordt weergegeven op de Inhoud/Zijbalk halve paginabreedte paginasjablonen"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 6 - sidebar-home.php - Displays on the Home Page"
+msgstr "Gebied 6 - sidebar-home.php - Wordt weergegeven op de homepage"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 7 - sidebar-home.php - Displays on the Home Page"
+msgstr "Gebied 7 - sidebar-home.php - Wordt op de hompage weergegeven"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 8 - sidebar-home.php - Displays on the Home Page"
+msgstr "Gebied 8 - sidebar-home.php - Wordt op de homepagina weergegeven"
+
+#: core/includes/functions-sidebar.php
+msgid "Area 9 - sidebar-gallery.php - Displays on the page after an image has been clicked in a Gallery"
+msgstr "Gebied 9 - sidebar-gallery.php - Wordt weergegeven op de pagina die verschijnt nadat er op een afbeelding in een galerij is geklikt"
+
+#: core/includes/theme-options/theme-options.php
+msgid "Blog"
+msgstr "Blog"
+
+#: core/includes/functions-update.php
+msgid "blog post"
+msgstr "blogbericht"
+
+#: core/includes/theme-options/theme-options.php
+msgid "Blog Title Toggle"
+msgstr "Blogtitel aan/uit-knop"
+
+#: core/includes/theme-options/theme-options.php
+#: core/includes/theme-options/theme-options.php
+msgid "check to disable"
+msgstr "Selecteer om uit te schakelen"
+
+#: core/includes/theme-options/theme-options.php
+msgid "check to enable"
+msgstr "Selecteer om in te schakelen"
+
+#: core/includes/theme-options/theme-options.php
+msgid "Click here"
+msgstr "Klik hier"
+
+#: core/includes/classes/Responsive_Options.php
+#: core/includes/theme-options/theme-options.php
+msgid "Click OK to Restore."
+msgstr "Klik op OK om de instellingen terug te zetten"
+
+#: core/includes/theme-options/theme-options.php
+msgid "CSS Styles"
+msgstr "CSS-stijlen"
+
+#. Author of the plugin/theme
+# INSTRUCTION: Author of the plugin/theme
+msgid "CyberChimps.com"
+msgstr "CyberChimps.com"
+
+#: header.php
+msgid "&darr; Skip to Main Content"
+msgstr "&darr; Doorgaan naar hoofdinhoud"
+
+#: core/includes/theme-options/theme-options.php
+msgid "Disable breadcrumb list?"
+msgstr "Kruimelpad uitschakelen?"
+
+#: core/includes/classes/Responsive_Options.php
+#: core/includes/theme-options/theme-options.php
+msgid "Do you want to restore?"
+msgstr "Wilt u de instellingen terugzetten?"
+
+#: core/includes/theme-options/theme-options.php
+msgid "Enable Custom Front Page"
+msgstr "Schakel aangepaste frontpagina in"
+
+#: core/includes/theme-options/theme-options.php
+msgid "Enable minified css?"
+msgstr "Activeer gecomprimeerde css?"
+
+#: core/includes/functions-sidebar.php
+msgid "Footer Widget"
+msgstr "Footer widget"
+
+#: core/includes/functions.php
+#: core/includes/functions.php
+msgid "Help"
+msgstr "Help"
+
+#. Author URI of the plugin/theme
+# INSTRUCTION: Author URI of the plugin/theme
+msgid "http://cyberchimps.com"
+msgstr "http://cyberchimps.com"
+
+#. Theme URI of the plugin/theme
+# INSTRUCTION: Theme URI of the plugin/theme
+msgid "http://cyberchimps.com/responsive-theme/"
+msgstr "http://cyberchimps.com/responsive-theme/"
+
+#: core/includes/functions.php
+msgid "Installing Plugin: %s"
+msgstr "Bezig met installeren plugin: %s"
+
+#: core/includes/functions.php
+#: core/includes/functions.php
+msgid "Instructions"
+msgstr "Instructies"
+
+#: core/includes/functions.php
+msgid "Activate installed plugin"
+msgid_plural "Activate installed plugins"
+msgstr[0] "Activeer geïnstalleerde plugin"
+msgstr[1] "Activeer geïnstalleerde plugins"
+
+#: core/includes/functions.php
+msgid "Begin installing plugin"
+msgid_plural "Begin installing plugins"
+msgstr[0] "Begin met het installeren van de plugin"
+msgstr[1] "Begin met het installeren van de plugins"
+
+#: comments.php
+msgid "One comment on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s comments on &ldquo;%2$s&rdquo;"
+msgstr[0] "Een reactie op &ldquo;%2$s&rdquo;"
+msgstr[1] "%1$s reacties op &ldquo;%2$s&rdquo;"
+
+#: core/includes/functions.php
+msgid "Sorry, but you do not have the correct permissions to activate the %s plugin. Contact the administrator of this site for help on getting the plugin activated."
+msgid_plural ""
+msgstr[0] "Sorry, maar u heeft niet de juiste machtigingen om de %s plugin te activeren. Gelieve contact op te nemen met de beheerder van deze site voor hulp met de activatie van de plugin."
+msgstr[1] "Sorry, maar u heeft niet de juiste machtigingen om deze %s plugins te activeren. Gelieve contact op te nemen met de beheerder van deze site voor hulp met de activatie van deze plugins."
+
+#: core/includes/functions.php
+msgid "Sorry, but you do not have the correct permissions to install the %s plugin. Contact the administrator of this site for help on getting the plugin installed."
+msgid_plural ""
+msgstr[0] "Sorry, maar u heeft niet de juiste machtigingen om de %s plugin te installeren. Gelieve contact op te nemen met de beheerder van deze site voor hulp met de installatie van de plugin. "
+msgstr[1] "Sorry, maar u heeft niet de juiste machtigingen om de %s plugins te installeren. Gelieve contact op te nemen met de beheerder van deze site voor hulp met de installatie van de plugins. "
+
+#: core/includes/functions.php
+msgid "Sorry, but you do not have the correct permissions to update the %s plugin. Contact the administrator of this site for help on getting the plugin updated."
+msgid_plural ""
+msgstr[0] "Sorry, maar u heeft niet de juiste machtigingen om de %s plugin te updaten. Neem contact op met de beheerder van deze site voor hulp met het updaten van de plugin."
+msgstr[1] "Sorry, maar u heeft niet de juiste machtigingen om de %s plugins te updaten. Neem contact op met de beheerder van deze site voor hulp met het updaten van de plugins."
+
+#: core/includes/functions.php
+msgid "The following plugin needs to be updated to its latest version to ensure maximum compatibility with this theme: %1$s."
+msgid_plural ""
+msgstr[0] "Volgende plugin moet geüpdatet worden naar de meest recente versie om een maximale compatibiliteit met dit thema te verzekeren: %1$s."
+msgstr[1] "Volgende plugins moeten geüpdatet worden naar hun meest recente versie om een maximale compatibiliteit met dit thema te verzekeren: %1$s."
+
+#: core/includes/functions.php
+msgid "The following recommended plugin is currently inactive: %1$s."
+msgid_plural "The following recommended plugins are currently inactive: %1$s."
+msgstr[0] "Volgende aanbevolen plugin is momenteel uitgeschakeld: %1$s."
+msgstr[1] "Volgende aanbevolen plugins zijn momenteel uitgeschakeld: %1$s."
+
+#: core/includes/functions.php
+msgid "The following required plugin is currently inactive: %1$s."
+msgid_plural "The following required plugins are currently inactive: %1$s."
+msgstr[0] "Volgende vereiste plugin is momenteel uitgeschakeld: %1$s."
+msgstr[1] "Volgende vereiste plugins zijn momenteel uitgeschakeld: %1$s."
+
+#: core/includes/functions.php
+msgid "This theme recommends the following plugin: %1$s."
+msgid_plural "This theme recommends the following plugins: %1$s."
+msgstr[0] "Dit thema raadt volgende plugin aan: %1$s."
+msgstr[1] "Dit thema raadt volgende plugins aan: %1$s."
+
+#: core/includes/functions.php
+msgid "This theme requires the following plugin: %1$s."
+msgid_plural "This theme requires the following plugins: %1$s."
+msgstr[0] "Dit thema heeft volgende plugin nodig: %1$s."
+msgstr[1] "Dit thema heeft volgende plugins nodig: %1$s."
+
+#: core/includes/theme-options/theme-options.php
+msgid "Overrides the WordPress %1sfront page option%2s"
+msgstr "Overschrijft de Wordpress %1sfrontpaginaoptie"
+
+#: core/includes/functions.php
+msgid "Plugin activated successfully."
+msgstr "Plugin met succes geactiveerd."
+
+#. Theme Name of the plugin/theme
+# INSTRUCTION: Theme Name of the plugin/theme
+msgid "Responsive"
+msgstr "Responsive"
+
+#: core/includes/functions.php
+msgid "Responsive Add Features"
+msgstr "Responsive functies toevoegen"
+
+#. Description of the plugin/theme
+# INSTRUCTION: Description of the plugin/theme
+msgid "Responsive Theme is a flexible foundation with fluid grid system that adapts your website to mobile devices and the desktop or any other viewing environment. Theme features 9 Page Templates, 11 Widget Areas, 6 Template Layouts, 4 Menu Positions and more. Powerful but simple Theme Options for full CMS control with easy Logo Upload, Social Networking and Webmaster Tools etc. Responsive is WooCommerce Compatible, Multilingual Ready (WPML), RTL-Language Support, Retina-Ready, Search Engine Friendly, W3C Markup Validated and currently translated into 45 languages. Cross-Browser compatible. <a href=\"http://cyberchimps.com/forum/free/responsive/\">Official support forum</a> (http://cyberchimps.com/forum/free/responsive/)"
+msgstr "Het Responsive thema is een flexibele basis met een veerkrachtig rastersysteem dat de weergave van uw website aanpast aan elk platform (Desktop, tablet, smartphone, enz.). Het thema heeft 9 paginasjablonen, 11 widget-gebieden, 6 sjabloonlayouts, 4 menuposities en meer. Krachtige maar eenvoudige themaopties voor volledige CMS-controle met eenvoudige logo-upload, hulpmiddelen voor sociale netwerken en webmasters enz. Responsive is compatibel met WooCommerce, meertalig (WPML), ondersteuning voor talen die van rechts naar links (RTL) worden geschreven, Retina-klaar, zoekmachinevriendelijk, validatie van W3C opmaak en momenteel vertaald naar 45 talen. Cross-browser compatibel.  <a href=\"http://cyberchimps.com/forum/free/responsive/\">Officieel ondersteuningsforum</a> (http://cyberchimps.com/forum/free/responsive/)"
+
+#: core/includes/functions.php
+msgid "Return to Required Plugins Installer"
+msgstr "Terug naar vereist installatieprogramma voor plugins"
+
+#: core/includes/theme-options/theme-options.php
+msgid "Scripts"
+msgstr "Scripts"
+
+#: searchform.php
+msgid "Search for:"
+msgstr "Zoeken naar:"
+
+#: core/includes/functions.php
+msgid "Something went wrong with the plugin API."
+msgstr "Er ging iets mis met de plugin API."
+
+#: core/includes/functions-update.php
+#. Translators: This is a big update. Please read the blog post beforeupdating.
+# INSTRUCTION: Translators: This is a big update. Please read the blog post beforeupdating.
+msgid "<strong>WARNING:</strong> There is a big <strong>Responsive Theme</strong> update available. Please read the %1$s before updating."
+msgstr "<strong>OPGELET:</strong> Er is een belangrijke <strong>Responsive Theme</strong> update beschikbaar. Gelieve eerst de %1$s na te lezen alvorens te updaten."
+
+#: core/includes/functions.php
+msgid "The Custom Front Page is disabled. You can enable it in the <a href=\"%1$s\">theme settings</a>."
+msgstr "De aangepaste frontpagina is uitgeschakeld. U kunt deze inschakelen in de <a href=\"%1$s\"> thema-instellingen</a>."
+
+#: core/includes/functions.php
+msgid "The Custom Front Page is enabled. You can disable it in the <a href=\"%1$s\">theme settings</a>."
+msgstr "De aangepaste frontpagina is ingeschakeld. U kunt deze uitschakelen in de <a href=\"%1$s\"> thema-instellingen</a>."
+
+msgid "Themes You Can Trust"
+msgstr "Thema's waarop u kunt vertrouwen"
+
+msgid "Title Text"
+msgstr "Titel tekst"
+
+#: core/includes/functions.php
+#: core/includes/functions.php
+msgid "Translate"
+msgstr "Vertaal"
+
+#: core/includes/classes/Responsive_Options.php
+msgid "Upgrade"
+msgstr "Upgrade"
+
+#: core/includes/functions.php
+msgid "Welcome to %1$s! Upgrade to %2$s today."
+msgstr "Welkom bij %1$s! Upgrade vandaag nog naar %2$s."

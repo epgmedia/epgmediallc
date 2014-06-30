@@ -1,16 +1,18 @@
 <?php
 
 // Exit if accessed directly
-if ( !defined('ABSPATH')) exit;
+if( !defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Error 404 Template
  *
  *
  * @file           404.php
- * @package        Responsive 
- * @author         Emil Uzelac 
- * @copyright      2003 - 2013 ThemeID
+ * @package        Responsive
+ * @author         Emil Uzelac
+ * @copyright      2003 - 2014 CyberChimps
  * @license        license.txt
  * @version        Release: 1.0
  * @filesource     wp-content/themes/responsive/404.php
@@ -20,22 +22,24 @@ if ( !defined('ABSPATH')) exit;
 ?>
 <?php get_header(); ?>
 
-        <div id="content-full" class="grid col-940">
-        
-			<?php responsive_entry_before(); ?>
-			<div id="post-0" class="error404">       
-				<?php responsive_entry_top(); ?>
+<div id="content-full" class="grid col-940">
 
-                <div class="post-entry">
-                
-                    <?php get_template_part( 'loop-no-posts' ); ?>
-                    
-                </div><!-- end of .post-entry -->
-				               
-				<?php responsive_entry_bottom(); ?>      
-			</div><!-- end of #post-0 -->       
-			<?php responsive_entry_after(); ?>
+	<?php responsive_entry_before(); ?>
+	<div id="post-0" class="error404">
+		<?php responsive_entry_top(); ?>
 
-        </div><!-- end of #content-full -->
+		<div class="post-entry">
+
+			<?php get_template_part( 'loop-no-posts' ); ?>
+
+		</div>
+		<!-- end of .post-entry -->
+
+		<?php responsive_entry_bottom(); ?>
+	</div>
+	<!-- end of #post-0 -->
+	<?php responsive_entry_after(); ?>
+
+</div><!-- end of #content-full -->
 
 <?php get_footer(); ?>

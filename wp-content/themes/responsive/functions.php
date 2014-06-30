@@ -1,7 +1,9 @@
 <?php
 
 // Exit if accessed directly
-if ( !defined('ABSPATH')) exit;
+if( !defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  *
@@ -9,26 +11,28 @@ if ( !defined('ABSPATH')) exit;
  *
  * load the theme function files
  */
-require ( get_template_directory() . '/includes/functions.php' );
-require ( get_template_directory() . '/includes/theme-options.php' );
-require ( get_template_directory() . '/includes/post-custom-meta.php' );
-require ( get_template_directory() . '/includes/tha-theme-hooks.php' );
-require ( get_template_directory() . '/includes/hooks.php' );
-require ( get_template_directory() . '/includes/version.php' );
-require ( get_template_directory() . '/templates/epg-functions.php' );
 
+$template_directory = get_template_directory();
 
-function epg_form_styles() {
-    wp_enqueue_style('epg-forms', get_template_directory_uri() . '/includes/timeoff.css');
-    wp_enqueue_script('float-labels', get_template_directory_uri() . '/js/floatlabels.min.js', array("jquery"));
-    wp_enqueue_script('it-request', get_template_directory_uri() . '/js/it-request.js', array("jquery", "float-labels"));
-    wp_enqueue_script('html5-shiv', "//html5shiv.googlecode.com/svn/trunk/html5.js", array("jquery", "it-request"));
+require( $template_directory . '/core/includes/functions.php' );
+require( $template_directory . '/core/includes/functions-update.php' );
+require( $template_directory . '/core/includes/functions-sidebar.php' );
+require( $template_directory . '/core/includes/functions-install.php' );
+require( $template_directory . '/core/includes/theme-options/theme-options.php' );
+require( $template_directory . '/core/includes/post-custom-meta.php' );
+require( $template_directory . '/core/includes/tha-theme-hooks.php' );
+require( $template_directory . '/core/includes/hooks.php' );
+require( $template_directory . '/core/includes/version.php' );
+require( $template_directory . '/core/includes/upsell/theme-upsell.php' );
+
+// Return value of the supplied responsive free theme option.
+function responsive_free_get_option( $option, $default = false ) {
+	global $responsive_options;
+
+	// If the option is set then return it's value, otherwise return false.
+	if( isset( $responsive_options[$option] ) ) {
+		return $responsive_options[$option];
+	}
+
+	return $default;
 }
-add_action('wp_enqueue_scripts', 'epg_form_styles');
-
-function change_job_listing_slug( $args ) {
-	$args['rewrite']['slug'] = _x( 'careers', 'Job permalink - resave permalinks after changing this', 'job_manager' );
-	return $args;
-}
-
-add_filter( 'register_post_type_job_listing', 'change_job_listing_slug' );

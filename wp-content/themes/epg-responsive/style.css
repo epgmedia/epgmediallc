@@ -1,0 +1,16 @@
+@charset "UTF-8";
+/*
+ Theme Name:   EPG Media Responsive
+ Theme URI:    http://www.epgmediallc.com/
+ Description:  "Responsive" Child Theme
+ Author:       Chris Gerber
+ Author URI:   http://www.chriswgerber.com/
+ Template:     responsive
+ Version:      1.0.0
+ Text Domain:  epg-responsive
+*/
+
+@import url("../responsive/style.css");
+
+/* =Theme customization starts here
+-------------------------------------------------------------- */

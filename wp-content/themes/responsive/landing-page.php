@@ -1,17 +1,19 @@
 <?php
 
 // Exit if accessed directly
-if ( !defined('ABSPATH')) exit;
+if( !defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Landing Page Template
  *
-   Template Name:  Landing Page (no menu)
+Template Name:  Landing Page (no menu)
  *
  * @file           landing-page.php
- * @package        Responsive 
- * @author         Emil Uzelac 
- * @copyright      2003 - 2011 ThemeID
+ * @package        Responsive
+ * @author         Emil Uzelac
+ * @copyright      2003 - 2014 CyberChimps
  * @license        license.txt
  * @version        Release: 1.0
  * @filesource     wp-content/themes/responsive/landing-page.php
@@ -22,40 +24,41 @@ if ( !defined('ABSPATH')) exit;
 get_header(); ?>
 
 <div id="content-full" class="grid col-940">
-        
-	<?php if (have_posts()) : ?>
 
-		<?php while (have_posts()) : the_post(); ?>
-        
+	<?php if( have_posts() ) : ?>
+
+		<?php while( have_posts() ) : the_post(); ?>
+
 			<?php responsive_entry_before(); ?>
-			<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>       
+			<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 				<?php responsive_entry_top(); ?>
 
-                <h1 class="post-title"><?php the_title(); ?></h1> 
-                
-                <div class="post-entry">
-                    <?php the_content(__('Read more &#8250;', 'responsive')); ?>
-                    <?php wp_link_pages(array('before' => '<div class="pagination">' . __('Pages:', 'responsive'), 'after' => '</div>')); ?>
-                </div><!-- end of .post-entry -->
-            
+				<h1 class="post-title"><?php the_title(); ?></h1>
+
+				<div class="post-entry">
+					<?php the_content( __( 'Read more &#8250;', 'responsive' ) ); ?>
+					<?php wp_link_pages( array( 'before' => '<div class="pagination">' . __( 'Pages:', 'responsive' ), 'after' => '</div>' ) ); ?>
+				</div>
+				<!-- end of .post-entry -->
+
 				<?php get_template_part( 'post-data' ); ?>
-				               
-				<?php responsive_entry_bottom(); ?>      
-			</div><!-- end of #post-<?php the_ID(); ?> -->       
+
+				<?php responsive_entry_bottom(); ?>
+			</div><!-- end of #post-<?php the_ID(); ?> -->
 			<?php responsive_entry_after(); ?>
-                        
-        <?php 
-		endwhile; 
 
-		get_template_part( 'loop-nav' ); 
+		<?php
+		endwhile;
 
-	else : 
+		get_template_part( 'loop-nav' );
 
-		get_template_part( 'loop-no-posts' ); 
+	else :
 
-	endif; 
-	?>  
-      
+		get_template_part( 'loop-no-posts' );
+
+	endif;
+	?>
+
 </div><!-- end of #content-full -->
 
 <?php get_footer(); ?>
