@@ -63,7 +63,7 @@ if ( isset( $_POST['shortReasonItem'] ) ) {
 $mail->Subject = $short_reason;
 
 /** Email Content */
-$email_body = get_include_contents( get_template_directory() . '/templates/it-request-message.php' );
+$email_body = get_include_contents( get_stylesheet_directory() . '/templates/it-request-message.php' );
 $mail->msgHTML( $email_body );
 
 /** Image Attachments */

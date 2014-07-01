@@ -56,7 +56,7 @@ if(!$mail->Send()) {
 } else {
 	/** Second message to send for further communication */
 	$user_mail = new epg_phpmailer();
-	$user_mail->IsHTML();
+	$user_mail->IsHTML(TRUE);
 	$user_mail->IsSMTP();
 	$user_mail->setFrom( $email , $employee );
 	$email_addresses = array(

@@ -44,7 +44,7 @@ $mail->Subject = 'SCHEDULED AND UNSCHEDULED TIME OFF REQUEST FORM';
 
 /** Email Content */
 $email_body = get_include_contents(
-    get_template_directory() . '/templates/time-off-message.php'
+    get_stylesheet_directory() . '/templates/time-off-message.php'
 );
 $mail->msgHTML($email_body);
 
