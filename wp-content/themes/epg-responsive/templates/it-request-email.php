@@ -37,12 +37,17 @@ $email_addresses = array(
 	),
     array(
 		'kind' => 'cc',
+		'address' => $_POST['supervisor']
+	),
+	array(
+		'kind' => 'cc',
 		'address' => 'jprusak@snowgoer.com',
 		'name' => 'John Prusak'
 	),
-    array(
+	array(
 		'kind' => 'cc',
-		'address' => $_POST['supervisor']
+		'address' => 'mminor@specialtyim.com',
+		'name' =>  'Marion Minor'
 	),
     array(
 		'kind' => 'bcc',

@@ -43,7 +43,6 @@ if ( !defined('ABSPATH')) exit;
 					<option value="aesham@specialtyim.com">Andrew Esham</option>
 					<option value="dmcmahon@powersportsbusiness.com">Dave McMahon</option>
 					<option value="mminor@specialtyim.com">Marion Minor</option>
-					<option value="jpatterson@epgmediallc.com">Jeff Patterson</option>
 					<option value="cperschmann@epgmediallc.com">Cherri Perschmann</option>
 					<option value="jjuda@specialtyim.com">Joanne Juda-Prainito</option>
 					<option value="jprusak@snowgoer.com">John Prusak</option>
@@ -51,6 +50,7 @@ if ( !defined('ABSPATH')) exit;
 					<option value="aschmieg@epgmediallc.com">Angela Schmieg</option>
 					<option value="jsweet@boatingindustry.com">Jonathan Sweet</option>
 					<option value="mtuttle@ridermagazine.com">Mark Tuttle</option>
+					<option value="dvoll@epgmediallc.com">Dave Voll</option>
 					<option value="bwohlman@epgmediallc.com">Bernadette Wohlman</option>
 				</select>
 			</div>

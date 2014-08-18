@@ -29,7 +29,6 @@ if ( !defined('ABSPATH')) exit;
 					<option value="aesham@specialtyim.com">Andrew Esham</option>
 					<option value="dmcmahon@powersportsbusiness.com">Dave McMahon</option>
 					<option value="mminor@specialtyim.com">Marion Minor</option>
-					<option value="jpatterson@epgmediallc.com">Jeff Patterson</option>
 					<option value="cperschmann@epgmediallc.com">Cherri Perschmann</option>
 					<option value="jjuda@specialtyim.com">Joanne Juda-Prainito</option>
 					<option value="jprusak@snowgoer.com">John Prusak</option>
