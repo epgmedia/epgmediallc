@@ -1,8 +1,8 @@
 <?php
 
-    /*
-     * Template Name: Background-Wallpaper Example
-     */
+/*
+ * Template Name: Background-Wallpaper Example
+ */
 
 ?>
 <!DOCTYPE html>
