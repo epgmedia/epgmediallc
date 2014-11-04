@@ -206,7 +206,6 @@ sub {
 .col-700,
 .col-780,
 .col-860 {
-	display: inline;
 	margin-right: 2.127659574468%;
 }
 
@@ -1371,7 +1370,7 @@ ul.menu > li:hover {
 /* =Primary Main Menu IE Fixes
 -------------------------------------------------------------- */
 .ie7 .menu ul {
-	background: url(core/images/ie7-fix.gif) repeat;
+	background: url(../../core/images/ie7-fix.gif) repeat;
 }
 
 .ie7 .menu li li a {
@@ -1514,6 +1513,7 @@ ul.menu > li:hover {
 	line-height: 20px;
 	padding: 5px 10px;
 	text-shadow: none;
+	white-space: nowrap;
 }
 
 .sub-header-menu li li a:hover {
@@ -1548,7 +1548,7 @@ ul.menu > li:hover {
 /* =Sub Header Menu IE Fixes
 -------------------------------------------------------------- */
 .ie7 .sub-header-menu ul {
-	background: url(core/images/ie7-fix.gif) repeat;
+	background: url(../../core/images/ie7-fix.gif) repeat;
 }
 
 .ie7 .sub-header-menu li li a {

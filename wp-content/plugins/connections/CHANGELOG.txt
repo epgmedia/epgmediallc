@@ -1,24 +1,172 @@
 == Changelog ==
 
+= 8.1.5 10/16/2014 =
+* FEATURE: Add cnFormatting::excerpt().
+* BUG: Fix the use of UTF8 Cyrillic entry slugs throughout. Addresses issue where URL encoded folder names would be created for the images uploaded to an entry.
+* BUG: The output of get_query_var( 'cn-s' ) does not need to be urldecode().
+* BUG: Check for empty search terms array after shortwords are removed to prevent invalid db queries.
+* BUG: Reset the $like array var to ensure valid queries when performing a keyword search.
+* TWEAK: Use cnFormatting::excerpt() to create the entry bio for improved excerpt creation form several of the premium templates.
+* TWEAK: Add support autocomplete in cnHTML::input().
+* OTHER: Remove whitespace.
+* OTHER: Add .editorconfig.
+
+= 8.1.4 10/08/2014 =
+* BUG: Ensure image is not a WP_Error before trying to access its process log.
+* BUG: Fix error report when creating entry images. Was not calling correct object.
+* BUG: Ensure no double slash in paths when uploading an image.
+* BUG: Make cnEntry_Action::deleteImages() is PHP <= 5.2 compatible.
+* BUG: Ensure neither $filename or $source are empty in cnEntry_Action::deleteImages().
+* BUG: Fix undefined index notices when processing new images.
+* BUG: Fix the "Resize to fit the specified dimensions (no cropping)." image option.
+* BUG: Fix unclosed `br` tag in error message triggered when adding images to entries.
+* BUG: Fix missing %separator% token in replacement string for getLinkBlock() and getContactNameBlock().
+* BUG: Run setTermRelationships() thru $wpdb->prepare().
+* BUG: Fix version in changelog and readme.
+* TWEAK: Add `tag` option to getTitleBlock();.
+
+= 8.1.3 10/01/2014 =
+* BUG: Add `style` that should not be added to the img tag attributes.
+* BUG: Update cnLog to be compatible with change made in WP_Error in WP 4.0 when WP_DEBUG is not defined or FALSE.
+* BUG: Fixed undefined index error.
+* TWEAK: Refactor and add filters to cnRetrieve::search().
+* TWEAK: Move the image style from the span to the img.
+* TWEAK: Change `cn-list-actions` from id to class.
+* TWEAK: Update image_path_exists_failed and image_path_writeable_failed error messages.
+* OTHER: Prevent themes from setting spans as blocks within Connections HTML markup.
+* OTHER: Add the `cn_list_body_class` filter.
+* OTHER: Add the `cn_list_row_class` filter.
+* OTHER: Add `limit` support when querying phone numbers.
+* OTHER: Add `limit` support when querying email addresses.
+* OTHER: Temporarily disable the HiDPI image in srcset.
+* OTHER: Add experimental code (disabled) to speedup cnImage when called thru a URL query.
+* I18N: Update POT file.
+
+= 8.1.2 09/16/2014 =
+* BUG: Fix responsive image CSS bug.
+* BUG: Fix infinite loop bug when uploading images in a WP multi site installation.
+* TWEAK: Check for isDot() before calling. PHP5.2/5.3 compatibility.
+* TWEAK: Change custom template path for multi site back to `blogs.dir`.
+* TWEAK: Re-enable attemting to make writable CN_IMAGE_PATH in the upgrade.php file.
+* TWEAK: Add cnImage::info().
+* TWEAK: Update cnImage::get() to use cnImage::info().
+* TWEAK: Fix crop_focus sanitation in cnImage::get().
+* TWEAK: Add filter cn_get_image_atts.
+* TWEAK: Add action cn_image_get.
+* I18N: Update Turkish (Turkey) translation.
+
+= 8.1.1 09/09/2014 =
+* BUG: Fix responsive image support for IE8.
+* BUG: Fix issue where uploads of PNG file variations would save as JPG instead of PNG.
+* BUG: In multisite the upload subdir s/b sites not blogs.dir.
+* BUG: Set the image stream quality if one was not defined in the image query string.
+* BUG: Take into account default permalink setting when creating the image query string.
+* BUG: Ensure no duplicate meta title and meta desc on internal pages when using WPSEO.
+* TWEAK: Refactor code to use CN_IMAGE_PATH and CN_IMAGE_BASE_URL to support CN_MULTISITE_ENABLED.
+* TWEAK: Add support for registering a content block for list or entry only.
+* TWEAK: Update cnLog to be compatible with changes made in WP_Error in WP 4.0.
+* TWEAK: Escape text in a couple anonymous functions to prevent translations from throwing PHP errors.
+* TWEAK: Force new image uploads to have lowercase file extension. Add support for existing filenames with uppercase file extensions.
+* TWEAK: Increase execusion time and memory limit when processing images.
+* TWEAK: Remove use of SKIP_DOTS for PHP < 5.3 compatibility.
+* TWEAK: Support the uploading of GIF/s.
+* TWEAK: Add info() the the cnUpload class to get Connections related upload paths.
+* TWEAK: Use cnUpload::info() to define image upload paths.
+* TWEAK: Disable the admin image check because it somehow prevented access to the plugins/updates.
+* OTHER: Add Spain regions to cnGEO.
+* OTHER: Add error message for when $img_path is not set.
+* I18N: Update POT file.
+
+= 8.1 09/02/2014 =
+* FEATURE: Photo and logo images are now responsive.
+* FEATURE: Photo and logo images support HiDPI (Retina) devices.
+* FEATURE: Improve search results for relevancy and shortword search support.
+* FEATURE: Add new shortcode [cn_thumb].
+* FEATURE: Add new shortcode [cn_thumbr].
+* FEATURE: Add new image crop method, fit.
+* FEATURE: Add SmugMug to social network options.
+* FEATURE: Register TimThumb compatible query vars and add the CN_IMAGE_ENDPOINT root rewrite endpoint.
+* BUG: Fix gettext domain for "Name".
+* BUG: Make sure the visibility options are translation ready.
+* BUG: Fix invalid HTML markup. Remove p tag from within a span element in the no image block.
+* BUG: Fix vCard importing on OSX.
+* BUG: Fix bug that would cause entry meta to be lost during an entry update.
+* BUG: Fix cnSanitize::string() color callback method name.
+* BUG: Ensure valid custom metabox before displaying.
+* BUG: Make country code for Maldives uppercase.
+* TWEAK: Remove stop words from search.
+* TWEAK: Only run keyword search when FULLTEXT search is enabled if no results were returned from the FULLTEXT search.
+* TWEAK: Improve exclude_category exclusion.
+* TWEAK: Allow changing of entry type when copying and editing an entry.
+* TWEAK: Complete refactor of the admin js file.
+* TWEAK: Update frontend pagination links to use paginate_links().
+* TWEAK: Update CSS to support the pagination markup output by paginate_links().
+* TWEAK: Move the category separator within the category span.
+* TWEAK: Change span around entry name in core templates to div.
+* TWEAK: Add jquery-validate as a script dependency for cn-ui-admin.
+* TWEAK: Add support for the id attribute on the form tag.
+* TWEAK: Add id attribute to the add/edit entry form.
+* TWEAK: Cache category select, category checklist and family relations.
+* TWEAK: Use actual year in vCard instead of upcoming year for anniversary and birthday dates.
+* TWEAK: Update the posts dates to reflect the entry currently being viewed.
+* TWEAK: Add another CSS style for Chosen so theme's do not break it.
+* TWEAK: Add "Edit Entry" action link to the admin bar.
+* TWEAK: Set the visibility options only if a user is logged in.
+* TWEAK: Remove unnecessary manage form actions for metaboxes.
+* TWEAK: Remove inline styles from images.
+* TWEAK: Update image settings with better descriptions.
+* OTHER: Added methods to cnSanitize to sanitize a hex color with/without a hash.
+* OTHER: Add error message warning if GD or Imagick is not installed.
+* OTHER: Move class.filesystem.php in folder structure.
+* OTHER: Register and enqueue Picturefill.
+* OTHER: Add the CN_IMAGE_DIR_NAME constant.
+* OTHER: Add the CN_IMAGE_ENDPOINT constant.
+* OTHER: Introduce cnUpload.
+* OTHER: Introduce cnImage.
+* OTHER: Introduce cnLog.
+* OTHER: Introduce cnColor.
+* OTHER: Introduce cnCache.
+* OTHER: Introduce cnFragment.
+* OTHER: Introduce cnString.
+* OTHER: Add maybeHashHEXColor().
+* OTHER: Add remapRange().
+* OTHER: Add xrmdir().
+* OTHER: Add several helper methods in cnEntry to handle image metadata.
+* OTHER: Eliminate the use of Timthumb and class.upload.php from core.
+* OTHER: Move class.upload.php to the vendor sub-folder.
+* OTHER: Delete class.upload.php lang files. Not needed.
+* OTHER: Remove double spaces and trim the result of getName().
+* OTHER: Remove the use of the cn_preloader.
+* OTHER: Various checks to deal with empty entry slugs.
+* OTHER: Add filter so pagination atts can be changed.
+* OTHER: Update the installation instructions in the readme.txt file.
+* OTHER: Add screenshots to the readme.txt file.
+* OTHER: Remove deprecated image option methods.
+* OTHER: Add color picker support to the metabox api.
+* OTHER: Add filters to allow the addition of new metadata options.
+* I18N: Updated Danish translation.
+* I18N: Updated French (France).
+* I18N: Update connections.pot file to include new strings.
+
 = 0.8.14 07/21/2014 =
-FEATURE: Improve responsive readiness of the Dashboard and Manage admin pages.
-BUG: Rename the base for of the Single Entry Card template.
-BUG: Fix HTML syntax for text areas.
-BUG: Fix permalink encoding issue.
-BUG: Fix Dashboard column toggle.
-BUG: Fix the Screen Options tab display and functions.
-BUG: Escape the template file path before including it.
-TWEAK: Remove section head relative positioning.
-TWEAK: Improve Visibility CSS in metabox header.
-OTHER: Update TimThumb to 2.8.14.
-I18N: Update German (Germany) translation.
+* FEATURE: Improve responsive readiness of the Dashboard and Manage admin pages.
+* BUG: Rename the base for of the Single Entry Card template.
+* BUG: Fix HTML syntax for text areas.
+* BUG: Fix permalink encoding issue.
+* BUG: Fix Dashboard column toggle.
+* BUG: Fix the Screen Options tab display and functions.
+* BUG: Escape the template file path before including it.
+* TWEAK: Remove section head relative positioning.
+* TWEAK: Improve Visibility CSS in metabox header.
+* OTHER: Update TimThumb to 2.8.14.
+* I18N: Update German (Germany) translation.
 
 = 0.8.13 06/20/2014 =
-BUG: Fix logic that determines if cnEntry_Shortcode should process $content for the `cn_entry` shortcode.
-BUG: Fix cnFormatting::toBoolean(). Check if value is bool and return it if it is. Otherwise convert value to bool.
-TWEAK: Add submit, textarea & hidden to cnHTML.
-TWEAK: Re-order before/after list/entry action hooks to be more consistent.
-OTHER: Update EDD_SL_Plugin_Updater to version 1.2.
+* BUG: Fix logic that determines if cnEntry_Shortcode should process $content for the `cn_entry` shortcode.
+* BUG: Fix cnFormatting::toBoolean(). Check if value is bool and return it if it is. Otherwise convert value to bool.
+* TWEAK: Add submit, textarea & hidden to cnHTML.
+* TWEAK: Re-order before/after list/entry action hooks to be more consistent.
+* OTHER: Update EDD_SL_Plugin_Updater to version 1.2.
 
 = 0.8.12 06/13/2014 =
 * FEATURE: Add Goodreads to social media options.

@@ -3,8 +3,8 @@ Contributors: shazahm1@hotmail.com
 Donate link: http://connections-pro.com/
 Tags: addresses, address book, addressbook, bio, bios, biographies, business, businesses, business directory, business-directory, business directory plugin, directory widget, church, contact, contacts, connect, connections, directory, directories, hcalendar, hcard, ical, icalendar, image, images, list, lists, listings, member directory, members directory, members directories, microformat, microformats, page, pages, people, profile, profiles, post, posts, plugin, shortcode, staff, user, users, vcard, wordpress business directory, wordpress directory, wordpress directory plugin, wordpress business directory, wordpress local directory plugin
 Requires at least: 3.8
-Tested up to: 3.9
-Stable tag: 0.8.14
+Tested up to: 4.0
+Stable tag: 8.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,9 +17,10 @@ Connections Business Directory is a simple to use directory plugin which can be 
 Quite simply, Connections Business Directory is the best directory plugin available for WordPress. Its simplicity in design and function, vast array of unique features and versatility are the reasons more and more people are turning to Connections for their directory needs. You can use Connections to create a simple address book, maintain a staff directory and run a business directory or link directory. Connections was built bottom up to be as configurable as possible while providing the features you need. Read on to learn about some of the best features Connections has to offer...
 
 = Features =
+* Both the photo and logo images are fuly responsive with HiDPI (Retina) display support.
 * Seamless integration with the WordPress.
-* A Dashboard admin page where you can keep up to date with Connections related news, such as updates notices for Ttemplates](http://connections-pro.com/templates/) and the [Extensions](http://connections-pro.com/extensions/). Also see at a glance today's anniversaries and birthdays as well as any upcoming anniversaries and birthdays.
-* When inputting an entry there are multiple entry types from which to choose. They are individual, organization and family. The family entry type is unique to Connections. This entry type allows you to group individuals together as a family which makes Connections ideally suited for creating church directories.
+* A Dashboard admin page where you can keep up to date with Connections related news, such as updates notices for [templates](http://connections-pro.com/templates/) and the [Extensions](http://connections-pro.com/extensions/). Also see at a glance today's anniversaries and birthdays as well as any upcoming anniversaries and birthdays.
+* When adding an entry there are multiple entry types from which to choose. They are individual, organization and family. The family entry type is unique to Connections. This entry type allows you to group individuals together as a family which makes Connections ideally suited for creating church directories.
 * You control which entries are viewable to the public and which entries are private, viewable for logged in users only. You can even have entries set as unlisted so only admins can view them.
 * Fields, fields and more fields... no other directory plugin offers more. There are fields for addresses, phone numbers, email addresses, IM, social networks, an image, a logo, bio, notes and more. Want more? Many fields, such as addresses and phone numbers, you can assign as many as you need. Wait, I'm not done yet... want to be able to list the business phone but keep that cell phone number private? You can do that, too. Most of the fields have selectable visibility. What this means is you can have an entry set as public but keep personal details private or even unlisted so only them admin can view it.
 * Connections is being used to manage directories which contain tens of thousands of entries so the ability to manage them easily is a must- a task which Connections stands and delivers. You can filter the entries list by category, entry type and visibility. You can search for entries. You can even search within the filtered entries. Of course Connections doesn't stop there, there are several bulk actions available to make changes a breeze.
@@ -31,40 +32,57 @@ Quite simply, Connections Business Directory is the best directory plugin availa
 
 = Extensible =
 
-Connections Business directory provides a vast array of hooks and filters so it can be easily extended. It has a very flexible template engine which allows for loading of [custom CSS](http://connections-pro.com/2014/05/07/quicktip-custom-css-templates/) files that are update safe. The loading of template files and CSS are even context aware. This means your developer could create templates that load when a user visits a specific entry, category, postal code and more.
-
 Here are other great free extensions (with more on the way) that enhance your expirence with the Connections Business Directory:
 
-* [Business Hours](http://wordpress.org/plugins/connections-business-directory-hours/)
+Utility
+
 * [Toolbar](http://wordpress.org/plugins/connections-toolbar/)
+* [Login](http://wordpress.org/plugins/connections-business-directory-login/)
+
+Custom Fields
+
+* [Business Hours](http://wordpress.org/plugins/connections-business-directory-hours/)
 * [Income Level](http://wordpress.org/plugins/connections-business-directory-income-levels/)
 * [Education Level](http://wordpress.org/plugins/connections-business-directory-education-levels/)
+* [Languages](http://wordpress.org/plugins/connections-business-directory-languages/)
 
-In addition to the free extensions Connections Business Directory also features a growing library of [premium extensions](http://connections-pro.com/extensions/).
+In addition to these free extensions Connections Business Directory also features a growing library of [premium extensions](http://connections-pro.com/extensions/).
+
+= Developer Friendly =
+
+Connections Business Directory provides a vast array of hooks and filters so it can be easily extended.
+
+The directory has a very flexible template engine. The loading of template and CSS are context aware. This means your developer could create specific templates that load when a user visits a specific entry, category, postal code and more.
+
+Templates and CSS overridding is very granualar and update safe. Check out these links for the details:
+
+* [Custom Core CSS](http://connections-pro.com/2014/05/04/quicktip-custom-css/)
+* [Custom CSS for Templates](http://connections-pro.com/2014/05/07/quicktip-custom-css-templates/)
+* [Custom Template Override File](http://connections-pro.com/2014/06/04/quicktip-custom-template-override-files/)
 
 = Languages =
 
 Connections Business Directory has been embraced around the world and has been translated in the following languages.
 
-* Catalan [86% Complete]
-* Danish [37% Complete]
-* Danish (Denmark) [45% Complete]
-* Dutch (Netherlands) [80% Complete]
-* French (France) [86% Complete]
-* German (Germany) [75% Complete]
-* Hebrew (Israel) [100% Complete]
-* Hungarian (Hungry) [85% Complete]
-* Italian (Italy) [50% Complete]
-* Norwegian [20% Complete]
-* Persian (Iran) [85% Complete]
-* Polish (Poland) [86% Complete]
-* Portugese (Brazil) [77% Complete]
-* Portugese (Portugal) [39% Complete]
-* Russian (Russia) [42% Complete]
+* Catalan [79% Complete]
+* Danish [48% Complete]
+* Danish (Denmark) [41% Complete]
+* Dutch (Netherlands) [73% Complete]
+* French (France) [88% Complete]
+* German (Germany) [68% Complete]
+* Hebrew (Israel) [91% Complete]
+* Hungarian (Hungry) [78% Complete]
+* Italian (Italy) [46% Complete]
+* Norwegian [19% Complete]
+* Persian (Iran) [78% Complete]
+* Polish (Poland) [79% Complete]
+* Portugese (Brazil) [70% Complete]
+* Portugese (Portugal) [35% Complete]
+* Russian (Russia) [39% Complete]
 * Serbian (Latin) [4% Complete]
-* Spanish (Latin America) [81% Complete]
-* Spanish (Spain) [86% Complete]
-* Turkish (Turkey) [85% Complete]
+* Spanish (Latin America) [74% Complete]
+* Spanish (Spain) [79% Complete]
+* Turkish (Turkey) [86% Complete]
 
 == Credits: ==
 * This plugin was based off LBB, ["Little Black Book"](http://wordpress.org/extend/plugins/lbb-little-black-book/); which was based on [Addressbook](http://wordpress.org/extend/plugins/addressbook/), both of which can be found in the Plugin Directory.
@@ -87,42 +105,225 @@ Connections Business Directory has been embraced around the world and has been t
 * CSS theme and image used for the jQuery UI Datepicker by [helenhousandi](https://github.com/helenhousandi/wp-admin-jquery-ui).
 
 == Screenshots ==
-[Screenshots can be found here.](http://connections-pro.com/screenshots/)
+
+1. The Dashboard admin page. A snapshot of important infomation about the directory.
+2. The Manage admin page. Here you can manage all the entries within the address book.
+3. The Add New Entry admin page. From here you can add new entries to the addressbook.
+4. The Categories admin page. Add as many categories as you wish to the directory. Categories do support parent/child relationships.
+5. The Templates admin page. Here you choose which template that the business directory should use when displaying the directory.
+6. The Settings admin page where you can configure the business directory options.
+7. The Role and Capabilities admin page. Here you can assign which roles have which capabilities in viewing and managing the directory.
 
 [Connections running on live websites can be found here.](http://connections-pro.com/live-samples/)
 
 == Installation ==
+
 [Installation instructions can be found here.](http://connections-pro.com/documentation/plugin/install/)
 
+= Using the WordPress Plugin Search =
+
+1. Navigate to the `Add New` sub-page under the Plugins admin page.
+2. Search for `connections business directory`.
+3. The plugin should be listed first in the search results.
+4. Click the `Install Now` link.
+5. Lastly click the `Activate Plugin` link to activate the plugin.
+
+= Uploading in WordPress Admin =
+
+1. [Download the plugin zip file](http://wordpress.org/plugins/connections/) and save it to your computer.
+2. Navigate to the `Add New` sub-page under the Plugins admin page.
+3. Click the `Upload` link.
+4. Select Connections Business Directory zip file from where you saved the zip file on your computer.
+5. Click the `Install Now` button.
+6. Lastly click the `Activate Plugin` link to activate the plugin.
+
+= Using FTP =
+
+1. [Download the plugin zip file](http://wordpress.org/plugins/connections/) and save it to your computer.
+2. Extract the Connections Business Directory zip file.
+3. Create a new directory named `connections` directory in the `../wp-content/plugins/` directory.
+4. Upload the files from the folder extracted in Step 2.
+4. Activate the plugin on the Plugins admin page.
+
 = Requirements =
+
 * **WordPress version:** >= 3.8
 * **PHP version:** >= 5.2.4
-* **NOTE:** Upgrading from version 0.6.1 and newer only, is supported. Previous version must upgrade to 0.6.1 before upgrading to the current version.
+* **NOTE:** Upgrading from version 0.6.1 and newer only is supported. Previous version must upgrade to 0.6.1 before upgrading to the current version.
 
 == Frequently Asked Questions ==
+
 [FAQs can be found here.](http://connections-pro.com/faq/)
 
 == Changelog ==
 
+= 8.1.5 10/16/2014 =
+* FEATURE: Add cnFormatting::excerpt().
+* BUG: Fix the use of UTF8 Cyrillic entry slugs throughout. Addresses issue where URL encoded folder names would be created for the images uploaded to an entry.
+* BUG: The output of get_query_var( 'cn-s' ) does not need to be urldecode().
+* BUG: Check for empty search terms array after shortwords are removed to prevent invalid db queries.
+* BUG: Reset the $like array var to ensure valid queries when performing a keyword search.
+* TWEAK: Use cnFormatting::excerpt() to create the entry bio for improved excerpt creation form several of the premium templates.
+* TWEAK: Add support autocomplete in cnHTML::input().
+* OTHER: Remove whitespace.
+* OTHER: Add .editorconfig.
+
+= 8.1.4 10/08/2014 =
+* BUG: Ensure image is not a WP_Error before trying to access its process log.
+* BUG: Fix error report when creating entry images. Was not calling correct object.
+* BUG: Ensure no double slash in paths when uploading an image.
+* BUG: Make cnEntry_Action::deleteImages() is PHP <= 5.2 compatible.
+* BUG: Ensure neither $filename or $source are empty in cnEntry_Action::deleteImages().
+* BUG: Fix undefined index notices when processing new images.
+* BUG: Fix the "Resize to fit the specified dimensions (no cropping)." image option.
+* BUG: Fix unclosed `br` tag in error message triggered when adding images to entries.
+* BUG: Fix missing %separator% token in replacement string for getLinkBlock() and getContactNameBlock().
+* BUG: Run setTermRelationships() thru $wpdb->prepare().
+* BUG: Fix version in changelog and readme.
+* TWEAK: Add `tag` option to getTitleBlock();.
+
+= 8.1.3 10/01/2014 =
+* BUG: Add `style` that should not be added to the img tag attributes.
+* BUG: Update cnLog to be compatible with change made in WP_Error in WP 4.0 when WP_DEBUG is not defined or FALSE.
+* BUG: Fixed undefined index error.
+* TWEAK: Refactor and add filters to cnRetrieve::search().
+* TWEAK: Move the image style from the span to the img.
+* TWEAK: Change `cn-list-actions` from id to class.
+* TWEAK: Update image_path_exists_failed and image_path_writeable_failed error messages.
+* OTHER: Prevent themes from setting spans as blocks within Connections HTML markup.
+* OTHER: Add the `cn_list_body_class` filter.
+* OTHER: Add the `cn_list_row_class` filter.
+* OTHER: Add `limit` support when querying phone numbers.
+* OTHER: Add `limit` support when querying email addresses.
+* OTHER: Temporarily disable the HiDPI image in srcset.
+* OTHER: Add experimental code (disabled) to speedup cnImage when called thru a URL query.
+* I18N: Update POT file.
+
+= 8.1.2 09/16/2014 =
+* BUG: Fix responsive image CSS bug.
+* BUG: Fix infinite loop bug when uploading images in a WP multi site installation.
+* TWEAK: Check for isDot() before calling. PHP5.2/5.3 compatibility.
+* TWEAK: Change custom template path for multi site back to `blogs.dir`.
+* TWEAK: Re-enable attemting to make writable CN_IMAGE_PATH in the upgrade.php file.
+* TWEAK: Add cnImage::info().
+* TWEAK: Update cnImage::get() to use cnImage::info().
+* TWEAK: Fix crop_focus sanitation in cnImage::get().
+* TWEAK: Add filter cn_get_image_atts.
+* TWEAK: Add action cn_image_get.
+* I18N: Update Turkish (Turkey) translation.
+
+= 8.1.1 09/09/2014 =
+* BUG: Fix responsive image support for IE8.
+* BUG: Fix issue where uploads of PNG file variations would save as JPG instead of PNG.
+* BUG: In multisite the upload subdir s/b sites not blogs.dir.
+* BUG: Set the image stream quality if one was not defined in the image query string.
+* BUG: Take into account default permalink setting when creating the image query string.
+* BUG: Ensure no duplicate meta title and meta desc on internal pages when using WPSEO.
+* TWEAK: Refactor code to use CN_IMAGE_PATH and CN_IMAGE_BASE_URL to support CN_MULTISITE_ENABLED.
+* TWEAK: Add support for registering a content block for list or entry only.
+* TWEAK: Update cnLog to be compatible with changes made in WP_Error in WP 4.0.
+* TWEAK: Escape text in a couple anonymous functions to prevent translations from throwing PHP errors.
+* TWEAK: Force new image uploads to have lowercase file extension. Add support for existing filenames with uppercase file extensions.
+* TWEAK: Increase execusion time and memory limit when processing images.
+* TWEAK: Remove use of SKIP_DOTS for PHP < 5.3 compatibility.
+* TWEAK: Support the uploading of GIF/s.
+* TWEAK: Add info() the the cnUpload class to get Connections related upload paths.
+* TWEAK: Use cnUpload::info() to define image upload paths.
+* TWEAK: Disable the admin image check because it somehow prevented access to the plugins/updates.
+* OTHER: Add Spain regions to cnGEO.
+* OTHER: Add error message for when $img_path is not set.
+* I18N: Update POT file.
+
+= 8.1 09/02/2014 =
+* FEATURE: Photo and logo images are now responsive.
+* FEATURE: Photo and logo images support HiDPI (Retina) devices.
+* FEATURE: Improve search results for relevancy and shortword search support.
+* FEATURE: Add new shortcode [cn_thumb].
+* FEATURE: Add new shortcode [cn_thumbr].
+* FEATURE: Add new image crop method, fit.
+* FEATURE: Add SmugMug to social network options.
+* FEATURE: Register TimThumb compatible query vars and add the CN_IMAGE_ENDPOINT root rewrite endpoint.
+* BUG: Fix gettext domain for "Name".
+* BUG: Make sure the visibility options are translation ready.
+* BUG: Fix invalid HTML markup. Remove p tag from within a span element in the no image block.
+* BUG: Fix vCard importing on OSX.
+* BUG: Fix bug that would cause entry meta to be lost during an entry update.
+* BUG: Fix cnSanitize::string() color callback method name.
+* BUG: Ensure valid custom metabox before displaying.
+* BUG: Make country code for Maldives uppercase.
+* TWEAK: Remove stop words from search.
+* TWEAK: Only run keyword search when FULLTEXT search is enabled if no results were returned from the FULLTEXT search.
+* TWEAK: Improve exclude_category exclusion.
+* TWEAK: Allow changing of entry type when copying and editing an entry.
+* TWEAK: Complete refactor of the admin js file.
+* TWEAK: Update frontend pagination links to use paginate_links().
+* TWEAK: Update CSS to support the pagination markup output by paginate_links().
+* TWEAK: Move the category separator within the category span.
+* TWEAK: Change span around entry name in core templates to div.
+* TWEAK: Add jquery-validate as a script dependency for cn-ui-admin.
+* TWEAK: Add support for the id attribute on the form tag.
+* TWEAK: Add id attribute to the add/edit entry form.
+* TWEAK: Cache category select, category checklist and family relations.
+* TWEAK: Use actual year in vCard instead of upcoming year for anniversary and birthday dates.
+* TWEAK: Update the posts dates to reflect the entry currently being viewed.
+* TWEAK: Add another CSS style for Chosen so theme's do not break it.
+* TWEAK: Add "Edit Entry" action link to the admin bar.
+* TWEAK: Set the visibility options only if a user is logged in.
+* TWEAK: Remove unnecessary manage form actions for metaboxes.
+* TWEAK: Remove inline styles from images.
+* TWEAK: Update image settings with better descriptions.
+* OTHER: Added methods to cnSanitize to sanitize a hex color with/without a hash.
+* OTHER: Add error message warning if GD or Imagick is not installed.
+* OTHER: Move class.filesystem.php in folder structure.
+* OTHER: Register and enqueue Picturefill.
+* OTHER: Add the CN_IMAGE_DIR_NAME constant.
+* OTHER: Add the CN_IMAGE_ENDPOINT constant.
+* OTHER: Introduce cnUpload.
+* OTHER: Introduce cnImage.
+* OTHER: Introduce cnLog.
+* OTHER: Introduce cnColor.
+* OTHER: Introduce cnCache.
+* OTHER: Introduce cnFragment.
+* OTHER: Introduce cnString.
+* OTHER: Add maybeHashHEXColor().
+* OTHER: Add remapRange().
+* OTHER: Add xrmdir().
+* OTHER: Add several helper methods in cnEntry to handle image metadata.
+* OTHER: Eliminate the use of Timthumb and class.upload.php from core.
+* OTHER: Move class.upload.php to the vendor sub-folder.
+* OTHER: Delete class.upload.php lang files. Not needed.
+* OTHER: Remove double spaces and trim the result of getName().
+* OTHER: Remove the use of the cn_preloader.
+* OTHER: Various checks to deal with empty entry slugs.
+* OTHER: Add filter so pagination atts can be changed.
+* OTHER: Update the installation instructions in the readme.txt file.
+* OTHER: Add screenshots to the readme.txt file.
+* OTHER: Remove deprecated image option methods.
+* OTHER: Add color picker support to the metabox api.
+* OTHER: Add filters to allow the addition of new metadata options.
+* I18N: Updated Danish translation.
+* I18N: Updated French (France).
+* I18N: Update connections.pot file to include new strings.
+
 = 0.8.14 07/21/2014 =
-FEATURE: Improve responsive readiness of the Dashboard and Manage admin pages.
-BUG: Rename the base for of the Single Entry Card template.
-BUG: Fix HTML syntax for text areas.
-BUG: Fix permalink encoding issue.
-BUG: Fix Dashboard column toggle.
-BUG: Fix the Screen Options tab display and functions.
-BUG: Escape the template file path before including it.
-TWEAK: Remove section head relative positioning.
-TWEAK: Improve Visibility CSS in metabox header.
-OTHER: Update TimThumb to 2.8.14.
-I18N: Update German (Germany) translation.
+* FEATURE: Improve responsive readiness of the Dashboard and Manage admin pages.
+* BUG: Rename the base for of the Single Entry Card template.
+* BUG: Fix HTML syntax for text areas.
+* BUG: Fix permalink encoding issue.
+* BUG: Fix Dashboard column toggle.
+* BUG: Fix the Screen Options tab display and functions.
+* BUG: Escape the template file path before including it.
+* TWEAK: Remove section head relative positioning.
+* TWEAK: Improve Visibility CSS in metabox header.
+* OTHER: Update TimThumb to 2.8.14.
+* I18N: Update German (Germany) translation.
 
 = 0.8.13 06/20/2014 =
-BUG: Fix logic that determines if cnEntry_Shortcode should process $content for the `cn_entry` shortcode.
-BUG: Fix cnFormatting::toBoolean(). Check if value is bool and return it if it is. Otherwise convert value to bool.
-TWEAK: Add submit, textarea & hidden to cnHTML.
-TWEAK: Re-order before/after list/entry action hooks to be more consistent.
-OTHER: Update EDD_SL_Plugin_Updater to version 1.2.
+* BUG: Fix logic that determines if cnEntry_Shortcode should process $content for the `cn_entry` shortcode.
+* BUG: Fix cnFormatting::toBoolean(). Check if value is bool and return it if it is. Otherwise convert value to bool.
+* TWEAK: Add submit, textarea & hidden to cnHTML.
+* TWEAK: Re-order before/after list/entry action hooks to be more consistent.
+* OTHER: Update EDD_SL_Plugin_Updater to version 1.2.
 
 = 0.8.12 06/13/2014 =
 * FEATURE: Add Goodreads to social media options.
@@ -521,3 +722,21 @@ If you are updating from a version less than 0.8, it is recommended to backup be
 
 = 0.8.14 =
 If you are updating from a version less than 0.8, it is recommended to backup before updating as this is a major update. Requires WordPress >= 3.8.
+
+= 8.1 =
+This a major update to Connections it is recommended to backup before updating. Requires WordPress >= 3.8.
+
+= 8.1.1 =
+This a major update to Connections it is recommended to backup before updating. Requires WordPress >= 3.8.
+
+= 8.1.2 =
+This a major update to Connections it is recommended to backup before updating. Requires WordPress >= 3.8.
+
+= 8.1.3 =
+This a major update to Connections it is recommended to backup before updating. Requires WordPress >= 3.8.
+
+= 8.1.4 =
+This a major update to Connections it is recommended to backup before updating. Requires WordPress >= 3.8.
+
+= 8.1.5 =
+This a major update to Connections it is recommended to backup before updating. Requires WordPress >= 3.8.

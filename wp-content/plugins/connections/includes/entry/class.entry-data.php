@@ -239,8 +239,13 @@ class cnEntry {
 	private $updateObjectCache = FALSE;
 
 	function __construct( $entry = NULL ) {
-
 		global $connections;
+
+		// Load the formatting class for sanitizing the get methods.
+		$this->format = new cnFormatting();
+
+		// Load the validation class.
+		$this->validate = new cnValidate();
 
 		if ( isset( $entry ) ) {
 			if ( isset( $entry->id ) ) $this->id = (integer) $entry->id;
@@ -318,13 +323,12 @@ class cnEntry {
 			if ( isset( $entry->status ) ) $this->status = $entry->status;
 
 			$this->ruid = uniqid( $this->getId() , FALSE );
+
+			// Move any legacy images and logo, pre 8.1, to the new folder structure.
+			$this->processLegacyImages( $this->getImageNameOriginal() );
+			$this->processLegacyLogo( $this->getLogoName() );
 		}
 
-		// Load the formatting class for sanitizing the get methods.
-		$this->format = new cnFormatting();
-
-		// Load the validation class.
-		$this->validate = new cnValidate();
 	}
 
 	/**
@@ -414,29 +418,35 @@ class cnEntry {
 	 * @see cnEntry::$slug
 	 */
 	public function getSlug() {
-		return $this->slug;
+
+		return ( empty( $this->slug ) ? $this->getUniqueSlug() : $this->slug );
 	}
 
 	/**
 	 * Sets $slug.
 	 *
-	 * @param object  $slug
 	 * @see cnEntry::$slug
 	 */
 	public function setSlug( $slug ) {
-		$this->slug = $slug;
+
+		$this->slug = $this->getUniqueSlug( $slug );
 	}
 
 	/**
 	 * Returns a unique sanitized slug for insertion in the database.
 	 *
+	 * NOTE: If the entry name is UTF8 it will be URL encoded by the sanitize_title() function.
+	 *
 	 * @return string
 	 */
-	private function getUniqueSlug( $slug = NULL ) {
+	private function getUniqueSlug( $slug = '' ) {
 		global $wpdb;
 
 		// WP function -- formatting class
-		$slug = empty( $slug ) ? sanitize_title( $this->getName( array( 'format' => '%first%-%last%' ) ) ) : $slug;
+		$slug = empty( $slug ) || ! is_string( $slug ) ? sanitize_title( $this->getName( array( 'format' => '%first%-%last%' ) ) ) : sanitize_title( $slug );
+
+		// If the entry was entered with no name, use the entry ID instead.
+		if ( empty( $slug ) ) return 'cn-id-' . $this->getId();
 
 		$query = $wpdb->prepare( 'SELECT slug FROM ' . CN_ENTRY_TABLE . ' WHERE slug = %s', $slug );
 
@@ -528,7 +538,8 @@ class cnEntry {
 				break;
 		}
 
-		return preg_replace( '/\s{2,}/', ' ', $name );
+		// return preg_replace( '/\s{2,}/', ' ', $name );
+		return trim( preg_replace( '/\s+/', ' ', $name ) );
 	}
 
 	public function getHonorificPrefix() {
@@ -1145,6 +1156,7 @@ class cnEntry {
 		 */
 		$defaults['preferred'] = FALSE;
 		$defaults['type'] = NULL;
+		$defaults['limit'] = NULL;
 
 		$atts = $this->validate->attributesArray( $defaults, $atts );
 		$atts['id'] = $this->getId();
@@ -1165,6 +1177,11 @@ class cnEntry {
 				 * Covert to an array if it was supplied as a comma delimited string
 				 */
 				if ( ! empty( $type ) && ! is_array( $type ) ) $type = explode( ',' , trim( $type ) );
+
+				/*
+				 * Limit the number of results.
+				 */
+				if ( ! is_null( $atts['limit'] ) ) $phoneNumbers = array_slice( $phoneNumbers, 0, absint( $atts['limit'] ) );
 
 				foreach ( (array) $phoneNumbers as $key => $number ) {
 					/*
@@ -1414,6 +1431,7 @@ class cnEntry {
 		 */
 		$defaults['preferred'] = FALSE;
 		$defaults['type'] = NULL;
+		$defaults['limit'] = NULL;
 
 		$atts = $this->validate->attributesArray( $defaults, $atts );
 		$atts['id'] = $this->getId();
@@ -1434,6 +1452,11 @@ class cnEntry {
 				 * Covert to an array if it was supplied as a comma delimited string
 				 */
 				if ( ! empty( $type ) && ! is_array( $type ) ) $type = explode( ',' , trim( $type ) );
+
+				/*
+				 * Limit the number of results.
+				 */
+				if ( ! is_null( $atts['limit'] ) ) $emailAddresses = array_slice( $emailAddresses, 0, absint( $atts['limit'] ) );
 
 				foreach ( (array) $emailAddresses as $key => $email ) {
 
@@ -2956,41 +2979,16 @@ class cnEntry {
 	/**
 	 * Create excerpt from the supplied text. Default is the bio.
 	 *
-	 * Filters:
-	 *   cn_excerpt_length => change the default excerpt length of 55 words.
-	 *   cn_excerpt_more  => change the default more string of &hellip;
-	 *   cn_trim_excerpt  => change returned string
+	 * @access public
+	 * @since  unknown
+	 * @param  array   $atts [optional]
+	 * @param  string  $text [optional]
 	 *
-	 * @param (string)  $atts [optional]
-	 * @param (string)  $text [optional]
-	 * @return (string)
+	 * @return string
 	 */
-	public function getExcerpt( $atts = array(), $text = NULL ) {
+	public function getExcerpt( $atts = array(), $text = '' ) {
 
-		$defaults = array(
-			'length' => apply_filters( 'cn_excerpt_length', 55 ),
-			'more'   => apply_filters( 'cn_excerpt_more', '&hellip;' )
-		);
-
-		$atts = $this->validate->attributesArray( $defaults, $atts );
-
-		$text = empty( $text ) ? $this->getBio() : $this->format->sanitizeString( $text, FALSE );
-
-		$words = preg_split( "/[\n\r\t ]+/", $text, $atts['length'] + 1, PREG_SPLIT_NO_EMPTY );
-
-		if ( count( $words ) > $atts['length'] ) {
-
-			array_pop( $words );
-			$text = implode( ' ', $words ) . $atts['more'];
-
-		} else {
-
-			$text = implode( ' ', $words );
-		}
-
-		$text = strip_shortcodes( $text );
-
-		return apply_filters( 'cn_trim_excerpt', $text );
+		return cnFormatting::excerpt( $text = empty( $text ) ? $this->getBio() : $text, $atts );
 	}
 
 	/**
@@ -3258,6 +3256,537 @@ class cnEntry {
 		$this->options['image']['name']['original'] = $imageNameOriginal;
 	}
 
+	/**
+	 * Saves the logo image meta data (the result of cnImage::get()).
+	 *
+	 * @access public
+	 * @since  8.1
+	 * @param  array  $meta
+	 */
+	public function setOriginalLogoMeta( $meta ) {
+
+		$this->options['logo']['meta'] = $meta;
+	}
+
+	/**
+	 * Saves the photo image meta data (the result of cnImage::get()).
+	 *
+	 * @access public
+	 * @since  8.1
+	 * @param  array  $meta
+	 */
+	public function setOriginalImageMeta( $meta ) {
+
+		$this->options['image']['meta']['original'] = $meta;
+	}
+
+	/**
+	 * Get the original logo/photo absolute image path.
+	 *
+	 * @access public
+	 * @since  8.1
+	 * @uses   wp_upload_dir()
+	 * @uses   trailingslashit()
+	 * @uses   self::getSlug()
+	 * @uses   self::getLogoName()
+	 * @uses   self::getImageNameOriginal()
+	 * @param  string $type The image path to return, logo | photo.
+	 * @return string       The absolute image path.
+	 */
+	public function getOriginalImagePath( $type ) {
+
+		if ( empty( $type ) ) return '';
+
+		// Get the core WP uploads info.
+		// $uploadInfo = wp_upload_dir();
+
+		// The entry slug is saved in the db URL encoded, so it needs to be decoded.
+		$slug = rawurldecode( $this->getSlug() );
+
+		switch ( $type ) {
+
+			case 'logo':
+
+				// Build the URL to the original image.
+				return CN_IMAGE_PATH . $slug . DIRECTORY_SEPARATOR .$this->getLogoName();
+				break;
+
+			case 'photo':
+
+				// Build the URL to the original image.
+				return CN_IMAGE_PATH . $slug . DIRECTORY_SEPARATOR .$this->getImageNameOriginal();
+				break;
+
+			default:
+
+				return '';
+				break;
+		}
+
+	}
+
+	/**
+	 * Get the original logo/photo image URL.
+	 *
+	 * @access public
+	 * @since  8.1
+	 * @uses   wp_upload_dir()
+	 * @uses   trailingslashit()
+	 * @uses   self::getSlug()
+	 * @uses   self::getLogoName()
+	 * @uses   self::getImageNameOriginal()
+	 * @param  string $type The image URL to return, logo | photo.
+	 * @return string       The image URL.
+	 */
+	public function getOriginalImageURL( $type ) {
+
+		if ( empty( $type ) ) return '';
+
+		// Get the core WP uploads info.
+		// $uploadInfo = wp_upload_dir();
+
+		// The entry slug is saved in the db URL encoded, so it needs to be decoded.
+		$slug = rawurldecode( $this->getSlug() );
+
+		switch ( $type ) {
+
+			case 'logo':
+
+				return CN_IMAGE_BASE_URL . $slug . '/' . $this->getLogoName();
+				break;
+
+			case 'photo':
+
+				return CN_IMAGE_BASE_URL . $slug . '/' . $this->getImageNameOriginal();
+				break;
+
+			default:
+
+				return '';
+				break;
+		}
+
+	}
+
+	/**
+	 * Return an array of image meta data.
+	 *
+	 * Accepted option for the $atts property are:
+	 * 	type (string) Valid options: logo | photo | custom. Default: photo
+	 * 	size (string) Valid options depend on `type`.
+	 * 		If `type` is `logo`: original | scaled. Default: original
+	 * 		If `type` is `photo`: original | thumbnail | medium | large. Default: original
+	 * 		If `type` is `custom`: Not used, use the `width` and `height` to set the custom size.
+	 * 	width (int) The width of the `custom` size.
+	 * 	height (int) The height of the `custom` size.
+	 * 	crop_mode (int) Which crop mode to utilitize when rescaling the image. Valid range is 0–3. Default: 1
+	 * 		0 == Resize to Fit specified dimensions with no cropping. Aspect ratio will not be maintained.
+	 * 		1 == Crop and resize to best fit dimensions maintaining aspect ration. Default.
+	 * 		2 == Resize proportionally to fit entire image into specified dimensions, and add margins if required.
+	 * 			Use the canvas_color option to set the color to be used when adding margins.
+	 * 		3 == Resize proportionally adjusting size of scaled image so there are no margins added.
+	 * 	quality (int) The image quality to be used when saving the image. Valid range is 1–100. Default: 80
+	 *
+	 * The return array will contain the following keys and their value:
+	 * 	name   => (string) The image name.
+	 * 	path   => (string) The absolute image path.
+	 * 	url    => (string) The image URL.
+	 * 	width  => (int) The image width.
+	 * 	height => (int) The image height.
+	 * 	size   => (string) The image size in a string, `height="yyy" width="xxx"`, that can be used directly in an img tag.
+	 * 	mime   => (string) The image mime type.
+	 * 	type   => (int) The IMAGETYPE_XXX constants indicating the type of the image.
+	 *
+	 * @access public
+	 * @since  8.1
+	 * @uses   apply_filters()
+	 * @uses   wp_parse_args()
+	 * @uses   self::getOriginalImageURL()
+	 * @uses   self::getOriginalImagePath()
+	 * @uses   cnImage::get()
+	 * @uses   WP_Error
+	 * @uses   is_wp_error()
+	 * @param  array  $atts
+	 * @return array
+	 */
+	public function getImageMeta( $atts = array() ) {
+
+		$cropMode = array( 0 => 'none', 1 => 'crop', 2 => 'fill', 3 => 'fit' );
+		$sizes    = array( 'thumbnail', 'medium', 'large' );
+		$meta     = array();
+
+		$defaults = array(
+			'type'      => 'photo',
+			'size'      => 'original',
+			'width'     => 0,
+			'height'    => 0,
+			'crop_mode' => 1,
+			'quality'   => 80,
+		);
+
+		$defaults = apply_filters( 'cn_default_atts_image_meta', $defaults );
+
+		$atts = wp_parse_args( $atts, $defaults );
+
+		if ( empty( $atts['type'] ) ) return $meta;
+
+		// The entry slug is saved in the db URL encoded, so it needs to be decoded.
+		$slug = rawurldecode( $this->getSlug() );
+
+		if ( $atts['size'] == 'custom' ) {
+
+			$meta = cnImage::get(
+				$this->getOriginalImageURL( $atts['type'] ),
+				array(
+					'crop_mode' => empty( $atts['crop_mode'] ) && $atts['crop_mode'] !== 0 ? 1 : $atts['crop_mode'],
+					'width'     => empty( $atts['width'] ) ? NULL : $atts['width'],
+					'height'    => empty( $atts['height'] ) ? NULL : $atts['height'],
+					'quality'   => $atts['quality'],
+					'sub_dir'   => $slug,
+					),
+				'data'
+				);
+
+			if ( ! is_wp_error( $meta ) ) {
+
+				$meta['source'] = 'file';
+			}
+
+			return $meta;
+		}
+
+		switch ( $atts['type'] ) {
+
+			case 'logo':
+
+				switch ( $atts['size'] ) {
+
+					case 'original':
+						$meta['path'] = $this->getOriginalImagePath( $atts['type'] );
+						$meta['url']  = $this->getOriginalImageURL( $atts['type'] );
+
+						if ( isset( $this->options['logo']['meta'] ) ) {
+
+							$meta = $this->options['logo']['meta'];
+
+							$meta['source'] = 'db';
+
+						} else {
+
+
+							if ( is_file( $meta['path'] ) && $image = @getimagesize( $meta['path'] ) ) {
+
+								$meta['width']  = $image[0];
+								$meta['height'] = $image[1];
+								$meta['size']   = $image[3];
+								$meta['mime']   = $image['mime'];
+								$meta['type']   = $image[2];
+								$meta['source'] = 'file';
+
+							} else {
+
+								$meta = new WP_Error( 'image_not_found', __( sprintf( 'The file %s is not an image.', basename( $meta['path'] ) ), 'connections' ), $meta['path'] );
+							}
+
+						}
+
+						break;
+
+					default:
+
+						$meta = cnImage::get(
+							$this->getOriginalImageURL( $atts['type'] ),
+							array(
+								'crop_mode' => ( $key = array_search( cnSettingsAPI::get( 'connections', 'image_logo', 'ratio' ), $cropMode ) ) || $key === 0 ? $key : 2,
+								'width'     => cnSettingsAPI::get( 'connections', 'image_logo', 'width' ),
+								'height'    => cnSettingsAPI::get( 'connections', 'image_logo', 'height' ),
+								'quality'   => cnSettingsAPI::get( 'connections', 'image_logo', 'quality' ),
+								'sub_dir'   => $slug,
+								),
+							'data'
+							);
+
+						if ( ! is_wp_error( $meta ) ) {
+
+							$meta['source'] = 'file';
+						}
+
+						break;
+
+				}
+
+				break;
+
+			case 'photo':
+
+				switch ( $atts['size'] ) {
+
+					case 'original':
+
+						$meta['path'] = $this->getOriginalImagePath( $atts['type'] );
+						$meta['url']  = $this->getOriginalImageURL( $atts['type'] );
+
+						if ( isset( $this->options['image']['meta']['original'] ) ) {
+
+							$meta = $this->options['image']['meta']['original'];
+
+							$meta['source'] = 'db';
+
+						} else {
+
+							if ( is_file( $meta['path'] ) && $image = @getimagesize( $meta['path'] ) ) {
+
+								$meta['width']  = $image[0];
+								$meta['height'] = $image[1];
+								$meta['size']   = $image[3];
+								$meta['mime']   = $image['mime'];
+								$meta['type']   = $image[2];
+								$meta['source'] = 'file';
+
+							} else {
+
+								$meta = new WP_Error( 'image_not_found', __( sprintf( 'The file %s is not an image.', basename( $meta['path'] ) ), 'connections' ), $meta['path'] );
+							}
+
+						}
+
+						break;
+
+					default:
+
+						if ( in_array( $atts['size'], $sizes ) ) {
+
+							$meta = cnImage::get(
+								$this->getOriginalImageURL( $atts['type'] ),
+								array(
+									'crop_mode' => ( $key = array_search( cnSettingsAPI::get( 'connections', "image_{$atts['size']}", 'ratio' ), $cropMode ) ) || $key === 0 ? $key : 2,
+									'width'     => cnSettingsAPI::get( 'connections', "image_{$atts['size']}", 'width' ),
+									'height'    => cnSettingsAPI::get( 'connections', "image_{$atts['size']}", 'height' ),
+									'quality'   => cnSettingsAPI::get( 'connections', "image_{$atts['size']}", 'quality' ),
+									'sub_dir'   => $slug,
+									),
+								'data'
+								);
+
+							if ( ! is_wp_error( $meta ) ) {
+
+								$meta['source'] = 'file';
+							}
+
+						}
+
+						break;
+				}
+
+				break;
+
+		}
+
+		return $meta;
+	}
+
+	/**
+	 * Copy or move the originally uploaded image to the new folder structure, post 8.1.
+	 *
+	 * NOTE: If the original logo already exists in the new folder structure, this will
+	 * return TRUE without any further processing.
+	 *
+	 * NOTE: Versions previous to 0.6.2.1 did not not make a duplicate copy of images when
+	 * copying an entry so it was possible multiple entries could share the same image.
+	 * Only images created after the date that version .0.7.0.0 was released will be moved,
+	 * plus a couple weeks for good measure. Images before that date will be copied instead
+	 * so it is available to be copied to the new folder structure, post 8.1, for any other
+	 * entries that may require it.
+	 *
+	 * @access private
+	 * @since  8.1
+	 * @uses   wp_upload_dir()
+	 * @uses   trailingslashit()
+	 * @param  string $filename The original image file name.
+	 *
+	 * @return mixed            bool | object TRUE on success, an instance of WP_Error on failure.
+	 */
+	protected function processLegacyImages( $filename ) {
+		global $blog_id;
+
+		if ( is_multisite() && CN_MULTISITE_ENABLED ) {
+
+			$legacyPath = WP_CONTENT_DIR . '/blogs.dir/' . $blog_id . '/connection_images/';
+
+		} else {
+
+			$legacyPath = WP_CONTENT_DIR . '/connection_images/';
+		}
+
+		// The entry slug is saved in the db URL encoded, so it needs to be decoded.
+		$slug = rawurldecode( $this->getSlug() );
+
+		// Ensure the entry slug is not empty in case a user added an entry with no name.
+		if ( empty( $slug ) ) return new WP_Error( 'image_empty_slug', __( sprintf( 'Failed to move legacy image %s.', $filename ), 'connections' ), $legacyPath . $filename );
+
+		// Get the core WP uploads info.
+		// $uploadInfo = wp_upload_dir();
+
+		// Build the destination image path.
+		$path = CN_IMAGE_PATH . $slug . DIRECTORY_SEPARATOR;
+
+		/*
+		 * NOTE: is_file() will always return false if teh folder/file does not
+		 * have the execution bit set (ie 0775) on some hosts appearently. Need to
+		 * come up with an alternative method which may not be possible wihout using
+		 * WP_Filesystem and that causes a whole bunch of issues when credentials are
+		 * required.
+		 *
+		 * Maybe chmodding the path to 0755 first, sounds safe?
+		 * @link http://codex.wordpress.org/Changing_File_Permissions#Permission_Scheme_for_WordPress
+		 * @link http://stackoverflow.com/a/11005
+		 */
+
+		// If the source image already exists in the new folder structure, post 8.1, bail, nothing to do.
+		if ( is_file( $path . $filename ) ) {
+
+			return TRUE;
+		}
+
+		if ( is_file( $legacyPath . $filename ) ) {
+
+			// The modification file date that image will be deleted to maintain compatibility with 0.6.2.1 and older.
+			$compatiblityDate = mktime( 0, 0, 0, 6, 1, 2010 );
+
+			// Build path to the original file.
+			$original = $legacyPath . $filename;
+
+			// Get original file info.
+			$info = pathinfo( $original );
+
+			// Ensure the destination directory exists.
+			if ( cnFileSystem::mkdir( $path ) ) {
+
+				// Copy or move the original image.
+				if ( $compatiblityDate < @filemtime( $legacyPath . $filename ) ) {
+
+					$result = @rename( $original, $path . $filename );
+
+				} else {
+
+					$result = @copy( $original, $path . $filename );
+				}
+
+				// Delete any of the legacy size variations if the copy/move was successful.
+				if ( $result === TRUE ) {
+
+					// NOTE: This is a little greedy as it will also delete any variations of any duplicate images used by other entries.
+					// This should be alright because we will not need those variations anyway since they will be made from the original using cnImage.
+					$files         = new DirectoryIterator( $legacyPath );
+					$filesFiltered = new RegexIterator(
+						$files,
+						sprintf(
+							'/%s(?:_thumbnail|_entry|_profile)(?:_\d+)?\.%s/i',
+							preg_quote( preg_replace( '/(?:_original(?:_\d+)?)/i', '', $info['filename'] ) ),
+							preg_quote( $info['extension'] )
+						)
+					);
+
+					foreach( $filesFiltered as $file ) {
+
+						if ( $file->isDot() ) { continue; }
+
+						@unlink( $file->getPathname() );
+					}
+
+					return TRUE;
+				}
+
+			}
+
+		}
+
+		return new WP_Error( 'image_move_legacy_image_error', __( sprintf( 'Failed to move legacy image %s.', $filename ), 'connections' ), $legacyPath . $filename );
+	}
+
+	/**
+	 * Copy or move the originally uploaded logo to the new folder structure, post 8.1.
+	 *
+	 * NOTE: If the original logo already exists in the new folder structure, this will
+	 * return TRUE without any further processing.
+	 *
+	 * NOTE: Versions previous to 0.6.2.1 did not not make a duplicate copy of logos when
+	 * copying an entry so it was possible multiple entries could share the same logo.
+	 * Only logos created after the date that version .0.7.0.0 was released will be moved,
+	 * plus a couple weeks for good measure. Images before that date will be copied instead
+	 * so it is available to be copied to the new folder structure, post 8.1, for any other
+	 * entries that may require it.
+	 *
+	 * @access private
+	 * @since  8.1
+	 * @uses   wp_upload_dir()
+	 * @uses   trailingslashit(
+	 * @param  string $filename The original logo file name.
+	 *
+	 * @return mixed            bool | object TRUE on success, an instance of WP_Error on failure.
+	 */
+	protected function processLegacyLogo( $filename ) {
+		global $blog_id;
+
+		if ( is_multisite() && CN_MULTISITE_ENABLED ) {
+
+			$legacyPath = WP_CONTENT_DIR . '/blogs.dir/' . $blog_id . '/connection_images/';
+
+		} else {
+
+			$legacyPath = WP_CONTENT_DIR . '/connection_images/';
+		}
+
+		// The entry slug is saved in the db URL encoded, so it needs to be decoded.
+		$slug = rawurldecode( $this->getSlug() );
+
+		// Ensure the entry slug is not empty in case a user added an entry with no name.
+		if ( empty( $slug ) ) return new WP_Error( 'image_empty_slug', __( sprintf( 'Failed to move legacy logo %s.', $filename ), 'connections' ), $legacyPath . $filename );
+
+		// Get the core WP uploads info.
+		// $uploadInfo = wp_upload_dir();
+
+		// Build the destination logo path.
+		$path = CN_IMAGE_PATH . $slug . DIRECTORY_SEPARATOR;
+
+		// If the source logo already exists in the new folder structure, post 8.1, bail, nothing to do.
+		if ( is_file( $path . $filename ) ) {
+
+			return TRUE;
+		}
+
+		if ( is_file( $legacyPath . $filename ) ) {
+
+			// The modification file date that logo will be deleted to maintain compatibility with 0.6.2.1 and older.
+			$compatiblityDate = mktime( 0, 0, 0, 6, 1, 2010 );
+
+			// Build path to the original file.
+			$original = $legacyPath . $filename;
+
+			// Get original file info.
+			$info = pathinfo( $original );
+
+			// Ensure the destination directory exists.
+			if ( cnFileSystem::mkdir( $path ) ) {
+
+				// Copy or move the logo.
+				if ( $compatiblityDate < @filemtime( $legacyPath . $filename ) ) {
+
+					$result = @rename( $original, $path . $filename );
+
+				} else {
+
+					$result = @copy( $original, $path . $filename );
+				}
+
+				if ( $result === TRUE ) return TRUE;
+			}
+
+		}
+
+		return new WP_Error( 'image_move_legacy_logo_error', __( sprintf( 'Failed to move legacy logo %s.', $filename ), 'connections' ), $legacyPath . $filename );
+	}
+
 	public function getAddedBy() {
 		$addedBy = get_userdata( $this->addedBy );
 
@@ -3388,11 +3917,6 @@ class cnEntry {
 
 		$wpdb->show_errors = true;
 
-		/*
-		 * Check to see if there is a slug; if not go fetch one.
-		 */
-		if ( empty( $this->slug ) ) $this->slug = $this->getUniqueSlug();
-
 		$result = $wpdb->query( $wpdb->prepare(
 			'UPDATE ' . CN_ENTRY_TABLE . ' SET
 			ts                 = %s,
@@ -3429,7 +3953,7 @@ class cnEntry {
 			current_time( 'mysql' ),
 			$this->entryType,
 			$this->getVisibility(),
-			$this->slug,
+			$this->getSlug(),
 			$this->honorificPrefix,
 			$this->firstName,
 			$this->middleName,
@@ -4055,12 +4579,6 @@ class cnEntry {
 
 		$wpdb->show_errors = true;
 
-		/*
-		 * Check to see if there is a slug; if not go fetch one.
-		 * NOTE: When adding a new entry, a new unique slug should be created and set.
-		 */
-		/*if ( empty( $this->slug ) )*/ $this->slug = $this->getUniqueSlug();
-
 		$sql = $wpdb->prepare(
 			'INSERT INTO ' . CN_ENTRY_TABLE . ' SET
 			ts                 = %s,
@@ -4100,7 +4618,7 @@ class cnEntry {
 			current_time( 'timestamp' ),
 			$this->entryType,
 			$this->getVisibility(),
-			$this->slug,
+			$this->getSlug(), /* NOTE: When adding a new entry, a new unique slug should always be created and set. */
 			$this->familyName,
 			$this->honorificPrefix,
 			$this->firstName,
@@ -4326,31 +4844,34 @@ class cnEntry {
 		do_action( 'cn_delete-entry', $this );
 		do_action( 'cn_process_delete-entry', $this );  // KEEP! This action must exist for Link, however, do not ever use it!
 
-		/*
-		 * Delete images assigned to the entry.
-		 *
-		 * Versions previous to 0.6.2.1 did not not make a duplicate copy of images when
-		 * copying an entry so it was possible multiple entries could share the same image.
-		 * Only images created after the date that version .0.7.0.0 was released will be deleted,
-		 * plus a couple weeks for good measure.
-		 */
+		// Get the core WP uploads info.
+		// $uploadInfo = wp_upload_dir();
 
-		$compatiblityDate = mktime( 0, 0, 0, 6, 1, 2010 );
+		// The entry slug is saved in the db URL encoded, so it needs to be decoded.
+		$slug = rawurldecode( $this->getSlug() );
 
-		if ( is_file( CN_IMAGE_PATH . $this->getImageNameOriginal() ) ) {
-			if ( $compatiblityDate < filemtime( CN_IMAGE_PATH . $this->getImageNameOriginal() ) ) unlink( CN_IMAGE_PATH . $this->getImageNameOriginal() );
-		}
+		// Ensure the entry slug is not empty in case a user added an entry with no name.
+		// If this check is not done all the images in the CN_IMAGE_DIR_NAME will be deleted
+		// by cnFileSystem::xrmdir() which would be very bad, indeed.
+		if ( ! empty( $slug ) ) {
 
-		if ( is_file( CN_IMAGE_PATH . $this->getImageNameThumbnail() ) ) {
-			if ( $compatiblityDate < filemtime( CN_IMAGE_PATH . $this->getImageNameThumbnail() ) ) unlink( CN_IMAGE_PATH . $this->getImageNameThumbnail() );
-		}
+			// Build path to the subfolder in which all the entry's images are saved.
+			$path = CN_IMAGE_PATH . $slug . DIRECTORY_SEPARATOR;
 
-		if ( is_file( CN_IMAGE_PATH . $this->getImageNameCard() ) ) {
-			if ( $compatiblityDate < filemtime( CN_IMAGE_PATH . $this->getImageNameCard() ) ) unlink( CN_IMAGE_PATH . $this->getImageNameCard() );
-		}
+			// Delete the entry image and its variations.
+			cnEntry_Action::deleteImages( $this->getImageNameOriginal(), $slug );
 
-		if ( is_file( CN_IMAGE_PATH . $this->getImageNameProfile() ) ) {
-			if ( $compatiblityDate < filemtime( CN_IMAGE_PATH . $this->getImageNameProfile() ) ) unlink( CN_IMAGE_PATH . $this->getImageNameProfile() );
+			// Delete any legacy images, pre 8.1, that may exist.
+			cnEntry_Action::deleteLegacyImages( $this );
+
+			// Delete the entry logo.
+			cnEntry_Action::deleteImages( $this->getLogoName(), $slug );
+
+			// Delete logo the legacy logo, pre 8.1.
+			cnEntry_Action::deleteLegacyLogo( $this );
+
+			// Delete the entry subfolder from CN_IMAGE_DIR_NAME.
+			cnFileSystem::xrmdir( $path );
 		}
 
 		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . CN_ENTRY_TABLE . ' WHERE id = %d' , $id ) );

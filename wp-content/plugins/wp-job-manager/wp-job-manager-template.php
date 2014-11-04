@@ -94,6 +94,20 @@ function get_job_manager_template_part( $slug, $name = '', $template_path = '', 
 }
 
 /**
+ * Add custom body classes
+ * @param  array $classes
+ * @return array
+ */
+function job_manager_body_class( $classes ) {
+	$classes   = (array) $classes;
+	$classes[] = sanitize_title( wp_get_theme() );
+
+	return array_unique( $classes );
+}
+
+add_filter( 'body_class', 'job_manager_body_class' );
+
+/**
  * Get jobs pagination for [jobs] shortcode
  * @return [type] [description]
  */
@@ -201,7 +215,7 @@ function get_the_job_application_method( $post = null ) {
 		$method->type      = 'email';
 		$method->raw_email = $apply;
 		$method->email     = antispambot( $apply );
-		$method->subject   = apply_filters( 'job_manager_application_email_subject', sprintf( __( 'Job Application via "%s" listing on %s', 'wp-job-manager' ), $post->post_title, home_url() ), $post );
+		$method->subject   = apply_filters( 'job_manager_application_email_subject', sprintf( __( 'Application via "%s" listing on %s', 'wp-job-manager' ), $post->post_title, home_url() ), $post );
 	} else {
 		if ( strpos( $apply, 'http' ) !== 0 )
 			$apply = 'http://' . $apply;
@@ -218,8 +232,9 @@ function get_the_job_application_method( $post = null ) {
  * @return void
  */
 function the_job_type( $post = null ) {
-	if ( $job_type = get_the_job_type( $post ) )
+	if ( $job_type = get_the_job_type( $post ) ) {
 		echo $job_type->name;
+	}
 }
 
 /**
@@ -231,15 +246,17 @@ function the_job_type( $post = null ) {
  */
 function get_the_job_type( $post = null ) {
 	$post = get_post( $post );
-	if ( $post->post_type !== 'job_listing' )
+	if ( $post->post_type !== 'job_listing' ) {
 		return;
+	}
 
 	$types = wp_get_post_terms( $post->ID, 'job_listing_type' );
 
-	if ( $types )
+	if ( $types ) {
 		$type = current( $types );
-	else
+	} else {
 		$type = false;
+	}
 
 	return apply_filters( 'the_job_type', $type, $post );
 }
@@ -327,10 +344,19 @@ function get_the_company_logo( $post = null ) {
 function job_manager_get_resized_image( $logo, $size ) {
 	global $_wp_additional_image_sizes;
 
-	if ( $size !== 'full' && isset( $_wp_additional_image_sizes[ $size ] ) ) {
+	ob_start();
 
-		$img_width  = $_wp_additional_image_sizes[ $size ]['width'];
-		$img_height = $_wp_additional_image_sizes[ $size ]['height'];
+	if ( $size !== 'full' && strstr( $logo, WP_CONTENT_URL ) && ( isset( $_wp_additional_image_sizes[ $size ] ) || in_array( $size, array( 'thumbnail', 'medium', 'large' ) ) ) ) {
+
+		if ( in_array( $size, array( 'thumbnail', 'medium', 'large' ) ) ) {
+			$img_width  = get_option( $size . '_size_w' );
+			$img_height = get_option( $size . '_size_h' );
+			$img_crop   = get_option( $size . '_size_crop' );
+		} else {
+			$img_width  = $_wp_additional_image_sizes[ $size ]['width'];
+			$img_height = $_wp_additional_image_sizes[ $size ]['height'];
+			$img_crop   = $_wp_additional_image_sizes[ $size ]['crop'];
+		}
 
 		$upload_dir        = wp_upload_dir();
 		$logo_path         = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $logo );
@@ -342,18 +368,46 @@ function job_manager_get_resized_image( $logo, $size ) {
 			$image = wp_get_image_editor( $logo_path );
 
 			if ( ! is_wp_error( $image ) ) {
-			    $image->resize( $_wp_additional_image_sizes[ $size ]['width'], $_wp_additional_image_sizes[ $size ]['height'], $_wp_additional_image_sizes[ $size ]['crop'] );
-
-			    $image->save( $resized_logo_path );
-
-			    $logo = dirname( $logo ) . '/' . basename( $resized_logo_path );
+			   	if ( ! is_wp_error( $image->resize( $img_width, $img_height, $img_crop ) ) ) {
+					if ( ! is_wp_error( $image->save( $resized_logo_path ) ) ) {
+						$logo = dirname( $logo ) . '/' . basename( $resized_logo_path );
+					}
+				}
 			}
 		} else {
 			$logo = dirname( $logo ) . '/' . basename( $resized_logo_path );
 		}
 	}
 
+	ob_end_clean();
+
 	return $logo;
+}
+
+/**
+ * Output the company video
+ */
+function the_company_video( $post = null ) {
+	$video       = get_the_company_video( $post );
+	$video_embed = wp_oembed_get( $video );
+
+	if ( $video_embed ) {
+		echo '<div class="company_video">' . $video_embed . '</div>';
+	}
+}
+
+/**
+ * Get the company video URL
+ *
+ * @param mixed $post (default: null)
+ * @return string
+ */
+function get_the_company_video( $post = null ) {
+	$post = get_post( $post );
+	if ( $post->post_type !== 'job_listing' ) {
+		return;
+	}
+	return apply_filters( 'the_company_video', $post->_company_video, $post );
 }
 
 /**
@@ -524,7 +578,7 @@ function get_job_listing_class( $class = '', $post_id = null ) {
 	if ( $post->post_type !== 'job_listing' ) {
 		return array();
 	}
-	
+
 	$classes = array();
 
 	if ( empty( $post ) ) {
@@ -532,7 +586,9 @@ function get_job_listing_class( $class = '', $post_id = null ) {
 	}
 
 	$classes[] = 'job_listing';
-	$classes[] = 'job-type-' . sanitize_title( get_the_job_type()->name );
+	if ( $job_type = get_the_job_type() ) {
+		$classes[] = 'job-type-' . sanitize_title( $job_type->name );
+	}
 
 	if ( is_position_filled( $post ) ) {
 		$classes[] = 'job_position_filled';
@@ -541,7 +597,7 @@ function get_job_listing_class( $class = '', $post_id = null ) {
 	if ( is_position_featured( $post ) ) {
 		$classes[] = 'job_position_featured';
 	}
-	
+
 	if ( ! empty( $class ) ) {
 		if ( ! is_array( $class ) ) {
 			$class = preg_split( '#\s+#', $class );
@@ -551,3 +607,19 @@ function get_job_listing_class( $class = '', $post_id = null ) {
 
 	return get_post_class( $classes, $post->ID );
 }
+
+/**
+ * Displays job meta data on the single job page
+ */
+function job_listing_meta_display() {
+	get_job_manager_template( 'content-single-job_listing-meta.php', array() );
+}
+add_action( 'single_job_listing_start', 'job_listing_meta_display', 20 );
+
+/**
+ * Displays job company data on the single job page
+ */
+function job_listing_company_display() {
+	get_job_manager_template( 'content-single-job_listing-company.php', array() );
+}
+add_action( 'single_job_listing_start', 'job_listing_company_display', 30 );

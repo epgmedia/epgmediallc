@@ -1,5 +1,5 @@
 <div id="job-manager-job-dashboard">
-	<p><?php _e( 'Your job listings are shown in the table below. Expired listings will be automatically removed after 30 days.', 'wp-job-manager' ); ?></p>
+	<p><?php _e( 'Your listings are shown in the table below. Expired listings will be automatically removed after 30 days.', 'wp-job-manager' ); ?></p>
 	<table class="job-manager-jobs">
 		<thead>
 			<tr>
@@ -11,7 +11,7 @@
 		<tbody>
 			<?php if ( ! $jobs ) : ?>
 				<tr>
-					<td colspan="6"><?php _e( 'You do not have any active job listings.', 'wp-job-manager' ); ?></td>
+					<td colspan="6"><?php _e( 'You do not have any active listings.', 'wp-job-manager' ); ?></td>
 				</tr>
 			<?php else : ?>
 				<?php foreach ( $jobs as $job ) : ?>
@@ -39,10 +39,16 @@
 													}
 													break;
 												case 'expired' :
-													if ( get_option( 'job_manager_submit_page_slug' ) ) {
+													if ( job_manager_get_permalink( 'submit_job_form' ) ) {
 														$actions['relist'] = array( 'label' => __( 'Relist', 'wp-job-manager' ), 'nonce' => true );
 													}
 													break;
+												case 'pending_payment' :
+												case 'pending' :
+													if ( job_manager_user_can_edit_pending_submissions() ) {
+														$actions['edit'] = array( 'label' => __( 'Edit', 'wp-job-manager' ), 'nonce' => false );
+													}
+												break;
 											}
 
 											$actions['delete'] = array( 'label' => __( 'Delete', 'wp-job-manager' ), 'nonce' => true );

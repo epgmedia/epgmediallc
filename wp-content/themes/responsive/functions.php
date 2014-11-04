@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if( !defined( 'ABSPATH' ) ) {
+if ( !defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -18,6 +18,9 @@ require( $template_directory . '/core/includes/functions.php' );
 require( $template_directory . '/core/includes/functions-update.php' );
 require( $template_directory . '/core/includes/functions-sidebar.php' );
 require( $template_directory . '/core/includes/functions-install.php' );
+require( $template_directory . '/core/includes/functions-admin.php' );
+require( $template_directory . '/core/includes/functions-extras.php' );
+require( $template_directory . '/core/includes/functions-extentions.php' );
 require( $template_directory . '/core/includes/theme-options/theme-options.php' );
 require( $template_directory . '/core/includes/post-custom-meta.php' );
 require( $template_directory . '/core/includes/tha-theme-hooks.php' );
@@ -30,7 +33,7 @@ function responsive_free_get_option( $option, $default = false ) {
 	global $responsive_options;
 
 	// If the option is set then return it's value, otherwise return false.
-	if( isset( $responsive_options[$option] ) ) {
+	if ( isset( $responsive_options[$option] ) ) {
 		return $responsive_options[$option];
 	}
 
