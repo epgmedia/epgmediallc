@@ -155,8 +155,9 @@ class cnRetrieve {
 			if ( ! empty( $queryDeparment ) ) $atts['department'] = urldecode( $queryDeparment );
 
 			// Entry slug
+			// NOTE: The entry slug is saved in the DB URL encoded, so there's no need to urldecode().
 			$queryEntrySlug = get_query_var( 'cn-entry-slug' );
-			if ( ! empty( $queryEntrySlug ) ) $atts['slug'] = urldecode( $queryEntrySlug );
+			if ( ! empty( $queryEntrySlug ) ) $atts['slug'] = $queryEntrySlug;
 
 			// Initial character.
 			$queryInitialChar = get_query_var( 'cn-char' );
@@ -169,7 +170,7 @@ class cnRetrieve {
 
 			// Search terms
 			$searchTerms = get_query_var( 'cn-s' );
-			if ( ! empty( $searchTerms ) ) $atts['search_terms'] = urldecode( $searchTerms );
+			if ( ! empty( $searchTerms ) ) $atts['search_terms'] = $searchTerms;
 
 			// Geo-location
 			$queryCoord = get_query_var( 'cn-near-coord' );
@@ -354,6 +355,27 @@ class cnRetrieve {
 					if ( ! in_array( $term->term_id, $categoryExcludeIDs ) ) $categoryExcludeIDs[] = $wpdb->prepare( '%d', $term->term_id );
 				}
 			}
+
+			// Merge the children of the excluded category into the excluded category ID array.
+			$atts['exclude_category'] = array_merge( $atts['exclude_category'], (array) $categoryExcludeIDs );
+
+			// Ensure unique values only.
+			$atts['exclude_category'] = array_unique( $atts['exclude_category'] );
+
+			$sql = 'SELECT tr.entry_id FROM ' . CN_TERM_RELATIONSHIP_TABLE . ' AS tr
+					INNER JOIN ' . CN_TERM_TAXONOMY_TABLE . ' AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
+					WHERE 1=1 AND tt.term_id IN (' . implode( ", ", $atts['exclude_category'] ) . ')';
+
+			// Store the entryIDs that are to be excluded.
+			$results = $wpdb->get_col( $sql );
+			//print_r($results);
+
+			if ( ! empty( $results ) ) {
+
+				$where[] = 'AND ' . CN_ENTRY_TABLE . '.id NOT IN (' . implode( ", ", $results ) . ')';
+			} /*else {
+				$where[] = 'AND 1=2';
+			}*/
 		}
 
 		// Convert the supplied category IDs $atts['category_in'] to an array.
@@ -459,9 +481,16 @@ class cnRetrieve {
 
 			// If there were no results, add a WHERE clause that will not return results when performing the whole query.
 			if ( empty( $searchResults ) ) {
+
 				$where[] = 'AND 1=2';
-			}
-			else {
+
+			} else {
+
+				// Set $atts['order_by'] to the order the entry IDs were returned.
+				// This is to support the relenvancy order results being retuned by self::search().
+				$atts['order_by'] = 'id|SPECIFIED';
+				$atts['id']       = $searchResults;
+
 				// Set the entry IDs to be the search results.
 				$where[] = 'AND ' . CN_ENTRY_TABLE . '.id IN (\'' . implode( "', '", $searchResults ) . '\')';
 			}
@@ -763,7 +792,7 @@ class cnRetrieve {
 							case 'SPECIFIED':
 
 								if ( ! empty( $atts['id'] ) ) {
-									$orderBy = array( 'FIELD( id, ' . implode( ', ', (array) $atts['id'] ) . ' )' );
+									$orderBy = array( 'FIELD( ' . CN_ENTRY_TABLE . '.id, ' . implode( ', ', (array) $atts['id'] ) . ' )' );
 								}
 								break;
 
@@ -1464,6 +1493,7 @@ class cnRetrieve {
 		$defaultAttr['id'] = NULL;
 		$defaultAttr['preferred'] = NULL;
 		$defaultAttr['type'] = NULL;
+		$defaultAttr['limit'] = NULL;
 
 		$atts = $validate->attributesArray( $defaultAttr, $suppliedAttr );
 		/*
@@ -1506,6 +1536,8 @@ class cnRetrieve {
 
 		if ( ! empty( $visibility ) ) $where[] = 'AND `visibility` IN (\'' . implode( "', '", (array) $visibility ) . '\')';
 
+		$limit = is_null( $atts['limit'] ) ? '' : sprintf( ' LIMIT %d', $atts['limit'] );
+
 		if ( $returnData ) {
 			$sql = 'SELECT SQL_CALC_FOUND_ROWS DISTINCT ' . CN_ENTRY_PHONE_TABLE . '.*
 
@@ -1513,7 +1545,7 @@ class cnRetrieve {
 
 				implode( ' ', $where ) . ' ' .
 
-				'ORDER BY `order`';
+				'ORDER BY `order`' . $limit;
 
 			//print_r($sql);
 
@@ -1522,7 +1554,7 @@ class cnRetrieve {
 		else {
 			$sql = 'SELECT SQL_CALC_FOUND_ROWS DISTINCT ' . CN_ENTRY_PHONE_TABLE . '.entry_id
 
-					FROM ' . CN_ENTRY_PHONE_TABLE . ' ' . ' ' . implode( ' ', $where );
+					FROM ' . CN_ENTRY_PHONE_TABLE . ' ' . ' ' . implode( ' ', $where ) . $limit;
 
 			//print_r($sql);
 			$results = $wpdb->get_col( $sql );
@@ -1558,6 +1590,7 @@ class cnRetrieve {
 		$defaultAttr['id'] = NULL;
 		$defaultAttr['preferred'] = NULL;
 		$defaultAttr['type'] = NULL;
+		$defaultAttr['limit'] = NULL;
 
 		$atts = $validate->attributesArray( $defaultAttr, $suppliedAttr );
 		/*
@@ -1600,6 +1633,8 @@ class cnRetrieve {
 
 		if ( ! empty( $visibility ) ) $where[] = 'AND `visibility` IN (\'' . implode( "', '", (array) $visibility ) . '\')';
 
+		$limit = is_null( $atts['limit'] ) ? '' : sprintf( ' LIMIT %d', $atts['limit'] );
+
 		if ( $returnData ) {
 			$sql = 'SELECT SQL_CALC_FOUND_ROWS DISTINCT ' . CN_ENTRY_EMAIL_TABLE . '.*
 
@@ -1607,7 +1642,7 @@ class cnRetrieve {
 
 				implode( ' ', $where ) . ' ' .
 
-				'ORDER BY `order`';
+				'ORDER BY `order`' . $limit;
 
 			//print_r($sql);
 
@@ -1616,7 +1651,7 @@ class cnRetrieve {
 		else {
 			$sql = 'SELECT SQL_CALC_FOUND_ROWS DISTINCT ' . CN_ENTRY_EMAIL_TABLE . '.entry_id
 
-					FROM ' . CN_ENTRY_EMAIL_TABLE . ' ' . ' ' . implode( ' ', $where );
+					FROM ' . CN_ENTRY_EMAIL_TABLE . ' ' . ' ' . implode( ' ', $where ) . $limit;
 
 			//print_r($sql);
 			$results = $wpdb->get_col( $sql );
@@ -2026,51 +2061,55 @@ class cnRetrieve {
 	 *  http://devzone.zend.com/26/using-mysql-full-text-searching/
 	 *  http://onlamp.com/onlamp/2003/06/26/fulltext.html
 	 *
-	 * @author Steven A. Zahm
-	 * @since 0.7.2.0
-	 * @param array   $suppliedAttr [optional]
+	 * @since  0.7.2.0
+	 * @param  array   $atts [optional]
+	 *
 	 * @return array
 	 */
-	public function search( $suppliedAttr = array() ) {
-		global $wpdb, $connections;
+	public function search( $atts = array() ) {
+		global $wpdb;
 
-		$validate = new cnValidate();
-		$results = array();
-		$like = array();
-		$search = $connections->options->getSearchFields();
+		// Grab an instance of the Connections object.
+		$instance = Connections_Directory();
+
+		$results    = array();
+		$scored     = array();
+		$shortwords = array();
+		$fields     = $instance->options->getSearchFields();
+
+		$fields     = apply_filters( 'cn_search_fields', $fields );
 
 		// If no search search fields are set, return an empty array.
-		if ( empty( $search ) ) return array();
+		if ( empty( $fields ) ) return array();
 
 		/*
 		 * // START -- Set the default attributes array. \\
 		 */
-		$defaultAttr['terms'] = array();
+		$defaults['terms'] = array();
 
-		if ( in_array( 'family_name' , $search ) ) $defaultAttr['fields_entry'][] = 'family_name';
-		if ( in_array( 'first_name' , $search ) ) $defaultAttr['fields_entry'][] = 'first_name';
-		if ( in_array( 'middle_name' , $search ) ) $defaultAttr['fields_entry'][] = 'middle_name';
-		if ( in_array( 'last_name' , $search ) ) $defaultAttr['fields_entry'][] = 'last_name';
-		if ( in_array( 'title' , $search ) ) $defaultAttr['fields_entry'][] = 'title';
-		if ( in_array( 'organization' , $search ) ) $defaultAttr['fields_entry'][] = 'organization';
-		if ( in_array( 'department' , $search ) ) $defaultAttr['fields_entry'][] = 'department';
-		if ( in_array( 'contact_first_name' , $search ) ) $defaultAttr['fields_entry'][] = 'contact_first_name';
-		if ( in_array( 'contact_last_name' , $search ) ) $defaultAttr['fields_entry'][] = 'contact_last_name';
-		if ( in_array( 'bio' , $search ) ) $defaultAttr['fields_entry'][] = 'bio';
-		if ( in_array( 'notes' , $search ) ) $defaultAttr['fields_entry'][] = 'notes';
+		if ( in_array( 'family_name', $fields ) ) $defaults['fields']['entry'][]        = 'family_name';
+		if ( in_array( 'first_name', $fields ) ) $defaults['fields']['entry'][]         = 'first_name';
+		if ( in_array( 'middle_name', $fields ) ) $defaults['fields']['entry'][]        = 'middle_name';
+		if ( in_array( 'last_name', $fields ) ) $defaults['fields']['entry'][]          = 'last_name';
+		if ( in_array( 'title', $fields ) ) $defaults['fields']['entry'][]              = 'title';
+		if ( in_array( 'organization', $fields ) ) $defaults['fields']['entry'][]       = 'organization';
+		if ( in_array( 'department', $fields ) ) $defaults['fields']['entry'][]         = 'department';
+		if ( in_array( 'contact_first_name', $fields ) ) $defaults['fields']['entry'][] = 'contact_first_name';
+		if ( in_array( 'contact_last_name', $fields ) ) $defaults['fields']['entry'][]  = 'contact_last_name';
+		if ( in_array( 'bio', $fields ) ) $defaults['fields']['entry'][]                = 'bio';
+		if ( in_array( 'notes', $fields ) ) $defaults['fields']['entry'][]              = 'notes';
 
-		if ( in_array( 'address_line_1' , $search ) ) $defaultAttr['fields_address'][] = 'line_1';
-		if ( in_array( 'address_line_2' , $search ) ) $defaultAttr['fields_address'][] = 'line_2';
-		if ( in_array( 'address_line_3' , $search ) ) $defaultAttr['fields_address'][] = 'line_3';
-		if ( in_array( 'address_city' , $search ) ) $defaultAttr['fields_address'][] = 'city';
-		if ( in_array( 'address_state' , $search ) ) $defaultAttr['fields_address'][] = 'state';
-		if ( in_array( 'address_zipcode' , $search ) ) $defaultAttr['fields_address'][] = 'zipcode';
-		if ( in_array( 'address_country' , $search ) ) $defaultAttr['fields_address'][] = 'country';
+		if ( in_array( 'address_line_1', $fields ) ) $defaults['fields']['address'][]   = 'line_1';
+		if ( in_array( 'address_line_2', $fields ) ) $defaults['fields']['address'][]   = 'line_2';
+		if ( in_array( 'address_line_3', $fields ) ) $defaults['fields']['address'][]   = 'line_3';
+		if ( in_array( 'address_city', $fields ) ) $defaults['fields']['address'][]     = 'city';
+		if ( in_array( 'address_state', $fields ) ) $defaults['fields']['address'][]    = 'state';
+		if ( in_array( 'address_zipcode', $fields ) ) $defaults['fields']['address'][]  = 'zipcode';
+		if ( in_array( 'address_country', $fields ) ) $defaults['fields']['address'][]  = 'country';
 
-		if ( in_array( 'phone_number' , $search ) ) $defaultAttr['fields_phone'][] = 'number';
+		if ( in_array( 'phone_number', $fields ) ) $defaults['fields']['phone'][]       = 'number';
 
-		$atts = $validate->attributesArray( $defaultAttr, $suppliedAttr );
-		//print_r($atts);
+		$atts = wp_parse_args( $atts, apply_filters( 'cn_search_atts', $defaults ) );
 
 		// @todo Validate each fiels array to ensure only permitted fields will be used.
 		/*
@@ -2080,12 +2119,19 @@ class cnRetrieve {
 		// If no search terms were entered, return an empty array.
 		if ( empty( $atts['terms'] ) ) return array();
 
-		// If value is a string, string the white space and covert to an array.
-		if ( ! is_array( $atts['terms'] ) ) $atts['terms'] = explode( ' ' , trim( $atts['terms'] ) );
+		// If value is a string, stripe the white space and covert to an array.
+		if ( ! is_array( $atts['terms'] ) ) $atts['terms'] = explode( ' ', trim( $atts['terms'] ) );
 
 		// Trim any white space from around the terms in the array.
 		array_walk( $atts['terms'] , 'trim' );
 
+		$atts['terms'] = apply_filters( 'cn_search_terms', $atts['terms'] );
+
+		// Remove any single characters and stop words from terms.
+		$atts['terms'] = $this->parse_search_terms( $atts['terms'] );
+
+		// If no search terms are left after removing stop words, return an empty array.
+		if ( empty( $atts['terms'] ) ) return array();
 
 		/*
 		 * Perform search using FULLTEXT if enabled.
@@ -2108,45 +2154,234 @@ class cnRetrieve {
 		 * 		MySQL has a default stopwords file that has a list of common words (i.e., the, that, has) which are not returned in your search. In other words, searching for the will return zero rows.
 		 * 		According to MySQL's manual, the argument to AGAINST() must be a constant string. In other words, you cannot search for values returned within the query.
 		 */
-		if ( $connections->settings->get( 'connections', 'connections_search', 'fulltext_enabled' ) ) {
-			// Convert the search terms to a string adding the wild card to the end of each term to allow wider search results.
-			//$terms = implode( '* ' , $atts['terms'] ) . '*';
-			$terms = '+' . implode( ' +' , $atts['terms'] );
-			// $terms = '+"' . implode( ' +' , $atts['terms'] ) . '"';
-			//$terms = implode( ' ' , $atts['terms'] );
+		if ( cnSettingsAPI::get( 'connections', 'search', 'fulltext_enabled' ) ) {
+
+			$terms      = array();
+			$shortwords = array();
+			$strlen     = function_exists( 'mb_strtolower' ) ? 'mb_strtolower' : 'strlen';
+
+			/*
+			 * Remove any shortwords from the FULLTEXT query since the db will drop them anyway.
+			 * Add the shortwords to a separate array to be used to do a LIKE query.
+			 */
+			foreach ( $atts['terms'] as $key => $term ) {
+
+				if ( strlen( $term ) >= 2 && strlen( $term ) <= 3 ) {
+
+					unset( $atts['terms'][ $key ] );
+
+					$shortwords[] = $term;
+				}
+			}
+
+			if ( ! empty( $atts['terms'] ) ) {
+
+				// Make each term required, functional AND query.
+				$terms = apply_filters( 'cn_search_fulltext_terms', '+' . implode( ' +', $atts['terms'] ) );
+			}
 
 			/*
 			 * Only search the primary records if at least one fields is selected to be searched.
 			 */
-			if ( ! empty( $defaultAttr['fields_entry'] ) ) {
-				$sql = $wpdb->prepare( 'SELECT ' . CN_ENTRY_TABLE . '.id
-											FROM ' . CN_ENTRY_TABLE . '
-											WHERE MATCH (' . implode( ', ' , $atts['fields_entry'] ) . ') AGAINST (%s IN BOOLEAN MODE)' , $terms );
-				//print_r($sql);
-				$results = $wpdb->get_col( $sql );
+			if ( ! empty( $atts['fields']['entry'] ) ) {
+
+				$select = array();
+				$from   = array();
+				$where  = array();
+				$like   = array();
+
+				$select[] = 'SELECT ' . CN_ENTRY_TABLE . '.id';
+
+				/*
+				 * Set up the SELECT to return the results scored by relevance.
+				 */
+				if ( ! empty( $terms ) ) {
+
+					$select[] = $wpdb->prepare(
+						'MATCH (' . implode( ', ', $atts['fields']['entry'] ) . ') AGAINST (%s) AS score',
+						$terms
+						);
+				}
+
+				$from[] = CN_ENTRY_TABLE;
+
+				/*
+				 * If there are long word terms, perform a FULLTEXT query.
+				 */
+				if ( ! empty( $terms ) ) {
+
+					$where[] = $wpdb->prepare(
+						'MATCH (' . implode( ', ', $atts['fields']['entry'] ) . ') AGAINST (%s IN BOOLEAN MODE)',
+						$terms
+						);
+				}
+
+				/*
+				 * If there are no long words and there are short words, perform a LIKE query for the short words.
+				 */
+				if ( empty( $terms ) && ! empty( $shortwords ) ) {
+
+					foreach ( $shortwords as $word ) {
+
+						$like[] = $wpdb->prepare( implode( ' LIKE %s OR ' , $atts['fields']['entry'] ) . ' LIKE %s ', array_fill( 0, count( $atts['fields']['entry'] ), like_escape( $word ) . '%' ) );
+					}
+
+					$where[] = '( ' . implode( ') OR (' , $like ) . ')';
+
+				}
+
+				/*
+				 * Return the query results ordered by the relevance score.
+				 */
+				$orderBy = empty( $terms ) ? '' : ' ORDER BY score';
+
+				$sql     = implode( ', ', $select ) . ' FROM ' . implode( ',', $from ) . ' WHERE ' . implode( ' AND ', $where ) . $orderBy;
+
+				$scored  = $wpdb->get_results( $sql, ARRAY_A );
 			}
 
 			/*
 			 * Only search the address records if at least one fields is selected to be searched.
 			 */
-			if ( ! empty( $defaultAttr['fields_address'] ) ) {
-				$sql = $wpdb->prepare( 'SELECT ' . CN_ENTRY_ADDRESS_TABLE . '.entry_id
-											FROM ' . CN_ENTRY_ADDRESS_TABLE . '
-											WHERE MATCH (' . implode( ', ' , $atts['fields_address'] ) . ') AGAINST (%s IN BOOLEAN MODE)' , $terms );
-				//print_r($sql);
-				$results = array_merge( $results, $wpdb->get_col( $sql ) );
+			if ( ! empty( $atts['fields']['address'] ) ) {
+
+				$select = array();
+				$from   = array();
+				$where  = array();
+				$like   = array();
+
+				$select[] = 'SELECT ' . CN_ENTRY_ADDRESS_TABLE . '.entry_id';
+
+				/*
+				 * Set up the SELECT to return the results scored by relevance.
+				 */
+				if ( ! empty( $terms ) ) {
+
+					$select[] = $wpdb->prepare(
+						'MATCH (' . implode( ', ', $atts['fields']['address'] ) . ') AGAINST (%s) AS score',
+						$terms
+						);
+				}
+
+				$from[] = CN_ENTRY_ADDRESS_TABLE;
+
+				/*
+				 * If there are long word terms, perform a FULLTEXT query.
+				 */
+				if ( ! empty( $terms ) ) {
+
+					$where[] = $wpdb->prepare(
+						'MATCH (' . implode( ', ', $atts['fields']['address'] ) . ') AGAINST (%s IN BOOLEAN MODE)',
+						$terms
+						);
+				}
+
+				/*
+				 * If there are no long words and there are short words, perform a LIKE query for the short words.
+				 */
+				if ( empty( $terms ) && ! empty( $shortwords ) ) {
+
+					foreach ( $shortwords as $word ) {
+
+						$like[] = $wpdb->prepare( implode( ' LIKE %s OR ' , $atts['fields']['address'] ) . ' LIKE %s ', array_fill( 0, count( $atts['fields']['address'] ), like_escape( $word ) . '%' ) );
+					}
+
+					$where[] = '( ' . implode( ') OR (' , $like ) . ')';
+
+				}
+
+				/*
+				 * Return the query results ordered by the relevance score.
+				 */
+				$orderBy = empty( $terms ) ? '' : ' ORDER BY score';
+
+				$sql = implode( ', ', $select ) . ' FROM ' . implode( ',', $from ) . ' WHERE ' . implode( ' AND ', $where ) . $orderBy;
+
+				$ids = $wpdb->get_results( $sql, ARRAY_A );
+
+				/*
+				 * If any results are returned merge them in to the $scored results.
+				 */
+				if ( ! empty( $ids ) ) $scored = array_merge( $scored, $ids );
 			}
 
 			/*
 			 * Only search the phone records if thefield is selected to be search.
 			 */
-			if ( ! empty( $defaultAttr['fields_phone'] ) ) {
-				$sql = $wpdb->prepare( 'SELECT ' . CN_ENTRY_PHONE_TABLE . '.entry_id
-											FROM ' . CN_ENTRY_PHONE_TABLE . '
-											WHERE MATCH (' . implode( ', ' , $atts['fields_phone'] ) . ') AGAINST (%s IN BOOLEAN MODE)' , $terms );
-				//print_r($sql);
-				$results = array_merge( $results, $wpdb->get_col( $sql ) );
+			if ( ! empty( $atts['fields']['phone'] ) ) {
+
+				$select = array();
+				$from   = array();
+				$where  = array();
+				$like   = array();
+
+				$select[] = 'SELECT ' . CN_ENTRY_PHONE_TABLE . '.entry_id';
+
+				/*
+				 * Set up the SELECT to return the results scored by relevance.
+				 */
+				if ( ! empty( $terms ) ) {
+
+					$select[] = $wpdb->prepare(
+						'MATCH (' . implode( ', ', $atts['fields']['phone'] ) . ') AGAINST (%s) AS score',
+						$terms
+						);
+				}
+
+				$from[] = CN_ENTRY_PHONE_TABLE;
+
+				/*
+				 * If there are long word terms, perform a FULLTEXT query.
+				 */
+				if ( ! empty( $terms ) ) {
+
+					$where[] = $wpdb->prepare(
+						'MATCH (' . implode( ', ', $atts['fields']['phone'] ) . ') AGAINST (%s IN BOOLEAN MODE)',
+						$terms
+						);
+				}
+
+				/*
+				 * If there are no long words and there are short words, perform a LIKE query for the short words.
+				 */
+				if ( empty( $terms ) && ! empty( $shortwords ) ) {
+
+					foreach ( $shortwords as $word ) {
+
+						$like[] = $wpdb->prepare( implode( ' LIKE %s OR ' , $atts['fields']['phone'] ) . ' LIKE %s ', array_fill( 0, count( $atts['fields']['phone'] ), like_escape( $word ) . '%' ) );
+					}
+
+					$where[] = '( ' . implode( ') OR (' , $like ) . ')';
+
+				}
+
+				/*
+				 * Return the query results ordered by the relevance score.
+				 */
+				$orderBy = empty( $terms ) ? '' : ' ORDER BY score';
+
+				$sql = implode( ', ', $select ) . ' FROM ' . implode( ',', $from ) . ' WHERE ' . implode( ' AND ', $where ) . $orderBy;
+
+				$ids = $wpdb->get_results( $sql, ARRAY_A );
+
+				/*
+				 * If any results are returned merge them in to the $scored results.
+				 */
+				if ( ! empty( $ids ) ) $scored = array_merge( $scored, $ids );
 			}
+
+			$scored = apply_filters( 'cn_search_scored_results', $scored, $terms );
+
+			/*
+			 * The query results are stored in the $scored array ordered by relevance.
+			 * Only the entry ID/s are needed to be returned. Setup the $results array
+			 * with only the entry ID/s in the same order as returned by the relevance score.
+			 */
+			foreach ( $scored as $entry ) {
+
+				$results[] = isset( $entry['id'] ) ? $entry['id'] : $entry['entry_id'];
+			}
+
 		}
 
 		/*
@@ -2156,11 +2391,20 @@ class cnRetrieve {
 		 * Perform the search on each table individually because joining the tables doesn't scale when
 		 * there are a large number of entries.
 		 */
-		if ( $connections->settings->get( 'connections', 'connections_search', 'keyword_enabled' ) ) {
+		if (
+			(
+				( cnSettingsAPI::get( 'connections', 'search', 'keyword_enabled' ) && empty( $results ) ) ||
+				( cnSettingsAPI::get( 'connections', 'search', 'fulltext_enabled' ) && empty( $results ) )
+			) &&
+			! empty( $atts['terms'] ) ) {
+
 			/*
 			 * Only search the primary records if at least one fields is selected to be searched.
 			 */
-			if ( ! empty( $defaultAttr['fields_entry'] ) ) {
+			if ( ! empty( $atts['fields']['entry'] ) ) {
+
+				$like = array(); // Reset the like array.
+
 				foreach ( $atts['terms'] as $term ) {
 					/*
 					 * Attempt to secure the query using $wpdb->prepare() and like_escape()
@@ -2168,7 +2412,7 @@ class cnRetrieve {
 					 * Since $wpdb->prepare() required var for each directive in the query string we'll use array_fill
 					 * where the count based on the number of columns that will be searched.
 					 */
-					$like[] = $wpdb->prepare( implode( ' LIKE %s OR ' , $defaultAttr['fields_entry'] ) . ' LIKE %s ' , array_fill( 0 , count( $defaultAttr['fields_entry'] ) , '%' . like_escape( $term ) . '%' ) );
+					$like[] = $wpdb->prepare( implode( ' LIKE %s OR ' , $atts['fields']['entry'] ) . ' LIKE %s ' , array_fill( 0 , count( $atts['fields']['entry'] ) , '%' . like_escape( $term ) . '%' ) );
 				}
 
 				$sql =  'SELECT ' . CN_ENTRY_TABLE . '.id
@@ -2183,7 +2427,8 @@ class cnRetrieve {
 			/*
 			 * Only search the address records if at least one fields is selected to be searched.
 			 */
-			if ( ! empty( $defaultAttr['fields_address'] ) ) {
+			if ( ! empty( $atts['fields']['address'] ) ) {
+
 				$like = array(); // Reset the like array.
 
 				foreach ( $atts['terms'] as $term ) {
@@ -2193,7 +2438,7 @@ class cnRetrieve {
 					 * Since $wpdb->prepare() required var for each directive in the query string we'll use array_fill
 					 * where the count based on the number of columns that will be searched.
 					 */
-					$like[] = $wpdb->prepare( implode( ' LIKE %s OR ' , $defaultAttr['fields_address'] ) . ' LIKE %s ' , array_fill( 0 , count( $defaultAttr['fields_address'] ) , '%' . like_escape( $term ) . '%' ) );
+					$like[] = $wpdb->prepare( implode( ' LIKE %s OR ' , $atts['fields']['address'] ) . ' LIKE %s ' , array_fill( 0 , count( $atts['fields']['address'] ) , '%' . like_escape( $term ) . '%' ) );
 				}
 
 				$sql =  'SELECT ' . CN_ENTRY_ADDRESS_TABLE . '.entry_id
@@ -2208,7 +2453,8 @@ class cnRetrieve {
 			/*
 			 * Only search the phone records if thefield is selected to be search.
 			 */
-			if ( ! empty( $defaultAttr['fields_phone'] ) ) {
+			if ( ! empty( $atts['fields']['phone'] ) ) {
+
 				$like = array(); // Reset the like array.
 
 				foreach ( $atts['terms'] as $term ) {
@@ -2218,7 +2464,7 @@ class cnRetrieve {
 					 * Since $wpdb->prepare() required var for each directive in the query string we'll use array_fill
 					 * where the count based on the number of columns that will be searched.
 					 */
-					$like[] = $wpdb->prepare( implode( ' LIKE %s OR ' , $defaultAttr['fields_phone'] ) . ' LIKE %s ' , array_fill( 0 , count( $defaultAttr['fields_phone'] ) , '%' . like_escape( $term ) . '%' ) );
+					$like[] = $wpdb->prepare( implode( ' LIKE %s OR ' , $atts['fields']['phone'] ) . ' LIKE %s ' , array_fill( 0 , count( $atts['fields']['phone'] ) , '%' . like_escape( $term ) . '%' ) );
 				}
 
 				$sql =  'SELECT ' . CN_ENTRY_PHONE_TABLE . '.entry_id
@@ -2232,7 +2478,87 @@ class cnRetrieve {
 
 		}
 
-		return array_unique( $results );
+		return apply_filters( 'cn_search_results', $results, $atts );;
+	}
+
+	/**
+	 * Ripped from WP core. Unfortunately it can not be used
+	 * directly because it is a protected method in the WP_Query class.
+	 *
+	 * Check if the terms are suitable for searching.
+	 *
+	 * Uses an array of stopwords (terms) that are excluded from the separate
+	 * term matching when searching for posts. The list of English stopwords is
+	 * the approximate search engines list, and is translatable.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param array Terms to check.
+	 * @return array Terms that are not stopwords.
+	 */
+	protected function parse_search_terms( $terms ) {
+		$strtolower = function_exists( 'mb_strtolower' ) ? 'mb_strtolower' : 'strtolower';
+		$checked = array();
+
+		$stopwords = $this->get_search_stopwords();
+
+		foreach ( $terms as $term ) {
+			// keep before/after spaces when term is for exact match
+			if ( preg_match( '/^".+"$/', $term ) )
+				$term = trim( $term, "\"'" );
+			else
+				$term = trim( $term, "\"' " );
+
+			// Avoid single A-Z.
+			if ( ! $term || ( 1 === strlen( $term ) && preg_match( '/^[a-z]$/i', $term ) ) )
+				continue;
+
+			if ( in_array( call_user_func( $strtolower, $term ), $stopwords, true ) )
+				continue;
+
+			$checked[] = $term;
+		}
+
+		return $checked;
+	}
+
+	/**
+	 * Ripped from WP core. Unfortunately it can not be used
+	 * directly because it is a protected method in the WP_Query class.
+	 *
+	 * Retrieve stopwords used when parsing search terms.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return array Stopwords.
+	 */
+	protected function get_search_stopwords() {
+		if ( isset( $this->stopwords ) )
+			return $this->stopwords;
+
+		/* translators: This is a comma-separated list of very common words that should be excluded from a search,
+		 * like a, an, and the. These are usually called "stopwords". You should not simply translate these individual
+		 * words into your language. Instead, look for and provide commonly accepted stopwords in your language.
+		 */
+		$words = explode( ',', _x( 'about,an,are,as,at,be,by,com,for,from,how,in,is,it,of,on,or,that,the,this,to,was,what,when,where,who,will,with,www',
+			'Comma-separated list of search stopwords in your language' ) );
+
+		$stopwords = array();
+		foreach( $words as $word ) {
+			$word = trim( $word, "\r\n\t " );
+			if ( $word )
+				$stopwords[] = $word;
+		}
+
+		/**
+		 * Filter stopwords used when parsing search terms.
+		 *
+		 * @since 3.7.0
+		 *
+		 * @param array $stopwords Stopwords.
+		 */
+		$this->stopwords = apply_filters( 'wp_search_stopwords', $stopwords );
+		return $this->stopwords;
 	}
 
 	/**

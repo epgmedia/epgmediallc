@@ -166,7 +166,7 @@ class cnRegisterSettings
 			'title'     => __( 'Result List' , 'connections' ),
 			'callback'  => create_function(
 				'',
-				'echo \'' . __( 'The following settings are applied when viewing the entry results list.', 'connections' ) . '\';'
+				'echo \'' . esc_html__( 'The following settings are applied when viewing the entry results list.', 'connections' ) . '\';'
 				),
 			'page_hook' => $settings
 		);
@@ -178,7 +178,7 @@ class cnRegisterSettings
 			'title'     => __( 'Entry Actions' , 'connections' ),
 			'callback'  => create_function(
 				'',
-				'echo \'' . __( 'Enable or disable various actions that are shown above the single entry in the detail view.', 'connections' ) . '\';'
+				'echo \'' . esc_html__( 'Enable or disable various actions that are shown above the single entry in the detail view.', 'connections' ) . '\';'
 				),
 			'page_hook' => $settings
 		);
@@ -579,7 +579,7 @@ class cnRegisterSettings
 			'desc'      => __( 'Whether a content block should be shown. Read more by clicking this link. NOTE: Content block support must be enabled in the template to have an effect. All the core templates support this feature. If you have purchase a commercial template, it may need to be updated in order to support this feature.', 'connections' ),
 			'help'      => '',
 			'type'      => 'sortable_checklist',
-			'options'   =>  cnOptions::getContentBlocks(),
+			'options'   =>  cnOptions::getContentBlocks( NULL, 'list' ),
 			'default'   => 0,
 		);
 
@@ -639,7 +639,7 @@ class cnRegisterSettings
 			'desc'      => __( 'Whether a content block should be shown. Read more by clicking this link. NOTE: Content block support must be enabled in the template to have an effect. All the core templates support this feature. If you have purchase a commercial template, it may need to be updated in order to support this feature.', 'connections' ),
 			'help'      => '',
 			'type'      => 'sortable_checklist',
-			'options'   =>  cnOptions::getContentBlocks(),
+			'options'   =>  cnOptions::getContentBlocks( NULL, 'single' ),
 			'default'   => 0,
 		);
 
@@ -696,14 +696,15 @@ class cnRegisterSettings
 			'page_hook' => $settings,
 			'tab'       => 'images',
 			'section'   => 'connections_image_thumbnail',
-			'title'     => __('Ratio', 'connections'),
+			'title'     => __('Crop Mode', 'connections'),
 			'desc'      => '',
 			'help'      => '',
 			'type'      => 'radio',
 			'options'   => array(
-				'crop'      => __('Crop, maintain aspect ratio.', 'connections'),
-				'fill'      => __('Fill, maintain aspect ratio.', 'connections'),
-				'none'      => __('None, scale to fit.', 'connections')
+				'crop'      => __('Crop and resize proportionally to best fit the specified dimensions, maintaining the aspect ratio.', 'connections'),
+				'fill'      => __('Resize proportionally to fit entire image into the specified dimensions and add margins if required.', 'connections'),
+				'fit'       => __('Resize proportionally adjusting the size of scaled image so there are no margins added.', 'connections'),
+				'none'      => __('Resize to fit the specified dimensions (no cropping).', 'connections')
 			),
 			'default'   => 'crop'
 		);
@@ -757,14 +758,15 @@ class cnRegisterSettings
 			'page_hook' => $settings,
 			'tab'       => 'images',
 			'section'   => 'connections_image_medium',
-			'title'     => __('Ratio', 'connections'),
+			'title'     => __('Crop Mode', 'connections'),
 			'desc'      => '',
 			'help'      => '',
 			'type'      => 'radio',
 			'options'   => array(
-				'crop'      => __('Crop, maintain aspect ratio.', 'connections'),
-				'fill'      => __('Fill, maintain aspect ratio.', 'connections'),
-				'none'      => __('None, scale to fit.', 'connections')
+				'crop'      => __('Crop and resize proportionally to best fit the specified dimensions, maintaining the aspect ratio.', 'connections'),
+				'fill'      => __('Resize proportionally to fit entire image into the specified dimensions and add margins if required.', 'connections'),
+				'fit'       => __('Resize proportionally adjusting the size of scaled image so there are no margins added.', 'connections'),
+				'none'      => __('Resize to fit the specified dimensions (no cropping).', 'connections')
 			),
 			'default'   => 'crop'
 		);
@@ -818,14 +820,15 @@ class cnRegisterSettings
 			'page_hook' => $settings,
 			'tab'       => 'images',
 			'section'   => 'connections_image_large',
-			'title'     => __('Ratio', 'connections'),
+			'title'     => __('Crop Mode', 'connections'),
 			'desc'      => '',
 			'help'      => '',
 			'type'      => 'radio',
 			'options'   => array(
-				'crop'      => __('Crop, maintain aspect ratio.', 'connections'),
-				'fill'      => __('Fill, maintain aspect ratio.', 'connections'),
-				'none'      => __('None, scale to fit.', 'connections')
+				'crop'      => __('Crop and resize proportionally to best fit the specified dimensions, maintaining the aspect ratio.', 'connections'),
+				'fill'      => __('Resize proportionally to fit entire image into the specified dimensions and add margins if required.', 'connections'),
+				'fit'       => __('Resize proportionally adjusting the size of scaled image so there are no margins added.', 'connections'),
+				'none'      => __('Resize to fit the specified dimensions (no cropping).', 'connections')
 			),
 			'default'   => 'crop'
 		);
@@ -879,14 +882,15 @@ class cnRegisterSettings
 			'page_hook' => $settings,
 			'tab'       => 'images',
 			'section'   => 'connections_image_logo',
-			'title'     => __('Ratio', 'connections'),
+			'title'     => __('Crop Mode', 'connections'),
 			'desc'      => '',
 			'help'      => '',
 			'type'      => 'radio',
 			'options'   => array(
-				'crop'      => __('Crop, maintain aspect ratio.', 'connections'),
-				'fill'      => __('Fill, maintain aspect ratio.', 'connections'),
-				'none'      => __('None, scale to fit.', 'connections')
+				'crop'      => __('Crop and resize proportionally to best fit the specified dimensions, maintaining the aspect ratio.', 'connections'),
+				'fill'      => __('Resize proportionally to fit entire image into the specified dimensions and add margins if required.', 'connections'),
+				'fit'       => __('Resize proportionally adjusting the size of scaled image so there are no margins added.', 'connections'),
+				'none'      => __('Resize to fit the specified dimensions (no cropping).', 'connections')
 			),
 			'default'   => 'fill'
 		);
@@ -1415,7 +1419,7 @@ class cnRegisterSettings
 		$settings['width']   = empty( $settings['width'] ) ? 225 : $settings['width'];
 
 		// The valid ratio options
-		$ratio = array( 'crop', 'fill', 'none' );
+		$ratio = array( 'crop', 'fill', 'fit', 'none' );
 
 		// Make sure the value is one of the permitted options and if it is not, set it to the 'crop' value.
 		$settings['ratio'] = in_array( $settings['ratio'], $ratio ) ? $settings['ratio'] : 'crop';

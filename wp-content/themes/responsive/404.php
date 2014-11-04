@@ -1,7 +1,7 @@
 <?php
 
 // Exit if accessed directly
-if( !defined( 'ABSPATH' ) ) {
+if ( !defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -30,14 +30,12 @@ if( !defined( 'ABSPATH' ) ) {
 
 		<div class="post-entry">
 
-			<?php get_template_part( 'loop-no-posts' ); ?>
+			<?php get_template_part( 'loop-no-posts', get_post_type() ); ?>
 
-		</div>
-		<!-- end of .post-entry -->
+		</div><!-- end of .post-entry -->
 
 		<?php responsive_entry_bottom(); ?>
-	</div>
-	<!-- end of #post-0 -->
+	</div><!-- end of #post-0 -->
 	<?php responsive_entry_after(); ?>
 
 </div><!-- end of #content-full -->
