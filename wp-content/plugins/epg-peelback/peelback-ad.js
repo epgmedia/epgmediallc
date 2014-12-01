@@ -3,9 +3,9 @@ jQuery('document').ready( function($) {
 
     $(function(){
         $('body').peelback({
-            adImage     : 'http://local.wordpress.dev/wp-content/uploads/2014/11/0210619_PS19017_S14-OPE_magazine_500x500_v1mm.jpg',
-            peelImage   : 'http://epgmedia.s3.amazonaws.com/web/EPG%20Media/peel-image.png',
-            clickURL    : '#',
+            adImage     : '//epgmediallc.com/wp-content/uploads/2014/11/synchrony-1411.jpg',
+            peelImage   : '//epgmedia.s3.amazonaws.com/web/EPG%20Media/peel-image.png',
+            clickURL    : 'https://www.synchronybusiness.com/markets/outdoor-power-equipment-financing.html',
             smallSize   : 75,
             bigSize     : 500,
             autoAnimate : true,
