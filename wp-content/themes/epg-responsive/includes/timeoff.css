@@ -69,6 +69,19 @@
 	border-bottom: none;
 }
 
+.epg_form_wrap h4 {
+    display: inline-block;
+    font-size: 130%;
+    margin-bottom: 5px;
+    padding-bottom: 0;
+    border-bottom: 1px solid #000000;
+}
+
+.epg_form_wrap h4 em {
+    font-size: 75%;
+    border-bottom: none;
+}
+
 .epg_form_wrap p span {
 	font-weight: bold;
 	text-decoration: underline;

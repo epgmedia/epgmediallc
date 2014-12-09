@@ -1,4 +1,4 @@
-w<?php
+<?php
 /**
  * Time-Off Request Form Email
  *

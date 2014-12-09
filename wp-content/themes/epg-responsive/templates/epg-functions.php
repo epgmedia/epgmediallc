@@ -49,20 +49,17 @@ class epg_phpmailer extends phpmailer {
 
 			return NULL;
 		}
+
         switch ($issuetype) :
             case 'Bug':
-                $label = ' #Bug/Issue';
-                break;
 
             case 'Issue':
 				$label = ' #Bug/Issue';
                 break;
 
-            case 'Request':
-				$label = ' #Request/Idea';
-                break;
+            case 'Enhancement':
 
-            case 'Idea':
+            case 'Question':
 				$label = ' #Request/Idea';
                 break;
 
