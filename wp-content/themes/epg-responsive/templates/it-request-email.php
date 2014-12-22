@@ -14,7 +14,7 @@ if (
 	( !isset($_POST['shortReasonText']) || !isset($_POST['shortReasonItem']) ) ||
 	!isset($_POST['reason'])
 ) {
-	died('You are missing some required fields.');
+	EPG_Forms::died('You are missing some required fields.');
 }
 
 include_once( ABSPATH . '/wp-includes/class-phpmailer.php' );

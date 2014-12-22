@@ -13,7 +13,7 @@ if(
     !isset($_POST['requesting']) ||
     !isset($_POST['supervisor'])
 ) {
-    died('We are sorry, but there appears to be a problem with the form you submitted.');
+    EPG_Forms::died('We are sorry, but there appears to be a problem with the form you submitted.');
 }
 
 /** The Mail */

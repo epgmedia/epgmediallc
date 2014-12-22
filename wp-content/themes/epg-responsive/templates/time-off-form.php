@@ -1,6 +1,9 @@
 <?php
 // Exit if accessed directly
 if ( !defined('ABSPATH')) exit;
+
+include( 'class.epg_forms.php' );
+
 ?>
 <div class="epg_form_wrap">
 	<form enctype="multipart/form-data" onsubmit="return validate()" method="POST" name="MyForm" action="">
@@ -22,21 +25,7 @@ if ( !defined('ABSPATH')) exit;
 
 			<h3>Send To:</h3>
 			<select name="supervisor">
-				<option selected value="none">Select Supervisor</option>
-				<option value="acollins@boatingindustry.com">Amy Collins</option>
-				<option value="aesham@specialtyim.com">Andrew Esham</option>
-				<option value="dmcmahon@powersportsbusiness.com">Dave McMahon</option>
-				<option value="mminor@specialtyim.com">Marion Minor</option>
-				<option value="cperschmann@epgmediallc.com">Cherri Perschmann</option>
-				<option value="jjuda@specialtyim.com">Joanne Juda-Prainito</option>
-				<option value="jprusak@snowgoer.com">John Prusak</option>
-				<option value="troorda@epgmediallc.com">Terry Roorda</option>
-				<option value="aschmieg@epgmediallc.com">Angela Schmieg</option>
-				<option value="ssutherland@thunderpress.net">Stuart Sutherland</option>
-				<option value="jsweet@boatingindustry.com">Jonathan Sweet</option>
-				<option value="mtuttle@ridermagazine.com">Mark Tuttle</option>
-				<option value="dvoll@ridermagazine.com">Dave Voll</option>
-				<option value="bwohlman@epgmediallc.com">Bernadette Wohlman</option>
+				<?php EPG_Forms::epg_form_options( 'Select Supervisor' ); ?>
 			</select>
 
 			<h3>Date Submitted:</h3>
