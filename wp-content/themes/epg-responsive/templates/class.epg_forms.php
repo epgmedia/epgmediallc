@@ -70,7 +70,7 @@ class EPG_Forms {
 		),
 		array(
 			'first_name'   => 'Angela',
-			'last_name'    => 'Scott',
+			'last_name'    => 'Schmieg',
 			'email_domain' => 'epgmediallc.com'
 		),
 		array(
