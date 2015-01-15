@@ -131,6 +131,12 @@ class EPG_Forms {
 		return $supervisor_array['first_name'] . ' ' . $supervisor_array['last_name'];
 	}
 
+	public static function format_date( $date ) {
+		$date_arr = explode( '-', $date );
+
+		return $date_arr[1] . '/' . $date_arr[2] . '/' . substr( $date_arr[0], -2);
+	}
+
 	public static function died($error) {
 		// your error code can go here ?>
 		<p>

@@ -3,9 +3,10 @@
 if ( !defined('ABSPATH')) exit;
 
 $_GET['submit'] = 'success';
-
+include( 'class.epg_forms.php' );
 ?>
 <h1>Time Off <span>request confirmation</span></h1>
+
 <div class="timeOffWrap">
     <h2>Thank You</h2>
     <div class="innerwrap">
@@ -13,7 +14,7 @@ $_GET['submit'] = 'success';
             Please verify the entries from your submission.
         </h3>
         <p>
-            Date submitted: <span><?php echo $_POST['date_submitted']; ?></span>
+            Date submitted: <span><?php echo epg_forms::format_date($_POST['date_submitted']); ?></span>
         </p>
         <p>
             A copy of the following email was sent to you, <?php echo $_POST['supervisor']; ?> and H.R.:

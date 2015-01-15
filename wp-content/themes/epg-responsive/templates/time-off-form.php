@@ -28,8 +28,10 @@ include( 'class.epg_forms.php' );
 				<?php EPG_Forms::epg_form_options( 'Select Supervisor' ); ?>
 			</select>
 
-			<h3>Date Submitted:</h3>
-			<input class="floatlabel full-width date_submitted" type="text" maxLength="8" value="01/01/14" name="date_submitted" placeholder="Format: mm/dd/yy">
+			<div class="header half-width">
+				<h3>Date Submitted:</h3>
+				<input class="floatlabel full-width date_submitted" type="date" value="" name="date_submitted" placeholder="Format: mm/dd/yy">
+			</div>
 
 			<h2>REQUEST</h2>
 
@@ -56,10 +58,10 @@ include( 'class.epg_forms.php' );
 
 			<h3>Date(s) Requested (Please indicate month, day and year)</h3>
 			<div class="header half-width">
-				From: <input class="floatlabel full-width" type="text" maxLength="8" name="datefrom" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
+				From: <input class="floatlabel full-width" type="date" maxLength="8" name="datefrom" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
 			</div>
 			<div class="header half-width">
-				To: <input class="floatlabel full-width" type="text" maxLength="8" name="dateto" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
+				To: <input class="floatlabel full-width" type="date" maxLength="8" name="dateto" placeholder="Example: 03/24/14" data-label="Format: mm/dd/yy">
 			</div>
 
 			<h3>Reason for request:</h3>

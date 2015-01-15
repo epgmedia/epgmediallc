@@ -1,7 +1,14 @@
+Date.prototype.yyyymmdd = function() {
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+    var dd  = this.getDate().toString();
+    return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]); // padding
+};
+
 jQuery(document).ready(function ($) {
 
     /*
-    Float Labels
+        Float Labels
     */
     $('input.floatlabel').floatlabel({
         labelStartTop: '10px',
@@ -9,67 +16,16 @@ jQuery(document).ready(function ($) {
         transitionDuration: 0.1
     });
     /*
-    Document Focus
+        Document Focus
     */
-    $(document).ready(function() {
-        $('form:first *:input[type!=hidden]:first').focus();
-    });
+    $('form:first *:input[type!=hidden]:first').focus();
 
     /*
-    * Set Date submitted Variable
+        Date
     */
-    var today = new Date();
-    var month = today.getMonth();
-    var day = today.getDate();
-    var year = today.getFullYear();
-    var s = "/";
-    var monthname;
-    if (month == 0) monthname = "01";
-    if (month == 1) monthname = "02";
-    if (month == 2) monthname = "03";
-    if (month == 3) monthname = "04";
-    if (month == 4) monthname = "05";
-    if (month == 5) monthname = "06";
-    if (month == 6) monthname = "07";
-    if (month == 7) monthname = "08";
-    if (month == 8) monthname = "09";
-    if (month == 9) monthname = "10";
-    if (month == 10) monthname = "11";
-    if (month == 11) monthname = "12";
-
-    var dayname;
-    if (day == 01) day = "01";
-    if (day == 02) day = "02";
-    if (day == 03) day = "03";
-    if (day == 04) day = "04";
-    if (day == 05) day = "05";
-    if (day == 06) day = "06";
-    if (day == 07) day = "07";
-    if (day == 08) day = "08";
-    if (day == 09) day = "09";
-
-    var yearname;
-    if (year == 2000) yearname = "00";
-    if (year == 2001) yearname = "01";
-    if (year == 2002) yearname = "02";
-    if (year == 2003) yearname = "03";
-    if (year == 2004) yearname = "04";
-    if (year == 2005) yearname = "05";
-    if (year == 2006) yearname = "06";
-    if (year == 2007) yearname = "07";
-    if (year == 2008) yearname = "08";
-    if (year == 2009) yearname = "09";
-    if (year == 2010) yearname = "10";
-    if (year == 2011) yearname = "11";
-    if (year == 2012) yearname = "12";
-    if (year == 2013) yearname = "13";
-    if (year == 2014) yearname = "14";
-
-    var populate_date = monthname + s + day + s + yearname;
-
-    $(".date_submitted").val(populate_date);
-
-    //document.Myform.date_submitted.value = monthname + s + day + s + yearname;
+    var now = new Date().yyyymmdd();
+    console.log( now );
+    $(".date_submitted").val( now );
 
     /**
     *
@@ -129,7 +85,7 @@ jQuery(document).ready(function ($) {
 
     // ************** is Pay Type selected ***************
     function check_paytype(){
-        var paytype = -1
+        var paytype = -1;
         for (i=0; i<document.Myform.pay_type.length; i++){
         if (document.Myform.pay_type[i].checked)
         paytype = i;
@@ -143,7 +99,7 @@ jQuery(document).ready(function ($) {
 
     // ************** is Day or Hour selected ************
     function check_dayhour(){
-        var dayhour = -1
+        var dayhour = -1;
         for (c=0; c<document.Myform.days_or_hours.length; c++){
         if (document.Myform.days_or_hours[c].checked)
         dayhour = c;

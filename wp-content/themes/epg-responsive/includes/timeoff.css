@@ -32,7 +32,7 @@
 .epg_form_wrap span,
 .epg_form_wrap input,
 .epg_form_wrap textarea {
-	font: 16px Times, "Times New Roman", serif;
+	font: 16px/1.3em Times, "Times New Roman", serif;
 	margin-top: 0;
 	padding-top: 3px;
 }
@@ -141,9 +141,8 @@
  * 
  *******************************************************/
 .epg_form_wrap {
-	border: 2px solid #1C445C;
 	margin: 0 auto 40px;
-	max-width: 700px;
+	max-width:80%;
 }
 
 .epg_form_wrap *,
