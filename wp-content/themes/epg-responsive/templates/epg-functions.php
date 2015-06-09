@@ -56,13 +56,13 @@ class epg_phpmailer extends phpmailer {
 			case 'Bug':
 
 			case 'Issue':
-				$label = ' #Bug/Issue';
+				$label = ' #Ticket';
 				break;
 
 			case 'Enhancement':
 
 			case 'Question':
-				$label = ' #Request/Idea';
+				$label = ' #Project';
 				break;
 
 			default:
