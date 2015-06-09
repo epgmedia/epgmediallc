@@ -1,81 +1,70 @@
-######################################
-                                     #
-# New Ignore File                    #
-                                     #
-######################################
-
-# Ignore All
-
-/*
-
-# Except....
-
-!.*
-!/wp-content
-/wp-content/*
-!/wp-content/plugins
-!/wp-content/themes
-!/wp-content/uploads
-!/wp-content/maintenance.php
-!/wp-content/index.php
-
-# But continue to ignore....
+########################
+# Weird Files and logs #
+########################
 
 .DS_Store
 ._*
+.htaccess
 .idea
 *.log
-*_log.txt
 error_log
 
 
+########################
+# Sitemap              #
+########################
 
-############
-# Weird Files and logs
+sitemap.xml
+sitemap.xml.gz
 
-#._*
-#.htaccess
-#.idea
-#*.log
-#error_log
 
-############
-# Sitemap
+########################
+# Wordpress            #
+########################
 
-#sitemap.xml
-#sitemap.xml.gz
-
-############
-# Wordpress
+wp-activate.php
+wp-atom.php
+wp-blog-header.php
+wp-comments-post.php
+wp-commentsrss2.php
+wp-config.php
+wp-config-sample.php
+wp-cron.php
+wp-feed.php
+wp-links-opml.php
+wp-load.php
+wp-login.php
+wp-mail.php
+wp-pass.php
+wp-rdf.php
+wp-register.php
+wp-rss.php
+wp-rss2.php
+wp-settings.php
+wp-signup.php
+wp-trackback.php
+xmlrpc.php
 
 # Admin
-#wp-admin/
+wp-admin/
 
-# Config file
-#wp-config.php
+# System files
+wp-includes/
 
 # Content folders
-#wp-content/advanced-cache.php
-#wp-content/backups/
-#wp-content/backup-db/
-#wp-content/blogs.dir/
-#wp-content/cache/
-#wp-content/gallery/
-#wp-content/upgrade/
-#wp-content/uploads/
-#wp-content/wp-cache-config.php
+wp-content/advanced-cache.php
+wp-content/db.php
+wp-content/object-cache.php
+wp-content/backups/
+wp-content/backup-db/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/gallery/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/wp-cache-config.php
+wp-content/w3tc-config
 
-## System files
-#wp-includes/
-#cg-bin/
-#e/
-#ftp/
-#FTP/
-#.ftpquota
-#wordpress/
-
-
-############
-# Site Specific
-
-#
+########################
+# Site Specific        #
+########################
