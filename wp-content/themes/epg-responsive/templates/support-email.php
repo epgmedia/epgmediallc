@@ -62,8 +62,8 @@ if(!$mail->Send()) {
 	$email_addresses = array(
 		array(
 			'kind' => 'to',
-			'address' => 'cgerber@epgmediallc.com',
-			'name' => 'Christopher Gerber'
+			'address' => 'digital@epgmediallc.com',
+			'name' => 'Digital'
 		)
 	);
 	$user_mail->it_request_recipients( $email_addresses );
