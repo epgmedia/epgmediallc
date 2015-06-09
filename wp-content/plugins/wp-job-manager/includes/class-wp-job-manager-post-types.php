@@ -13,11 +13,12 @@ class WP_Job_Manager_Post_Types {
 		add_filter( 'the_content', array( $this, 'job_content' ) );
 		add_action( 'job_manager_check_for_expired_jobs', array( $this, 'check_for_expired_jobs' ) );
 		add_action( 'job_manager_delete_old_previews', array( $this, 'delete_old_previews' ) );
-		add_action( 'pending_to_publish', array( $this, 'set_expirey' ) );
-		add_action( 'preview_to_publish', array( $this, 'set_expirey' ) );
-		add_action( 'draft_to_publish', array( $this, 'set_expirey' ) );
-		add_action( 'auto-draft_to_publish', array( $this, 'set_expirey' ) );
-		add_action( 'expired_to_publish', array( $this, 'set_expirey' ) );
+
+		add_action( 'pending_to_publish', array( $this, 'set_expiry' ) );
+		add_action( 'preview_to_publish', array( $this, 'set_expiry' ) );
+		add_action( 'draft_to_publish', array( $this, 'set_expiry' ) );
+		add_action( 'auto-draft_to_publish', array( $this, 'set_expiry' ) );
+		add_action( 'expired_to_publish', array( $this, 'set_expiry' ) );
 
 		add_filter( 'the_job_description', 'wptexturize'        );
 		add_filter( 'the_job_description', 'convert_smilies'    );
@@ -30,7 +31,18 @@ class WP_Job_Manager_Post_Types {
 		add_action( 'job_manager_application_details_url', array( $this, 'application_details_url' ) );
 
 		add_filter( 'wp_insert_post_data', array( $this, 'fix_post_name' ), 10, 2 );
-		add_action( 'update_post_meta', array( $this, 'maybe_generate_geolocation_data' ), 10, 4 );
+		add_action( 'add_post_meta', array( $this, 'maybe_add_geolocation_data' ), 10, 3 );
+		add_action( 'update_post_meta', array( $this, 'maybe_update_geolocation_data' ), 10, 4 );
+		add_action( 'update_post_meta', array( $this, 'maybe_update_menu_order' ), 10, 4 );
+		add_action( 'wp_insert_post', array( $this, 'maybe_add_default_meta_data' ), 10, 2 );
+
+		// WP ALL Import
+		add_action( 'pmxi_saved_post', array( $this, 'pmxi_saved_post' ), 10, 1 );
+
+		// RP4WP
+		add_filter( 'rp4wp_get_template', array( $this, 'rp4wp_template' ), 10, 3 );
+		add_filter( 'rp4wp_related_meta_fields', array( $this, 'rp4wp_related_meta_fields' ), 10, 3 );
+		add_filter( 'rp4wp_related_meta_fields_weight', array( $this, 'rp4wp_related_meta_fields_weight' ), 10, 3 );
 	}
 
 	/**
@@ -65,8 +77,8 @@ class WP_Job_Manager_Post_Types {
 			}
 
 			register_taxonomy( "job_listing_category",
-		        array( "job_listing" ),
-		        array(
+				apply_filters( 'register_taxonomy_job_listing_category_object_type', array( 'job_listing' ) ),
+	       	 	apply_filters( 'register_taxonomy_job_listing_category_args', array(
 		            'hierarchical' 			=> true,
 		            'update_count_callback' => '_update_post_term_count',
 		            'label' 				=> $plural,
@@ -92,7 +104,7 @@ class WP_Job_Manager_Post_Types {
 		            	'assign_terms' 		=> $admin_capability,
 		            ),
 		            'rewrite' 				=> $rewrite,
-		        )
+		        ) )
 		    );
 		}
 
@@ -112,8 +124,8 @@ class WP_Job_Manager_Post_Types {
 		}
 
 		register_taxonomy( "job_listing_type",
-	        array( "job_listing" ),
-	        array(
+			apply_filters( 'register_taxonomy_job_listing_type_object_type', array( 'job_listing' ) ),
+	        apply_filters( 'register_taxonomy_job_listing_type_args', array(
 	            'hierarchical' 			=> true,
 	            'label' 				=> $plural,
 	            'labels' => array(
@@ -138,7 +150,7 @@ class WP_Job_Manager_Post_Types {
 	            	'assign_terms' 		=> $admin_capability,
 	            ),
 	           'rewrite' 				=> $rewrite,
-	        )
+	        ) )
 	    );
 
 	    /**
@@ -266,7 +278,7 @@ class WP_Job_Manager_Post_Types {
 
 		add_filter( 'the_content', array( $this, 'job_content' ) );
 
-		return $content;
+		return apply_filters( 'job_manager_single_job_content', $content, $post );
 	}
 
 	/**
@@ -277,7 +289,7 @@ class WP_Job_Manager_Post_Types {
 			'post_type'           => 'job_listing',
 			'post_status'         => 'publish',
 			'ignore_sticky_posts' => 1,
-			'posts_per_page'      => 10,
+			'posts_per_page'      => isset( $_GET['posts_per_page'] ) ? absint( $_GET['posts_per_page'] ) : 10,
 			's'                   => isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '',
 			'meta_query'          => array(),
 			'tax_query'           => array()
@@ -407,37 +419,44 @@ class WP_Job_Manager_Post_Types {
 	}
 
 	/**
-	 * Set expirey date when job status changes
+	 * Typo -.-
 	 */
 	public function set_expirey( $post ) {
+		$this->set_expiry( $post );
+	}
+
+	/**
+	 * Set expirey date when job status changes
+	 */
+	public function set_expiry( $post ) {
 		if ( $post->post_type !== 'job_listing' ) {
 			return;
 		}
 
 		// See if it is already set
-		$expires  = get_post_meta( $post->ID, '_job_expires', true );
-
-		if ( ! empty( $expires ) ) {
+		if ( metadata_exists( 'post', $post->ID, '_job_expires' ) ) {
+			$expires = get_post_meta( $post->ID, '_job_expires', true );
+			if ( $expires && strtotime( $expires ) < current_time( 'timestamp' ) ) {
+				update_post_meta( $post->ID, '_job_expires', '' );
+				$_POST[ '_job_expires' ] = '';
+			}
 			return;
 		}
 
-		// Get duration from the product if set...
-		$duration = get_post_meta( $post->ID, '_job_duration', true );
+		// No metadata set so we can generate an expiry date
+		// See if the user has set the expiry manually:
+		if ( ! empty( $_POST[ '_job_expires' ] ) ) {
+			update_post_meta( $post->ID, '_job_expires', date( 'Y-m-d', strtotime( sanitize_text_field( $_POST[ '_job_expires' ] ) ) ) );
 
-		// ...otherwise use the global option
-		if ( ! $duration )
-			$duration = absint( get_option( 'job_manager_submission_duration' ) );
-
-		if ( $duration ) {
-			$expires = date( 'Y-m-d', strtotime( "+{$duration} days", current_time( 'timestamp' ) ) );
+		// No manual setting? Lets generate a date
+		} else {
+			$expires = calculate_job_expiry( $post->ID );
 			update_post_meta( $post->ID, '_job_expires', $expires );
 
 			// In case we are saving a post, ensure post data is updated so the field is not overridden
-			if ( isset( $_POST[ '_job_expires' ] ) )
+			if ( isset( $_POST[ '_job_expires' ] ) ) {
 				$_POST[ '_job_expires' ] = $expires;
-
-		} else {
-			update_post_meta( $post->ID, '_job_expires', '' );
+			}
 		}
 	}
 
@@ -468,14 +487,116 @@ class WP_Job_Manager_Post_Types {
 	}
 
 	/**
-	 * Generate location data if a post is saved
+	 * Generate location data if a post is added
 	 * @param  int $post_id
 	 * @param  array $post
 	 */
-	public function maybe_generate_geolocation_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
+	public function maybe_add_geolocation_data( $object_id, $meta_key, $_meta_value ) {
 		if ( '_job_location' !== $meta_key || 'job_listing' !== get_post_type( $object_id ) ) {
 			return;
 		}
 		do_action( 'job_manager_job_location_edited', $object_id, $_meta_value );
+	}
+
+	/**
+	 * Generate location data if a post is updated
+	 */
+	public function maybe_update_geolocation_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
+		if ( '_job_location' !== $meta_key || 'job_listing' !== get_post_type( $object_id ) ) {
+			return;
+		}
+		do_action( 'job_manager_job_location_edited', $object_id, $_meta_value );
+	}
+
+	/**
+	 * Maybe set menu_order if the featured status of a job is changed
+	 */
+	public function maybe_update_menu_order( $meta_id, $object_id, $meta_key, $_meta_value ) {
+		if ( '_featured' !== $meta_key || 'job_listing' !== get_post_type( $object_id ) ) {
+			return;
+		}
+		global $wpdb;
+
+		if ( '1' == $_meta_value ) {
+			$wpdb->update( $wpdb->posts, array( 'menu_order' => -1 ), array( 'ID' => $object_id ) );
+		} else {
+			$wpdb->update( $wpdb->posts, array( 'menu_order' => 0 ), array( 'ID' => $object_id, 'menu_order' => -1 ) );
+		}
+	}
+
+	/**
+	 * Legacy
+	 * @deprecated 1.19.1
+	 */
+	public function maybe_generate_geolocation_data( $meta_id, $object_id, $meta_key, $_meta_value ) {
+		$this->maybe_update_geolocation_data( $meta_id, $object_id, $meta_key, $_meta_value );
+	}
+
+	/**
+	 * Maybe set default meta data for job listings
+	 * @param  int $post_id
+	 * @param  WP_Post $post
+	 */
+	public function maybe_add_default_meta_data( $post_id, $post = '' ) {
+		if ( empty( $post ) || 'job_listing' === $post->post_type ) {
+			add_post_meta( $post_id, '_filled', 0, true );
+			add_post_meta( $post_id, '_featured', 0, true );
+		}
+	}
+
+	/**
+	 * After importing via WP ALL Import, add default meta data
+	 * @param  int $post_id
+	 */
+	public function pmxi_saved_post( $post_id ) {
+		if ( 'job_listing' === get_post_type( $post_id ) ) {
+			$this->maybe_add_default_meta_data( $post_id );
+			if ( ! WP_Job_Manager_Geocode::has_location_data( $post_id ) && ( $location = get_post_meta( $post_id, '_job_location', true ) ) ) {
+				WP_Job_Manager_Geocode::generate_location_data( $post_id, $location );
+			}
+		}
+	}
+
+	/**
+	 * Replace RP4WP template with the template from Job Manager
+	 * @param  string $located
+	 * @param  string $template_name
+	 * @param  array $args
+	 * @return string
+	 */
+	public function rp4wp_template( $located, $template_name, $args ) {
+		if ( 'related-post-default.php' === $template_name && 'job_listing' === $args['related_post']->post_type ) {
+			return JOB_MANAGER_PLUGIN_DIR . '/templates/content-job_listing.php';
+		}
+		return $located;
+	}
+
+	/**
+	 * Add meta fields for RP4WP to relate jobs by
+	 * @param  array $meta_fields
+	 * @param  int $post_id
+	 * @param  WP_Post $post
+	 * @return array
+	 */
+	public function rp4wp_related_meta_fields( $meta_fields, $post_id, $post ) {
+		if ( 'job_listing' === $post->post_type ) {
+			$meta_fields[] = '_company_name';
+			$meta_fields[] = '_job_location';
+		}
+		return $meta_fields;
+	}
+
+	/**
+	 * Add meta fields for RP4WP to relate jobs by
+	 * @param  int $weight
+	 * @param  WP_Post $post
+	 * @param  string $meta_field
+	 * @return int
+	 */
+	public function rp4wp_related_meta_fields_weight( $weight, $post, $meta_field ) {
+		if ( 'job_listing' === $post->post_type ) {
+			$weight = 100;
+		}
+		return $weight;
 	}
 }

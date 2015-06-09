@@ -7,7 +7,7 @@
  * @author 		Mike Jolley
  * @category 	Core
  * @package 	Job Manager/Template
- * @version     1.0.0
+ * @version     1.20.0
  */
 
 /**
@@ -19,10 +19,10 @@
  * @param string $default_path (default: '')
  * @return void
  */
-function get_job_manager_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
-	if ( $args && is_array($args) )
+function get_job_manager_template( $template_name, $args = array(), $template_path = 'job_manager', $default_path = '' ) {
+	if ( $args && is_array( $args ) ) {
 		extract( $args );
-
+	}
 	include( locate_job_manager_template( $template_name, $template_path, $default_path ) );
 }
 
@@ -35,17 +35,12 @@ function get_job_manager_template( $template_name, $args = array(), $template_pa
  *		yourtheme		/	$template_name
  *		$default_path	/	$template_name
  *
- * @param mixed $template_name
- * @param string $template_path (default: '')
- * @param string $default_path (default: '')
+ * @param string $template_name
+ * @param string $template_path (default: 'job_manager')
+ * @param string|bool $default_path (default: '') False to not load a default
  * @return string
  */
-function locate_job_manager_template( $template_name, $template_path = '', $default_path = '' ) {
-	if ( ! $template_path )
-		$template_path = 'job_manager';
-	if ( ! $default_path )
-		$default_path = JOB_MANAGER_PLUGIN_DIR . '/templates/';
-
+function locate_job_manager_template( $template_name, $template_path = 'job_manager', $default_path = '' ) {
 	// Look within passed path within the theme - this is priority
 	$template = locate_template(
 		array(
@@ -55,8 +50,12 @@ function locate_job_manager_template( $template_name, $template_path = '', $defa
 	);
 
 	// Get default template
-	if ( ! $template )
-		$template = $default_path . $template_name;
+	if ( ! $template && $default_path !== false ) {
+		$default_path = $default_path ? $default_path : JOB_MANAGER_PLUGIN_DIR . '/templates/';
+		if ( file_exists( trailingslashit( $default_path ) . $template_name ) ) {
+			$template = trailingslashit( $default_path ) . $template_name;
+		}
+	}
 
 	// Return what we found
 	return apply_filters( 'job_manager_locate_template', $template, $template_name, $template_path );
@@ -65,32 +64,26 @@ function locate_job_manager_template( $template_name, $template_path = '', $defa
 /**
  * Get template part (for templates in loops).
  *
- * @param mixed $slug
+ * @param string $slug
  * @param string $name (default: '')
- * @return void
+ * @param string $template_path (default: 'job_manager')
+ * @param string|bool $default_path (default: '') False to not load a default
  */
-function get_job_manager_template_part( $slug, $name = '', $template_path = '', $default_path = '' ) {
-	if ( ! $template_path )
-		$template_path = 'job_manager';
-	if ( ! $default_path )
-		$default_path = JOB_MANAGER_PLUGIN_DIR . '/templates/';
-
+function get_job_manager_template_part( $slug, $name = '', $template_path = 'job_manager', $default_path = '' ) {
 	$template = '';
 
-	// Look in yourtheme/slug-name.php and yourtheme/job_manager/slug-name.php
-	if ( $name )
-		$template = locate_template( array ( "{$slug}-{$name}.php", "{$template_path}/{$slug}-{$name}.php" ) );
-
-	// Get default slug-name.php
-	if ( ! $template && $name && file_exists( $default_path . "{$slug}-{$name}.php" ) )
-		$template = $default_path . "{$slug}-{$name}.php";
+	if ( $name ) {
+		$template = locate_job_manager_template( "{$slug}-{$name}.php", $template_path, $default_path );
+	}
 
 	// If template file doesn't exist, look in yourtheme/slug.php and yourtheme/job_manager/slug.php
-	if ( ! $template )
-		$template = locate_template( array( "{$slug}.php", "{$template_path}/{$slug}.php" ) );
+	if ( ! $template ) {
+		$template = locate_job_manager_template( "{$slug}.php", $template_path, $default_path );
+	}
 
-	if ( $template )
+	if ( $template ) {
 		load_template( $template, false );
+	}
 }
 
 /**
@@ -153,7 +146,6 @@ function get_the_job_status( $post = null ) {
  */
 function is_position_filled( $post = null ) {
 	$post = get_post( $post );
-
 	return $post->_filled ? true : false;
 }
 
@@ -165,8 +157,18 @@ function is_position_filled( $post = null ) {
  */
 function is_position_featured( $post = null ) {
 	$post = get_post( $post );
-
 	return $post->_featured ? true : false;
+}
+
+/**
+ * Return whether or not applications are allowed
+ *
+ * @param  object $post
+ * @return boolean
+ */
+function candidates_can_apply( $post = null ) {
+	$post = get_post( $post );
+	return ! is_position_filled() && ! in_array( $post->post_status, array( 'preview', 'expired' ) );
 }
 
 /**
@@ -202,8 +204,10 @@ function get_the_job_permalink( $post = null ) {
  */
 function get_the_job_application_method( $post = null ) {
 	$post = get_post( $post );
-	if ( $post->post_type !== 'job_listing' )
+
+	if ( $post && $post->post_type !== 'job_listing' ) {
 		return;
+	}
 
 	$method = new stdClass();
 	$apply  = $post->_application;
@@ -313,10 +317,11 @@ function the_company_logo( $size = 'full', $default = null, $post = null ) {
 
 		echo '<img class="company_logo" src="' . $logo . '" alt="' . get_the_company_name( $post ) . '" />';
 
-	} elseif ( $default )
+	} elseif ( $default ) {
 		echo '<img class="company_logo" src="' . $default . '" alt="' . get_the_company_name( $post ) . '" />';
-	else
-		echo '<img class="company_logo" src="' . JOB_MANAGER_PLUGIN_URL . '/assets/images/company.png' . '" alt="' . get_the_company_name( $post ) . '" />';
+	} else {
+		echo '<img class="company_logo" src="' . apply_filters( 'job_manager_default_company_logo', JOB_MANAGER_PLUGIN_URL . '/assets/images/company.png' ) . '" alt="' . get_the_company_name( $post ) . '" />';
+	}
 }
 
 /**
@@ -344,8 +349,6 @@ function get_the_company_logo( $post = null ) {
 function job_manager_get_resized_image( $logo, $size ) {
 	global $_wp_additional_image_sizes;
 
-	ob_start();
-
 	if ( $size !== 'full' && strstr( $logo, WP_CONTENT_URL ) && ( isset( $_wp_additional_image_sizes[ $size ] ) || in_array( $size, array( 'thumbnail', 'medium', 'large' ) ) ) ) {
 
 		if ( in_array( $size, array( 'thumbnail', 'medium', 'large' ) ) ) {
@@ -359,27 +362,38 @@ function job_manager_get_resized_image( $logo, $size ) {
 		}
 
 		$upload_dir        = wp_upload_dir();
-		$logo_path         = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $logo );
+		$logo_path         = str_replace( array( $upload_dir['baseurl'], $upload_dir['url'], WP_CONTENT_URL ), array( $upload_dir['basedir'], $upload_dir['path'], WP_CONTENT_DIR ), $logo );
 		$path_parts        = pathinfo( $logo_path );
 		$resized_logo_path = str_replace( '.' . $path_parts['extension'], '-' . $size . '.' . $path_parts['extension'], $logo_path );
 
+		if ( strstr( $resized_logo_path, 'http:' ) || strstr( $resized_logo_path, 'https:' ) ) {
+			return $logo;
+		}
+
 		if ( ! file_exists( $resized_logo_path ) ) {
-			// Generate size
+			ob_start();
+
 			$image = wp_get_image_editor( $logo_path );
 
 			if ( ! is_wp_error( $image ) ) {
-			   	if ( ! is_wp_error( $image->resize( $img_width, $img_height, $img_crop ) ) ) {
-					if ( ! is_wp_error( $image->save( $resized_logo_path ) ) ) {
+
+				$resize = $image->resize( $img_width, $img_height, $img_crop );
+
+			   	if ( ! is_wp_error( $resize ) ) {
+
+			   		$save = $image->save( $resized_logo_path );
+
+					if ( ! is_wp_error( $save ) ) {
 						$logo = dirname( $logo ) . '/' . basename( $resized_logo_path );
 					}
 				}
 			}
+
+			ob_get_clean();
 		} else {
 			$logo = dirname( $logo ) . '/' . basename( $resized_logo_path );
 		}
 	}
-
-	ob_end_clean();
 
 	return $logo;
 }
@@ -388,8 +402,14 @@ function job_manager_get_resized_image( $logo, $size ) {
  * Output the company video
  */
 function the_company_video( $post = null ) {
-	$video       = get_the_company_video( $post );
-	$video_embed = wp_oembed_get( $video );
+	$video    = get_the_company_video( $post );
+	$filetype = wp_check_filetype( $video );
+
+	if ( ! empty( $filetype['ext'] ) ) {
+		$video_embed = wp_video_shortcode( array( 'src' => $video ) );
+	} else {
+		$video_embed = wp_oembed_get( $video );
+	}
 
 	if ( $video_embed ) {
 		echo '<div class="company_video">' . $video_embed . '</div>';

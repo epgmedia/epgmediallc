@@ -162,22 +162,24 @@
 		.job-manager-uploaded-files {
 			display: table;
 			.job-manager-uploaded-file {
-				line-height: 1.5em;
+				line-height: 2em;
 				font-style: italic;
-				display: table-row;
+				margin-bottom: 1em;
+				display: block;
 				.job-manager-uploaded-file-preview {
-					display: table-cell;
-					vertical-align: middle;
-					padding: .5em 0 .5em 0;
 					img {
 						height: 64px;
 						margin: 0;
+						vertical-align: top;
+					}
+					a {
+						line-height: 64px;
+						display: inline-block;
+						padding: 0 0 0 1em;
 					}
 				}
 				.job-manager-uploaded-file-name {
-					display: table-cell;
-					vertical-align: middle;
-					padding: .5em 0 .5em 1em;
+					display: block;
 				}
 			}
 		}
@@ -211,6 +213,7 @@ div.job_listings {
 		margin: 0;
 	}
 }
+.rp4wp-related-job_listing > ul,
 ul.job_listings {
 	padding: 0;
 	margin: 0;
@@ -239,6 +242,7 @@ ul.job_listings {
 		a {
 			display: block;
 			padding: 1em 1em 1em 2em;
+			border: 0;
 			overflow: hidden;
 			zoom: 1;
 			position: relative;
@@ -463,7 +467,7 @@ ul.job_listings {
 		.internship {
 			background-color: @internship;
 		}
-		.position-filled {
+		.position-filled, .listing-expired {
 			color: #b81c23;
 		}
 		.location:before {
@@ -474,14 +478,27 @@ ul.job_listings {
 			.display-icon;
 			content: '\e80f';
 		}
-		.position-filled:before {
+		.position-filled:before, .listing-expired:before {
 			.display-icon;
 			content: '\e80e';
 		}
 	}
+}
+.job-manager-application-wrapper {
+	clear: both;
+	border: 1px solid #eee;
+	padding: .75em 1em 0;
+	margin: 1em 0;
+	line-height: 1.5em;
+	display: block;
+	position: relative;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+.single_job_listing, .job-manager-application-wrapper {
 	.application {
 		padding: 0;
 		margin: 0 0 1em;
+		overflow: hidden;
 
 		.application_button, .application_details {
 			-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
@@ -492,8 +509,8 @@ ul.job_listings {
 			text-align: center;
 			font-size: 1.1em;
 			line-height: 1em;
-			float: left;
-			margin: 0 .5em 20px 0;
+			display: inline-block;
+			margin: 0 .5em 0 0;
 			padding: 1/1.1em 2em;
 			outline: 0;
 		}
@@ -501,7 +518,7 @@ ul.job_listings {
 			clear: both;
 			border: 1px solid #eee;
 			padding: .75em 1em 0;
-			margin: 0;
+			margin: 1em 0;
 			line-height: 1.5em;
 			display: block;
 			position: relative;
@@ -615,6 +632,7 @@ ul.job_listings {
 		a {
 			float: right;
 			padding-left: 10px;
+			border: 0;
 		}
 	}
 }
@@ -625,6 +643,12 @@ div.job_listings {
 		padding: 1em 0 1em 0;
 		border-bottom: 1px solid #eee;
 		line-height: 1;
+	}
+	.load_previous {
+		border-top: 1px solid #eee;
+	}
+	.load_more_jobs + ul.job_listings {
+		border-top: 0;
 	}
 	.load_more_jobs {
 		text-align: center;
@@ -640,6 +664,7 @@ div.job_listings {
 		}
 		&:hover, &:focus {
 			background-color: #fcfcfc;
+			border-bottom: 1px solid #eee;
 		}
 	}
 }
@@ -758,6 +783,15 @@ div.job_listings {
 }
 
 #job-manager-job-dashboard {
+	.account-sign-in {
+		.button {
+			margin-right: .5em;
+			&:before {
+				.display-icon;
+				content: '\e808';
+			}
+		}
+	}
 	table {
 		ul.job-dashboard-actions {
 			margin: 0;
@@ -829,6 +863,7 @@ nav.job-manager-pagination, #content nav.job-manager-pagination {
 				padding: .5em;
 				min-width: 1em;
 				display: block;
+				border: 0;
 			}
 			span.current, a:hover, a:focus {
 				background: #eee;
@@ -876,6 +911,11 @@ nav.job-manager-pagination, #content nav.job-manager-pagination {
 	}
 }
 
+// Chosen fixes
+.chosen-container {
+	width: 100% !important;
+}
+
 // Default theme fixes
 .twenty-eleven {
 	ul.job_listings {
@@ -887,5 +927,29 @@ nav.job-manager-pagination, #content nav.job-manager-pagination {
 .twenty-ten {
 	.job_types, .chosen-choices {
 		margin: 0 !important;
+	}
+}
+
+.rtl {
+	.job-manager-form {
+		label {
+			float: right;
+		}
+		div.field {
+			float: left;
+		}
+	}
+	.job_listing_preview_title, .entry-content .job_listing_preview_title {
+		.button {
+			float: left;
+		}
+	}
+	.single_job_listing {
+		.meta {
+			li {
+				float: right;
+				margin: 0 0 0 1em;
+			}
+		}
 	}
 }

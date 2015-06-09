@@ -54,14 +54,23 @@ class WP_Job_Manager_Settings {
 							'std'        => '0',
 							'label'      => __( 'Filled Positions', 'wp-job-manager' ),
 							'cb_label'   => __( 'Hide filled positions', 'wp-job-manager' ),
-							'desc'       => __( 'If enabled, filled positions will be hidden.', 'wp-job-manager' ),
+							'desc'       => __( 'If enabled, filled positions will be hidden from archives.', 'wp-job-manager' ),
+							'type'       => 'checkbox',
+							'attributes' => array()
+						),
+						array(
+							'name'       => 'job_manager_hide_expired_content',
+							'std'        => '1',
+							'label'      => __( 'Expired Listings', 'wp-job-manager' ),
+							'cb_label'   => __( 'Hide content within expired listings', 'wp-job-manager' ),
+							'desc'       => __( 'If enabled, the content within expired listings will be hidden. Otherwise, expired listings will be displayed as normal (without the application area).', 'wp-job-manager' ),
 							'type'       => 'checkbox',
 							'attributes' => array()
 						),
 						array(
 							'name'       => 'job_manager_enable_categories',
 							'std'        => '0',
-							'label'      => __( 'Job Categories', 'wp-job-manager' ),
+							'label'      => __( 'Categories', 'wp-job-manager' ),
 							'cb_label'   => __( 'Enable categories for listings', 'wp-job-manager' ),
 							'desc'       => __( 'Choose whether to enable categories. Categories must be setup by an admin to allow users to choose them during submission.', 'wp-job-manager' ),
 							'type'       => 'checkbox',
@@ -111,6 +120,15 @@ class WP_Job_Manager_Settings {
 							'attributes' => array()
 						),
 						array(
+							'name'       => 'job_manager_generate_username_from_email',
+							'std'        => '1',
+							'label'      => __( 'Account Username', 'wp-job-manager' ),
+							'cb_label'   => __( 'Automatically Generate Username from Email Address', 'wp-job-manager' ),
+							'desc'       => __( 'If enabled, a username will be generated from the first part of the user email address. Otherwise, a username field will be shown.', 'wp-job-manager' ),
+							'type'       => 'checkbox',
+							'attributes' => array()
+						),
+						array(
 							'name'       => 'job_manager_registration_role',
 							'std'        => 'employer',
 							'label'      => __( 'Account Role', 'wp-job-manager' ),
@@ -121,8 +139,8 @@ class WP_Job_Manager_Settings {
 						array(
 							'name'       => 'job_manager_submission_requires_approval',
 							'std'        => '1',
-							'label'      => __( 'Approval Required', 'wp-job-manager' ),
-							'cb_label'   => __( 'New submissions require admin approval', 'wp-job-manager' ),
+							'label'      => __( 'Moderate New Listings', 'wp-job-manager' ),
+							'cb_label'   => __( 'New listing submissions require admin approval', 'wp-job-manager' ),
 							'desc'       => __( 'If enabled, new submissions will be inactive, pending admin approval.', 'wp-job-manager' ),
 							'type'       => 'checkbox',
 							'attributes' => array()
@@ -348,8 +366,16 @@ class WP_Job_Manager_Settings {
 				jQuery(this).addClass('nav-tab-active');
 				return false;
 			});
-
 			jQuery('.nav-tab-wrapper a:first').click();
+			jQuery('#setting-job_manager_enable_registration').change(function(){
+				if ( jQuery( this ).is(':checked') ) {
+					jQuery('#setting-job_manager_registration_role').closest('tr').show();
+					jQuery('#setting-job_manager_registration_username_from_email').closest('tr').show();
+				} else {
+					jQuery('#setting-job_manager_registration_role').closest('tr').hide();
+					jQuery('#setting-job_manager_registration_username_from_email').closest('tr').hide();
+				}
+			}).change();
 		</script>
 		<?php
 	}

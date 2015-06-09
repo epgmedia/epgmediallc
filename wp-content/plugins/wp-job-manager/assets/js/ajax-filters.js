@@ -2,44 +2,52 @@ jQuery( document ).ready( function ( $ ) {
 
 	var xhr = [];
 
-	$( '.job_listings' ).on( 'update_results', function ( event, page, append ) {
-		var data     = '';
-		var target   = $( this );
-		var form     = target.find( '.job_filters' );
-		var showing  = target.find( '.showing_jobs' );
-		var results  = target.find( '.job_listings' );
-		var per_page = target.data( 'per_page' );
-		var orderby  = target.data( 'orderby' );
-		var order    = target.data( 'order' );
-		var featured = target.data( 'featured' );
-		var index    = $( 'div.job_listings' ).index(this);
+	$( '.job_listings' ).on( 'update_results', function ( event, page, append, loading_previous ) {
+		var data         = '';
+		var target       = $( this );
+		var form         = target.find( '.job_filters' );
+		var showing      = target.find( '.showing_jobs' );
+		var results      = target.find( '.job_listings' );
+		var per_page     = target.data( 'per_page' );
+		var orderby      = target.data( 'orderby' );
+		var order        = target.data( 'order' );
+		var featured     = target.data( 'featured' );
+		var filled       = target.data( 'filled' );
+		var index        = $( 'div.job_listings' ).index(this);
 
 		if ( xhr[index] ) {
 			xhr[index].abort();
 		}
 
-		if ( append ) {
-			$( '.load_more_jobs', target ).addClass( 'loading' );
-		} else {
+		if ( ! append ) {
 			$( results ).addClass( 'loading' );
 			$( 'li.job_listing, li.no_job_listings_found', results ).css( 'visibility', 'hidden' );
+
+			// Not appending. If page > 1, we should show a load previous button so the user can get to earlier-page listings if needed
+			if ( page > 1 && true != target.data( 'show_pagination' ) ) {
+				$( results ).before( '<a class="load_more_jobs load_previous" href="#"><strong>' + job_manager_ajax_filters.i18n_load_prev_listings + '</strong></a>' );
+			} else {
+				target.find( '.load_previous' ).remove();
+			}
+
+			target.find( '.load_more_jobs' ).data( 'page', page );
 		}
 
 		if ( true == target.data( 'show_filters' ) ) {
 
 			var filter_job_type = [];
 
-			$( ':input[name="filter_job_type[]"]:checked, :input[name="filter_job_type[]"][type="hidden"]', form ).each( function () {
+			$( ':input[name="filter_job_type[]"]:checked, :input[name="filter_job_type[]"][type="hidden"], :input[name="filter_job_type"]', form ).each( function () {
 				filter_job_type.push( $( this ).val() );
 			} );
 
 			var categories = form.find( ':input[name^=search_categories], :input[name^=search_categories]' ).map( function () {
-				return $( this ).val();
+			return $( this ).val();
 			} ).get();
-			var keywords = '';
-			var location = '';
-			var $keywords = form.find( ':input[name=search_keywords]' );
-			var $location = form.find( ':input[name=search_location]' );
+			var keywords   = '';
+			var location   = '';
+			var $keywords  = form.find( ':input[name=search_keywords]' );
+			var $location  = form.find( ':input[name=search_location]' );
 
 			// Workaround placeholder scripts
 			if ( $keywords.val() !== $keywords.attr( 'placeholder' ) ) {
@@ -61,6 +69,7 @@ jQuery( document ).ready( function ( $ ) {
 				order: order,
 				page: page,
 				featured: featured,
+				filled: filled,
 				show_pagination: target.data( 'show_pagination' ),
 				form_data: form.serialize()
 			};
@@ -85,13 +94,14 @@ jQuery( document ).ready( function ( $ ) {
 				order: order,
 				page: page,
 				featured: featured,
+				filled: filled,
 				show_pagination: target.data( 'show_pagination' ),
 			};
 
 		}
 
 		xhr[index] = $.ajax( {
-			type: 'POST',
+			type: 'GET',
 			url: job_manager_ajax_filters.ajax_url,
 			data: data,
 			success: function ( response ) {
@@ -110,13 +120,21 @@ jQuery( document ).ready( function ( $ ) {
 						var result = $.parseJSON( response );
 
 						if ( result.showing ) {
-							$( showing ).show().html( '' ).append( '<span>' + result.showing + '</span>' + result.showing_links );
+							$( showing ).show().html( '<span>' + result.showing + '</span>' + result.showing_links );
 						} else {
 							$( showing ).hide();
 						}
 
+						if ( result.showing_all ) {
+							$( showing ).addClass( 'wp-job-manager-showing-all' );
+						} else {
+							$( showing ).removeClass( 'wp-job-manager-showing-all' );
+						}
+
 						if ( result.html ) {
-							if ( append ) {
+							if ( append && loading_previous ) {
+								$( results ).prepend( result.html );
+							} else if ( append ) {
 								$( results ).append( result.html );
 							} else {
 								$( results ).html( result.html );
@@ -130,10 +148,10 @@ jQuery( document ).ready( function ( $ ) {
 								target.append( result.pagination );
 							}
 						} else {
-							if ( ! result.found_jobs || result.max_num_pages === page ) {
-								$( '.load_more_jobs', target ).hide();
-							} else {
-								$( '.load_more_jobs', target ).show().data( 'page', page );
+							if ( ! result.found_jobs || result.max_num_pages <= page ) {
+								$( '.load_more_jobs:not(.load_previous)', target ).hide();
+							} else if ( ! loading_previous ) {
+								$( '.load_more_jobs', target ).show();
 							}
 							$( '.load_more_jobs', target ).removeClass( 'loading' );
 							$( 'li.job_listing', results ).css( 'visibility', 'visible' );
@@ -151,21 +169,17 @@ jQuery( document ).ready( function ( $ ) {
 		} );
 	} );
 
-	$( '#search_keywords, #search_location, .job_types input, #search_categories' ).change( function () {
-		var target = $( this ).closest( 'div.job_listings' );
-
+	$( '#search_keywords, #search_location, .job_types :input, #search_categories' ).change( function() {
+		var target   = $( this ).closest( 'div.job_listings' );
 		target.triggerHandler( 'update_results', [ 1, false ] );
+		job_manager_store_state( target, 1 );
 	} )
 
 	.on( "keyup", function(e) {
-	    if ( e.which === 13 ) {
-	        $( this ).trigger( 'change' );
-	    }
+		if ( e.which === 13 ) {
+			$( this ).trigger( 'change' );
+		}
 	} );
-
-	$( '.job_filters' ).each(function() {
-		$( this ).find( '#search_keywords, #search_location, .job_types input, #search_categories' ).eq(0).change();
-	});
 
 	$( '.job_filters' ).on( 'click', '.reset', function () {
 		var target = $( this ).closest( 'div.job_listings' );
@@ -178,24 +192,33 @@ jQuery( document ).ready( function ( $ ) {
 
 		target.triggerHandler( 'reset' );
 		target.triggerHandler( 'update_results', [ 1, false ] );
+		job_manager_store_state( target, 1 );
 
 		return false;
 	} );
 
-	$( '.load_more_jobs' ).click( function () {
-		var target = $( this ).closest( 'div.job_listings' );
-		var page = $( this ).data( 'page' );
+	$( 'body' ).on( 'click', '.load_more_jobs', function() {
+		var target           = $( this ).closest( 'div.job_listings' );
+		var page             = parseInt( $( this ).data( 'page' ) || 1 );
+		var loading_previous = false;
 
-		if ( !page ) {
-			page = 1;
+		$(this).addClass( 'loading' );
+
+		if ( $(this).is('.load_previous') ) {
+			page             = page - 1;
+			loading_previous = true;
+			if ( page === 1 ) {
+				$(this).remove();
+			} else {
+				$( this ).data( 'page', page );
+			}
 		} else {
-			page = parseInt( page );
+			page = page + 1;
+			$( this ).data( 'page', page );
+			job_manager_store_state( target, page );
 		}
 
-		$( this ).data( 'page', ( page + 1 ) );
-
-		target.triggerHandler( 'update_results', [ page + 1, true ] );
-
+		target.triggerHandler( 'update_results', [ page, true, loading_previous ] );
 		return false;
 	} );
 
@@ -203,12 +226,59 @@ jQuery( document ).ready( function ( $ ) {
 		var target = $( this ).closest( 'div.job_listings' );
 		var page   = $( this ).data( 'page' );
 
+		job_manager_store_state( target, page );
+
 		target.triggerHandler( 'update_results', [ page, false ] );
+
+		$( "body, html" ).animate({
+            scrollTop: target.offset().top
+        }, 600 );
 
 		return false;
 	} );
 
 	if ( $.isFunction( $.fn.chosen ) ) {
-		$( 'select[name^="search_categories"]' ).chosen();
+		if ( job_manager_ajax_filters.is_rtl == 1 ) {
+			$( 'select[name^="search_categories"]' ).addClass( 'chosen-rtl' );
+		}
+		$( 'select[name^="search_categories"]' ).chosen({ search_contains: true });
 	}
+
+	if ( window.history && window.history.pushState ) {
+		$supports_html5_history = true;
+	} else {
+		$supports_html5_history = false;
+	}
+
+	var location = document.location.href.split('#')[0];
+
+	function job_manager_store_state( target, page ) {
+		if ( $supports_html5_history ) {
+			var form  = target.find( '.job_filters' );
+			var data  = $( form ).serialize();
+			var index = $( 'div.job_listings' ).index( target );
+			window.history.replaceState( { id: 'job_manager_state', page: page, data: data, index: index }, '', location + '#s=1' );
+		}
+	}
+
+	// Inital job and form population
+	$(window).on( "load", function( event ) {
+		$( '.job_filters' ).each( function() {
+			var target      = $( this ).closest( 'div.job_listings' );
+			var form        = target.find( '.job_filters' );
+			var inital_page = 1;
+			var index       = $( 'div.job_listings' ).index( target );
+
+	   		if ( window.history.state && window.location.hash ) {
+	   			var state = window.history.state;
+	   			if ( state.id && 'job_manager_state' === state.id && index == state.index ) {
+					inital_page = state.page;
+					form.deserialize( state.data );
+					form.find( ':input[name^="search_categories"]' ).not(':input[type="hidden"]').trigger( 'chosen:updated' );
+				}
+	   		}
+
+			target.triggerHandler( 'update_results', [ inital_page, false ] );
+	   	});
+	});
 } );

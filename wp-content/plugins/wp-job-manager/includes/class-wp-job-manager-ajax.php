@@ -13,6 +13,8 @@ class WP_Job_Manager_Ajax {
 	public function __construct() {
 		add_action( 'wp_ajax_nopriv_job_manager_get_listings', array( $this, 'get_listings' ) );
 		add_action( 'wp_ajax_job_manager_get_listings', array( $this, 'get_listings' ) );
+		add_action( 'wp_ajax_nopriv_job_manager_upload_file', array( $this, 'upload_file' ) );
+		add_action( 'wp_ajax_job_manager_upload_file', array( $this, 'upload_file' ) );
 	}
 
 	/**
@@ -22,11 +24,13 @@ class WP_Job_Manager_Ajax {
 		global $wp_post_types;
 
 		$result            = array();
-		$search_location   = sanitize_text_field( stripslashes( $_POST['search_location'] ) );
-		$search_keywords   = sanitize_text_field( stripslashes( $_POST['search_keywords'] ) );
-		$search_categories = isset( $_POST['search_categories'] ) ? $_POST['search_categories'] : '';
-		$filter_job_types  = isset( $_POST['filter_job_type'] ) ? array_filter( array_map( 'sanitize_title', (array) $_POST['filter_job_type'] ) ) : null;
+		$search_location   = sanitize_text_field( stripslashes( $_REQUEST['search_location'] ) );
+		$search_keywords   = sanitize_text_field( stripslashes( $_REQUEST['search_keywords'] ) );
+		$search_categories = isset( $_REQUEST['search_categories'] ) ? $_REQUEST['search_categories'] : '';
+		$filter_job_types  = isset( $_REQUEST['filter_job_type'] ) ? array_filter( array_map( 'sanitize_title', (array) $_REQUEST['filter_job_type'] ) ) : null;
 		$types             = get_job_listing_types();
+		$post_type_label   = $wp_post_types['job_listing']->labels->name;
+		$orderby           = sanitize_text_field( $_REQUEST['orderby'] );
 
 		if ( is_array( $search_categories ) ) {
 			$search_categories = array_filter( array_map( 'sanitize_text_field', array_map( 'stripslashes', $search_categories ) ) );
@@ -38,15 +42,20 @@ class WP_Job_Manager_Ajax {
 			'search_location'    => $search_location,
 			'search_keywords'    => $search_keywords,
 			'search_categories'  => $search_categories,
-			'job_types'          => is_null( $filter_job_types ) ? '' : $filter_job_types + array( 0 ),
-			'orderby'            => sanitize_text_field( $_POST['orderby'] ),
-			'order'              => sanitize_text_field( $_POST['order'] ),
-			'offset'             => ( absint( $_POST['page'] ) - 1 ) * absint( $_POST['per_page'] ),
-			'posts_per_page'     => absint( $_POST['per_page'] )
+			'job_types'          => is_null( $filter_job_types ) || sizeof( $types ) === sizeof( $filter_job_types ) ? '' : $filter_job_types + array( 0 ),
+			'orderby'            => $orderby,
+			'order'              => sanitize_text_field( $_REQUEST['order'] ),
+			'offset'             => ( absint( $_REQUEST['page'] ) - 1 ) * absint( $_REQUEST['per_page'] ),
+			'posts_per_page'     => absint( $_REQUEST['per_page'] )
 		);
 
-		if ( isset( $_POST['featured'] ) && ( $_POST['featured'] === 'true' || $_POST['featured'] === 'false' ) ) {
-			$args['featured'] = $_POST['featured'] === 'true' ? true : false;
+		if ( isset( $_REQUEST['filled'] ) && ( $_REQUEST['filled'] === 'true' || $_REQUEST['filled'] === 'false' ) ) {
+			$args['filled'] = $_REQUEST['filled'] === 'true' ? true : false;
+		}
+
+		if ( isset( $_REQUEST['featured'] ) && ( $_REQUEST['featured'] === 'true' || $_REQUEST['featured'] === 'false' ) ) {
+			$args['featured'] = $_REQUEST['featured'] === 'true' ? true : false;
+			$args['orderby']  = 'featured' === $orderby ? 'date' : $orderby;
 		}
 
 		ob_start();
@@ -69,55 +78,57 @@ class WP_Job_Manager_Ajax {
 
 		<?php endif;
 
-		$result['html'] = ob_get_clean();
+		$result['html']    = ob_get_clean();
+		$result['showing'] = array();
 
 		// Generate 'showing' text
 		$showing_types = array();
 		$unmatched     = false;
 
 		foreach ( $types as $type ) {
-			if ( in_array( $type->slug, $filter_job_types ) ) {
+			if ( is_array( $filter_job_types ) && in_array( $type->slug, $filter_job_types ) ) {
 				$showing_types[] = $type->name;
 			} else {
 				$unmatched = true;
 			}
 		}
 
-		if ( ! $unmatched ) {
-			$showing_types  = '';
-		} elseif ( sizeof( $showing_types ) == 1 ) {
-			$showing_types  = implode( ', ', $showing_types ) . ' ';
-		} else {
-			$last           = array_pop( $showing_types );
-			$showing_types  = implode( ', ', $showing_types );
-			$showing_types .= " &amp; $last ";
+		if ( sizeof( $showing_types ) == 1 ) {
+			$result['showing'][] = implode( ', ', $showing_types );
+		} elseif ( $unmatched && $showing_types ) {
+			$last_type           = array_pop( $showing_types );
+			$result['showing'][] = implode( ', ', $showing_types ) . " &amp; $last_type";
 		}
 
-		$showing_categories = array();
-
 		if ( $search_categories ) {
+			$showing_categories = array();
+
 			foreach ( $search_categories as $category ) {
-				if ( ! is_numeric( $category ) ) {
-					$category_object = get_term_by( 'slug', $category, 'job_listing_category' );
-				}
-				if ( is_numeric( $category ) || is_wp_error( $category_object ) || ! $category_object ) {
-					$category_object = get_term_by( 'id', $category, 'job_listing_category' );
-				}
+				$category_object = get_term_by( is_numeric( $category ) ? 'id' : 'slug', $category, 'job_listing_category' );
+
 				if ( ! is_wp_error( $category_object ) ) {
 					$showing_categories[] = $category_object->name;
 				}
 			}
+
+			$result['showing'][] = implode( ', ', $showing_categories );
 		}
 
 		if ( $search_keywords ) {
-			$showing_jobs  = sprintf( __( 'Showing %s', 'wp-job-manager' ), $showing_types . '&ldquo;' . $search_keywords . '&rdquo; ' . implode( ', ', $showing_categories ) . $wp_post_types['job_listing']->labels->name );
-		} else {
-			$showing_jobs  = sprintf( __( 'Showing all %s', 'wp-job-manager' ), $showing_types . implode( ', ', $showing_categories ) . ' ' . $wp_post_types['job_listing']->labels->name );
+			$result['showing'][] = '&ldquo;' . $search_keywords . '&rdquo;';
 		}
 
-		$showing_location  = $search_location ? sprintf( ' ' . __( 'located in &ldquo;%s&rdquo;', 'wp-job-manager' ), $search_location ) : '';
+		$result['showing'][] = $post_type_label;
 
-		$result['showing'] = apply_filters( 'job_manager_get_listings_custom_filter_text', $showing_jobs . $showing_location );
+		if ( $search_location ) {
+			$result['showing'][] = sprintf( __( 'located in &ldquo;%s&rdquo;', 'wp-job-manager' ), $search_location );
+		}
+
+		if ( 1 === sizeof( $result['showing'] ) ) {
+			$result['showing_all'] = true;
+		}
+
+		$result['showing'] = apply_filters( 'job_manager_get_listings_custom_filter_text', sprintf( __( 'Showing all %s', 'wp-job-manager' ), implode( ' ', $result['showing'] ) ) );
 
 		// Generate RSS link
 		$result['showing_links'] = job_manager_get_filtered_links( array(
@@ -128,8 +139,8 @@ class WP_Job_Manager_Ajax {
 		) );
 
 		// Generate pagination
-		if ( isset( $_POST['show_pagination'] ) && $_POST['show_pagination'] === 'true' ) {
-			$result['pagination'] = get_job_listing_pagination( $jobs->max_num_pages, absint( $_POST['page'] ) );
+		if ( isset( $_REQUEST['show_pagination'] ) && $_REQUEST['show_pagination'] === 'true' ) {
+			$result['pagination'] = get_job_listing_pagination( $jobs->max_num_pages, absint( $_REQUEST['page'] ) );
 		}
 
 		$result['max_num_pages'] = $jobs->max_num_pages;
@@ -139,6 +150,32 @@ class WP_Job_Manager_Ajax {
 		echo '<!--WPJM_END-->';
 
 		die();
+	}
+
+	/**
+	 * Upload file via ajax
+	 *
+	 * No nonce field since the form may be statically cached.
+	 */
+	public function upload_file() {
+		$data = array( 'files' => array() );
+
+		if ( ! empty( $_FILES ) ) {
+			foreach ( $_FILES as $file_key => $file ) {
+				$files_to_upload = job_manager_prepare_uploaded_files( $file );
+				foreach ( $files_to_upload as $file_to_upload ) {
+					$uploaded_file = job_manager_upload_file( $file_to_upload, array( 'file_key' => $file_key ) );
+
+					if ( is_wp_error( $uploaded_file ) ) {
+						$data['files'][] = array( 'error' => $uploaded_file->get_error_message() );
+					} else {
+						$data['files'][] = $uploaded_file;
+					}
+				}
+			}
+		}
+
+		wp_send_json( $data );
 	}
 }
 

@@ -1,16 +1,18 @@
 === WP Job Manager ===
 Contributors: mikejolley
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=mike.jolley@me.com&currency_code=&amount=&return=&item_name=Buy+me+a+coffee+for+A+New+Job+Board+Plugin+for+WordPress
-Tags: job listing, job board, job, jobs, company, hiring, employment, employees, candidate, freelance, internship
-Requires at least: 3.8
-Tested up to: 4.0
-Stable tag: 1.18.0
+Tags: job manager, job listing, job board, job management, job lists, job list, job, jobs, company, hiring, employment, employer, employees, candidate, freelance, internship, job listings, positions, board, application, hiring, listing, manager, recruiting, recruitment, talent
+Requires at least: 4.1
+Tested up to: 4.2
+Stable tag: 1.22.3
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Manage job listings from the WordPress admin panel, and allow users to post jobs directly to your site.
+Manage job listings from the WordPress admin panel, and allow users to post job listings directly to your site.
 
 == Description ==
 
-WP Job Manager is a **lightweight** plugin for adding job-board functionality to your WordPress site. Being shortcode based, it can work with any theme (given a bit of CSS styling) and is really simple to setup.
+WP Job Manager is a **lightweight** job listing plugin for adding job-board like functionality to your WordPress site. Being shortcode based, it can work with any theme (given a bit of CSS styling) and is really simple to setup.
 
 = Features =
 
@@ -29,28 +31,49 @@ The plugin comes with several shortcodes to output jobs in various formats, and 
 
 = Documentation =
 
-Documentation for the core plugin and add-ons can be found [on the docs site here](https://wpjobmanager.com/documentation/).
+Documentation for the core plugin and add-ons can be found [on the docs site here](https://wpjobmanager.com/documentation/). Please take a look before requesting support because it covers all frequently asked questions!
 
 = Add-ons =
 
-Additonal functionality can be added through add-ons - you can browse these after installing the plugin by going to `Job Listings > Add-ons`.
+The core WP Job Manager plugin is free and always will be. It covers all functionality we consider 'core' to running a simple job board site.
 
-Some notable add-ons include:
+Additional, advanced functionality is available through add-ons. Not only do these extend the usefulness of the core plugin, they also help fund the development and support of core.
 
-* [Simple Paid Listings](https://wpjobmanager.com/add-ons/simple-paid-listings/) - Charge users a single fee to post a job via Stripe or PayPal.
-* [WooCommerce Paid Lisings](https://wpjobmanager.com/add-ons/wc-paid-listings/) - Charge users to post jobs using WooCommerce to take payment.
-* [Job Alerts](https://wpjobmanager.com/add-ons/job-alerts/) - Add saved search/email alert functionality.
-* [Resume Manager](https://wpjobmanager.com/add-ons/resume-manager/) - Add a resume submission area for employers to browse.
+You can browse available add-ons after installing the plugin by going to `Job Listings > Add-ons`. Our popular add-ons include:
+
+**[Applications](https://wpjobmanager.com/add-ons/applications/)**
+
+Allow candidates to apply to jobs using a form & employers to view and manage the applications from their job dashboard.
+
+**[WooCommerce Paid Listings](https://wpjobmanager.com/add-ons/wc-paid-listings/)**
+
+Paid listing functionality powered by WooCommerce. Create custom job packages which can be purchased or redeemed during job submission. Requires the WooCommerce plugin.
+
+**[Resume Manager](https://wpjobmanager.com/add-ons/resume-manager/)**
+
+Resume Manager is a plugin built on top of WP Job Manager which adds a resume submission form to your site and resume listings, all manageable from WordPress admin.
+
+**[Job Alerts](https://wpjobmanager.com/add-ons/job-alerts/)**
+
+Allow registered users to save their job searches and create alerts which send new jobs via email daily, weekly or fortnightly.
+
+**[Core add-on bundle](https://wpjobmanager.com/add-ons/bundle/)**
+
+You can get the above add-ons and several others at discount with our [Core Add-on Bundle](https://wpjobmanager.com/add-ons/bundle/). Take a look!
 
 = Contributing and reporting bugs =
 
 You can contribute code to this plugin via GitHub: [https://github.com/mikejolley/wp-job-manager](https://github.com/mikejolley/wp-job-manager) and localizations via Transifex: [https://www.transifex.com/projects/p/wp-job-manager/](https://www.transifex.com/projects/p/wp-job-manager/)
 
+Thanks to all of our contributors.
+
 = Support =
 
-Use the WordPress.org forums for community support - I cannot offer support directly for free. If you spot a bug, you can of course log it on [Github](https://github.com/mikejolley/wp-job-manager) instead where I can act upon it more efficiently.
+Use the WordPress.org forums for community support where we try to help all users. If you spot a bug, you can log it (or fix it) on [Github](https://github.com/mikejolley/wp-job-manager) where we can act upon them more efficiently.
 
-If you want help with a customisation, hire a developer! [http://jobs.wordpress.net/](http://jobs.wordpress.net/) is a good place to start.
+If you need help with one of our add-ons, [please raise a ticket in our help desk](https://wpjobmanager.com/support/).
+
+If you want help with a customisation, please consider hiring a developer! [http://jobs.wordpress.net/](http://jobs.wordpress.net/) is a good place to start.
 
 == Installation ==
 
@@ -62,7 +85,7 @@ In the search field type "WP Job Manager" and click Search Plugins. Once you've 
 
 = Manual installation =
 
-The manual installation method involves downloading the plugin and uploading it to your webserver via your favourite FTP application.
+The manual installation method involves downloading the plugin and uploading it to your web server via your favorite FTP application.
 
 * Download the plugin file to your computer and unzip it
 * Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's `wp-content/plugins/` directory.
@@ -105,7 +128,7 @@ If you'd like to learn about WordPress filters, here is a great place to start: 
 = How can I be notified of new jobs via email? =
 If you wish to be notified of new postings on your site you can use a plugin such as [Post Status Notifier](http://wordpress.org/plugins/post-status-notifier-lite/).
 
-= What langauge files are available? =
+= What language files are available? =
 You can view (and contribute) translations via the [Transifex project here](https://www.transifex.com/projects/p/wp-job-manager/).
 
 == Screenshots ==
@@ -118,6 +141,118 @@ You can view (and contribute) translations via the [Transifex project here](http
 6. Job listings in admin.
 
 == Changelog ==
+
+= 1.22.3 =
+* Fix frontend listing edits.
+
+= 1.22.2 =
+* Tweak - Set form actions to current page.
+* Fix - Video embeds.
+* Fix - Load textdomain before post types are registered.
+
+= 1.22.1 =
+* Fix - It's 2015, but some people are still running PHP 5.2. Compatibility fix.
+
+= 1.22.0 =
+* Tweak - Refactored form classes to be instance based rather than static. Reduction in code base.
+* Tweak - Admin styling of the job data panels.
+* Tweak - Admin styling of the status column.
+* Tweak - Better handling of the expiry field.
+* Tweak - Search _geolocation_state_long.
+* Tweak - Allow admin fields to have custom 'name'.
+* Tweak - Use wp_video_shortcode instead of oembed directly.
+* Tweak - Tweak menu order code for featured jobs - use -1 for featured and leave other jobs alone.
+* Tweak - Clear expired date when publishing an expired listing.
+* Tweak - clear_expired_transients function.
+* Fix - Prevent term-checklist being disabled for guests.
+* Fix - Add WPML var to transient name.
+* Fix - Remove use of create_function.
+
+= 1.21.4 =
+* Fix - get_job_listings_keyword_search keyword search.
+* Fix - Clear term cache when terms are set for any object.
+* Fix - Legacy uploads.
+* Tweak - RTL improvements.
+* Tweak - Use RLIKE to search keywords in content.
+* Tweak - Show relative pagination.
+* Updated translations.
+* Arabic translation by Mamdouh Samy.
+
+= 1.21.3 =
+* Feature - Support posts_per_page in feed.
+* Fix - Correctly set menu_order when creating a new job, or updating featured status.
+* Fix - Updater when there are no featured jobs.
+* Fix - Add geolocation_street_number to clear_location_data.
+
+= 1.21.2 =
+* Fix - Remove requried attribute from file input.
+
+= 1.21.1 =
+* Fix - Remove file type check when field is not required and empty.
+* Fix - Hide "Applications have closed" for previews.
+
+= 1.21.0 =
+* Feature - Ajax loading history - back button will take you back to current position in the search. If you are on > page 1, a 'load previous' button will be shown so you can paginate either way.
+* Feature - Ajax file upload during job submission.
+* Feature - Cookie set when submitting a job to allow resuming if you leave the page.
+* Feature - job_apply shortcode to show application area in other places on your site.
+* Feature - Allow admin fields to be priority sorted.
+* Feature - Featured job widget.
+* Feature - Scroll to top on pagination click.
+* Feature - Option to "Hide content within expired listings". If disabled, expired listings will be listed normally with applications disabled.
+* Fix - Prevent attachments being uploaded several times.
+* Fix - Expiry date on first save.
+* Fix - Relist should go back to form.
+* Fix - jquery.com CDN for CSS.
+* Tweak - Geocode street and street number separately.
+* Tweak - File upload field markup.
+* Tweak - Added filters around taxonomy definition.
+* Tweak - Chanced search logic/query to use the new meta queries in 4.1.
+* Tweak - Implement transient caching for searches.
+* Tweak - Removed wp_dropdown_user due to performance concerns.
+* Tweak - Use menu_order to make featured listings sticky. Improves performance.
+* Tweak - Retrieve AJAX jobs with GET rather than POST request to take advantage of more caching. Plugins looking for POST data will need to update to look for GET/REQUEST instead.
+* Tweak - Prevent themes that (sigh) mess with content hooks from breaking inputs.
+* Tweak - Remove unused job-category field.
+* Tweak - Hide company div if company name missing.
+
+= 1.20.1 =
+* Fix - Core template overrides.
+* Updated localisations.
+
+= 1.20.0 =
+* Feature - Sortable location column in admin.
+* Feature - Automatically Generate Username from Email Address option (disable to show a username field).
+* Feature - 'filled' option for job shortcode to show all filled/non filled jobs.
+* Fix - Pagination with default permalinks.
+* Fix - Correctly generate geolocation data when adding a post manually.
+* Fix - Chosen width when resizing the page.
+* Fix - Show no jobs when all types de-selected.
+* Tweak - content-widget-no-jobs-found.php template file.
+* Tweak - Don't limit keyword search query functions to published jobs.
+* Tweak - job_manager_output_jobs_no_results action.
+* Tweak - No results template hooked into job_manager_output_jobs_no_results.
+* Tweak - Changed content-no-jobs-found.php content to work for ajax and static lists of jobs. Tweaked text.
+* Tweak - job_manager_default_company_logo filter for changing default company image.
+* Tweak - Enhance multiselect field with chosen.
+* Dev - Abiltiy to pass shortcode args to submit_job_form shortcode.
+* Dev - Made get_job_manager_template_part() use locate_job_manager_template().
+* Dev - Changed how username/email/role are passed to wp_job_manager_create_account (backwards compat).
+
+= 1.19.0 =
+* Feature - Added html5 required attribute to required fields.
+* Feature - Added compatibility with RP4WP.
+* Fix - Chosen RTL.
+* Fix - Addded additonal check to check edit capabilities.
+* Fix - Add correct step input to submission form.
+* Tweak - Add CSS class to 'showing' bar when shoing all results (no filters).
+* Tweak - Geocode, use sublocality_level_1 as city.
+* Tweak - Don't update slug when editing via the frontend.
+* Tweak - Set default meta data for new jobs.
+* Tweak - Add geolocation data after import with WP ALL Import.
+* Tweak - Filter to disable chosen: job_manager_chosen_enabled
+* Tweak - Login link on job dashboard. job-dashboard-login.php template file.
+* Tweak - Made backend management honour capabilities of users. Props to minderdl.
 
 = 1.18.0 =
 * Fix - Keep post name when pending job is posted by non-admin.
@@ -412,3 +547,8 @@ You can view (and contribute) translations via the [Transifex project here](http
 
 = 1.0.0 =
 * First stable release.
+
+== Upgrade Notice ==
+
+= 1.22.0 =
+As this is a major update, please ensure you update any plugins and themes that rely on Job Manager. This includes Resume Manager, Applications, WC Paid Lisitngs, and themes such as Jobify.

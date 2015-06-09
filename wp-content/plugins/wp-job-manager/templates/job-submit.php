@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 global $job_manager;
 ?>
-<form action="<?php echo $action; ?>" method="post" id="submit-job-form" class="job-manager-form" enctype="multipart/form-data">
+<form action="<?php echo esc_url( $action ); ?>" method="post" id="submit-job-form" class="job-manager-form" enctype="multipart/form-data">
 
 	<?php if ( apply_filters( 'submit_job_form_show_signin', true ) ) : ?>
 
@@ -51,7 +51,7 @@ global $job_manager;
 		<p>
 			<input type="hidden" name="job_manager_form" value="<?php echo $form; ?>" />
 			<input type="hidden" name="job_id" value="<?php echo esc_attr( $job_id ); ?>" />
-			<input type="hidden" name="step" value="0" />
+			<input type="hidden" name="step" value="<?php echo esc_attr( $step ); ?>" />
 			<input type="submit" name="submit_job" class="button" value="<?php esc_attr_e( $submit_button_text ); ?>" />
 		</p>
 

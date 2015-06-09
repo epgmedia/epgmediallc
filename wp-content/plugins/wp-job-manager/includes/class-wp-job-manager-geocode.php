@@ -74,6 +74,7 @@ class WP_Job_Manager_Geocode {
 		delete_post_meta( $job_id, 'geolocation_state_long' );
 		delete_post_meta( $job_id, 'geolocation_state_short' );
 		delete_post_meta( $job_id, 'geolocation_street' );
+		delete_post_meta( $job_id, 'geolocation_street_number' );
 		delete_post_meta( $job_id, 'geolocation_zipcode' );
 		delete_post_meta( $job_id, 'geolocation_postcode' );
 	}
@@ -110,7 +111,7 @@ class WP_Job_Manager_Geocode {
 			return false;
 		}
 
-		$transient_name              = 'geocode_' . md5( $raw_address );
+		$transient_name              = 'jm_geocode_' . md5( $raw_address );
 		$geocoded_address            = get_transient( $transient_name );
 		$jm_geocode_over_query_limit = get_transient( 'jm_geocode_over_query_limit' );
 
@@ -169,32 +170,30 @@ class WP_Job_Manager_Geocode {
 
 		if ( ! empty( $geocoded_address->results[0]->address_components ) ) {
 			$address_data             = $geocoded_address->results[0]->address_components;
-			$street_number            = false;
+			$address['street_number'] = false;
 			$address['street']        = false;
 			$address['city']          = false;
 			$address['state_short']   = false;
 			$address['state_long']    = false;
-			$address['zipcode']       = false;
+			$address['postcode']      = false;
 			$address['country_short'] = false;
 			$address['country_long']  = false;
 
 			foreach ( $address_data as $data ) {
 				switch ( $data->types[0] ) {
 					case 'street_number' :
-						$address['street']        = sanitize_text_field( $data->long_name );
+						$address['street_number'] = sanitize_text_field( $data->long_name );
 					break;
 					case 'route' :
-						$route = sanitize_text_field( $data->long_name );
-
-						if ( ! empty( $address['street'] ) )
-							$address['street'] = $address['street'] . ' ' . $route;
-						else
-							$address['street'] = $route;
+						$address['street']        = sanitize_text_field( $data->long_name );
 					break;
+					case 'sublocality_level_1' :
 					case 'locality' :
+					case 'postal_town' :
 						$address['city']          = sanitize_text_field( $data->long_name );
 					break;
 					case 'administrative_area_level_1' :
+					case 'administrative_area_level_2' :
 						$address['state_short']   = sanitize_text_field( $data->short_name );
 						$address['state_long']    = sanitize_text_field( $data->long_name );
 					break;
@@ -209,7 +208,7 @@ class WP_Job_Manager_Geocode {
 			}
 		}
 
-		return $address;
+		return apply_filters( 'job_manager_geolocation_get_location_data', $address, $geocoded_address );
 	}
 }
 

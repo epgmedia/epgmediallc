@@ -1,0 +1,45 @@
+/* 
+
+	TableCloth	
+	by Alen Grakalic, brought to you by cssglobe.com
+	
+*/
+/* general styles */
+.tablecloth-container {
+  /* tablecloth styles */
+  /* use this if you want to apply different styleing to empty table cells*/ }
+  .tablecloth-container table, .tablecloth-container td {
+    font: 100% Arial, Helvetica, sans-serif; }
+  .tablecloth-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0; }
+  .tablecloth-container th, .tablecloth-container td {
+    text-align: left;
+    padding: .5em;
+    border: 1px solid #fff; }
+  .tablecloth-container th {
+    background: #328aa4 url(tr_back.gif) repeat-x;
+    color: #fff; }
+  .tablecloth-container td {
+    background: #e5f1f4; }
+  .tablecloth-container tr.even td {
+    background: #e5f1f4; }
+  .tablecloth-container tr.odd td {
+    background: #f8fbfc; }
+  .tablecloth-container th.over, .tablecloth-container tr.even th.over, .tablecloth-container tr.odd th.over {
+    background: #4a98af; }
+  .tablecloth-container th.down, .tablecloth-container tr.even th.down, .tablecloth-container tr.odd th.down {
+    background: #bce774; }
+  .tablecloth-container td.over, .tablecloth-container tr.even td.over, .tablecloth-container tr.odd td.over {
+    background: #ecfbd4; }
+  .tablecloth-container td.down, .tablecloth-container tr.even td.down, .tablecloth-container tr.odd td.down {
+    background: #bce774;
+    color: #fff; }
+  .tablecloth-container td.selected, .tablecloth-container tr.even td.selected, .tablecloth-container tr.odd td.selected {
+    background: #bce774;
+    color: #555; }
+  .tablecloth-container td.empty, .tablecloth-container tr.odd td.empty, .tablecloth-container tr.even td.empty {
+    background: #fff; }
+
+/*# sourceMappingURL=tablecloth.css.map */
