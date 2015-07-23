@@ -10,11 +10,11 @@ get_header(); ?>
 
         <?php if ( empty( $_POST['email'] ) ) {
 
-            include ( get_stylesheet_directory() . '/templates/support-form.php' );
+            include ( get_stylesheet_directory() . '/includes/support-form.php' );
 
         } else {
 
-            include ( get_stylesheet_directory() . '/templates/support-email.php' );
+            include ( get_stylesheet_directory() . '/includes/support-email.php' );
 
         } ?>
 

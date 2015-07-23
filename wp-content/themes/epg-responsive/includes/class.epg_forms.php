@@ -1,7 +1,9 @@
 <?php
 /**
+ * Class EPG_Forms
+ *
+ * @author Chris W. Gerber
  */
-
 class EPG_Forms {
 
 	/**
@@ -56,7 +58,7 @@ class EPG_Forms {
 		array(
 			'first_name'   => 'John',
 			'last_name'    => 'Prusak',
-			'email_domain' => 'epgmediallc.com'
+			'email_domain' => 'snowgoer.com'
 		),
 		array(
 			'first_name'   => 'Mark',
@@ -119,19 +121,19 @@ class EPG_Forms {
 		echo '<option selected value="none">' . $select_string . '</option>';
 
 		foreach ( $options as $supervisor ) {
-			echo '<option value="' . self::supervisor_email($supervisor) . '">' . self::supervisor_name($supervisor) . '</option>';
+			echo '<option value="' . self::supervisor_email( $supervisor ) . '">' . self::supervisor_name( $supervisor ) . '</option>';
 		}
 	}
 
 	public static function supervisor_email( $supervisor_array ) {
-		return strtolower($supervisor_array['first_name'][0] . $supervisor_array['last_name'] . '@' . $supervisor_array['email_domain']);
+		return strtolower( $supervisor_array['first_name'][0] . $supervisor_array['last_name'] . '@' . $supervisor_array['email_domain'] );
 	}
 
 	public static function supervisor_name( $supervisor_array ) {
 		return $supervisor_array['first_name'] . ' ' . $supervisor_array['last_name'];
 	}
 
-	public static function died($error) {
+	public static function died( $error ) {
 		// your error code can go here ?>
 		<p>
 			We are very sorry, but there were error(s) found with the form you submitted. These errors appear below.

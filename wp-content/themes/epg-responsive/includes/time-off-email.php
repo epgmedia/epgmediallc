@@ -15,12 +15,14 @@ if(
 ) {
     EPG_Forms::died('We are sorry, but there appears to be a problem with the form you submitted.');
 }
-
 /** The Mail */
 $mail = new epg_phpmailer();
 $mail->IsHTML(TRUE);
 // Validate the email addresses
-$mail->setFrom( $_POST['email'], $_POST['employee'] );
+$mail->setFrom(
+	filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ),
+	filter_input( INPUT_POST, 'employee', FILTER_SANITIZE_EMAIL )
+);
 $email_addresses = array(
 	array(
 		'kind' => 'to',
@@ -29,31 +31,21 @@ $email_addresses = array(
 	),
 	array(
 		'kind' => 'cc',
-		'address' => $_POST['supervisor']
+		'address' => filter_input( INPUT_POST, 'supervisor', FILTER_SANITIZE_EMAIL )
 	),
 	array(
 		'kind' => 'bcc',
-		'address' => $_POST['email'],
-		'name' =>  $_POST['employee']
+		'address' => filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ),
+		'name' =>   filter_input( INPUT_POST, 'employee', FILTER_SANITIZE_EMAIL )
 	),
 );
-$mail->it_request_recipients( $email_addresses );
-
+$mail->multiple_request_recipients( $email_addresses );
 /** Subject */
 $mail->Subject = 'SCHEDULED AND UNSCHEDULED TIME OFF REQUEST FORM';
-
 /** Email Content */
-$email_body = get_include_contents(
-    get_stylesheet_directory() . '/templates/time-off-message.php'
-);
-$mail->msgHTML($email_body);
-
+$email_body = $mail->include_html( '/includes/time-off-message.php' );
 if(!$mail->Send()) {
-
     echo "There was an error sending the email: " . $mail->ErrorInfo;
-
 } else {
-
-    include( get_stylesheet_directory() . '/templates/time-off-confirm.php');
-
+    include( get_stylesheet_directory() . '/includes/time-off-confirm.php');
 }

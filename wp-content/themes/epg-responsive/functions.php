@@ -1,7 +1,8 @@
 <?php
 
-require ( get_stylesheet_directory() . '/templates/epg-functions.php' );
-
+include_once( ABSPATH . '/wp-includes/class-phpmailer.php' );
+require ( get_stylesheet_directory() . '/includes/class.epg_forms.php' );
+require ( get_stylesheet_directory() . '/includes/class.epg_mailer.php' );
 
 function epg_form_styles() {
 	wp_enqueue_style('epg-forms', get_stylesheet_directory_uri() . '/includes/timeoff.css');

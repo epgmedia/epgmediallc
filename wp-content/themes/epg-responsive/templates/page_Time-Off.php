@@ -9,13 +9,13 @@ get_header(); ?>
 
 <div id="content" class="grid col-940">
 
-    <?php if (empty($_POST)) {
+    <?php if ( empty( $_POST['email'] ) ) {
 
-        include ( get_stylesheet_directory() . '/templates/time-off-form.php' );
+        include ( get_stylesheet_directory() . '/includes/time-off-form.php' );
 
     } else {
 
-        include ( get_stylesheet_directory() . '/templates/time-off-email.php' );
+        include ( get_stylesheet_directory() . '/includes/time-off-email.php' );
 
     } ?>
 
