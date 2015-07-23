@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=mike.jol
 Tags: job manager, job listing, job board, job management, job lists, job list, job, jobs, company, hiring, employment, employer, employees, candidate, freelance, internship, job listings, positions, board, application, hiring, listing, manager, recruiting, recruitment, talent
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 1.22.3
+Stable tag: 1.23.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -141,6 +141,42 @@ You can view (and contribute) translations via the [Transifex project here](http
 6. Job listings in admin.
 
 == Changelog ==
+
+= 1.23.4 =
+* Tweak - In 1.21.0 we switched to GET ajax requests to leverage caching, however, due to the length of some queries this was causing 414 request URI too long errors in many environments. Reverted to POST to avoid this.
+* Tweak - flush_rewrite_rules after updates to ensure ajax endpoint exists.
+* Tweak - Use relative path for ajax endpoint to work around https/http.
+
+= 1.23.3 =
+* Fix - WPML integration with lang.
+* Tweak - Improved plugin activation code.
+* Tweak - Improved theme switch code.
+* Tweak - Search the entire meta field, not just from the start.
+* Tweak - Added some debugging code to ajax-filters to display in console.
+
+= 1.23.2 =
+* Fix - Send entire form data (listify workaround).
+* Fix - Set is_home false on ajax endpoint (listify workaround).
+
+= 1.23.1 =
+* Fix - Orderby featured should be "menu order, date", not "manu order, title".
+* Tweak - Remove duplicate data from form_data in filters JS.
+* Tweak - If index is -1 in filters JS, abort.
+
+= 1.23.0 =
+* Feature - Custom AJAX endpoints to reduce overhead of loading admin.
+* Feature - Support radio fields.
+* Fix - Video max width.
+* Tweak - Admin remove overflow hidden from data box.
+* Tweak - Update notice styling.
+* Tweak - Improve orderby. https://make.wordpress.org/core/2014/08/29/a-more-powerful-order-by-in-wordpress-4-0/
+* Tweak - nofollow apply links.
+* Tweak - Rename 'title' to 'job title' for clarity.
+* Tweak - submit_job_form_prefix_post_name_with_company filter.
+* Tweak - submit_job_form_prefix_post_name_with_location filter.
+* Tweak - submit_job_form_prefix_post_name_with_job_type filter.
+* Tweak - Improved job_feed searching.
+* Tweak - Improved transient cleaning.
 
 = 1.22.3 =
 * Fix frontend listing edits.

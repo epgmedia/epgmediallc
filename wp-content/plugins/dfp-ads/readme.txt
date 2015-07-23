@@ -1,6 +1,6 @@
 === DFP Ad Manager ===
 
-Stable tag: trunk
+Stable tag: 0.3.0
 Contributors: chriswgerber
 Requires at least: 3.0.0
 Tested up to: 4.2.2
@@ -13,6 +13,10 @@ Simpler management of DFP (DoubleClick for Publishers) ad positions
 == Description ==
 
 **For simple management of DoubleClick for Publishers ad positions.**
+
+This plugin is designed to simplify the process of working with DoubleClick for Publishers. Rather than inundate the user with too many options and settings, instead everything is managed within DoubleClick, utilizing WordPress to display the positions.
+
+Page, category, and tag targeting is built-in, with the option to extend on the DoubleClick Javascript library and add even more targeting and send data from the WordPress backend to DoubleClick.
 
 Follow development of the plugin on [Github.com/ThatGerber/dfp-ads](http://github.com/ThatGerber/dfp-ads)
 
@@ -37,17 +41,51 @@ Follow development of the plugin on [Github.com/ThatGerber/dfp-ads](http://githu
 
 == Screenshots ==
 
-Visit [chriswgerber.com/dfp-ads/](http://www.chriswgerber.com/dfp-ads/) for screenshots and more information.
+1. Full Ad Positions Page
+2. Individual Ad Positions Page
+3. Position Settings Page
+4. Position Import Page
+
+Visit [chriswgerber.com/dfp-ads/](http://www.chriswgerber.com/dfp-ads/) for more information.
 
 == Frequently Asked Questions ==
 
-Submit your questions at [chriswgerber.com/contact/](http://www.chriswgerber.com/contact/)
+Submit your questions at [chriswgerber.com/contact/](http://www.chriswgerber.com/contact/).
 
 == Upgrade Notice ==
 
-If you're coming from the pre-release, many features have been changed and improved. You will be required to re-setup your network.
+There was an issue in the build process that has been fixed. Please upgrade immediately.
 
 == Changelog ==
+
+= 0.3.0
+
+* New - Adds option to turn off asynchronous loading.
+* Enhancement - Adds class `dfp_ad_pos` to ad tags.
+* Bugfix - Fixes shortcode issue where content would always appear at the top of the content area.
+
+= 0.2.5
+
+* [Bug Fix] Ad CPT was overriding page meta. Fix implemented resets post data after use of WP_Query.
+
+= 0.2.4
+
+* Fixes build
+
+= 0.2.3
+
+* Bug fix
+
+= 0.2.2
+
+* Fixed issue where settings were not being called.
+
+= 0.2.1
+
+* Bug Fix: Added extra check to make sure plugin didn't attempt to add other CPTs as ad positions.
+* Enhancement: Added linting and uglifying to JS. Now serving minified JS.
+* Enhancement: Updated directory structure
+* Enhancement: Updated Readme to include screenshots and more information.
 
 = 0.2.0
 

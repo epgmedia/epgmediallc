@@ -12,8 +12,8 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       dfp-ads
  * Github Plugin URI: https://github.com/ThatGerber/dfp-ads
- * GitHub Branch:     master
- * Version:           0.2.0
+ * GitHub Branch:     stable
+ * Version:           0.3.0
  *
  * The Plugin File
  *
@@ -21,22 +21,22 @@
  * @since             0.0.1
  * @subpackage        DFP-Ads
  */
-define( 'EPG_AD_PLUGIN_VER', '0.2.0' );
+define( 'EPG_AD_PLUGIN_VER', '0.2.5' );
 
 /* Autoload */
-require_once 'lib/autoload.php';
+require_once 'vendor/autoload.php';
 
 /* Library */
-include( 'src/helper_functions.php' );
-include( 'src/abstract.dfp_ads_form.php' );
-include( 'src/class.dfp_ads.php' );
-include( 'src/class.dfp_ads_post_type.php' );
-include( 'src/class.dfp_ads_input.php' );
-include( 'src/class.dfp_ad_position.php' );
-include( 'src/class.dfp_ads_settings_form.php' );
-include( 'src/class.dfp_ads_import_form.php' );
-include( 'src/class.dfp_ads_admin.php' );
-include( 'widget/widget.ad_position.php' );
+include 'includes/helper_functions.php';
+include 'includes/abstract.dfp_ads_form.php';
+include 'includes/class.dfp_ads.php';
+include 'includes/class.dfp_ads_post_type.php';
+include 'includes/class.dfp_ads_input.php';
+include 'includes/class.dfp_ad_position.php';
+include 'includes/class.dfp_ads_settings_form.php';
+include 'includes/class.dfp_ads_import_form.php';
+include 'includes/class.dfp_ads_admin.php';
+include 'widget/widget.ad_position.php';
 
 /*
  * Initialization for Post Type
@@ -62,13 +62,13 @@ add_action( 'dfp_ads_metabox_middle', array( $dfp_post_type, 'settings_table' ),
 /* Begin creating the new ads objects */
 $dfp_ads             = new DFP_Ads();
 $dfp_ads->dir_uri    = plugins_url( null, __FILE__ );
-$dfp_ads->set_account_id( dfp_get_settings_value( 'dfp_property_code' ) ); // = '/35190362/';
+$dfp_ads->set_account_id( dfp_get_settings_value( 'dfp_property_code' ) );
 
 /*
  * Enqueues the styles and scripts into WordPress. When this action runs
  * it also will grab all of the positions and other filtered in information
  */
-add_action( 'wp_enqueue_scripts', array($dfp_ads, 'scripts_and_styles') );
+add_action( 'wp_enqueue_scripts', array( $dfp_ads, 'scripts_and_styles' ), 100 );
 
 /* Sets Menu Position. Default 20 */
 add_filter( 'dfp_ads_menu_position', ( function( $pos ) { return 79; }), 10 );
@@ -160,6 +160,16 @@ if ( is_admin() ) {
 			'title'       => 'DFP Property Code',
 			'section'     => 'general_settings',
 			'description' => 'Enter your DoubleClick for Publishers Property Code.'
+		);
+
+		$fields['dfp_synchronous_tags'] = array(
+			'id'          => 'dfp_synchronous_tags',
+			'field'       => 'checkbox',
+			'callback'    => 'checkbox',
+			'title'       => 'Use Synchronous Ad Tags',
+			'section'     => 'general_settings',
+			'description' => '<em>DFP Ad Manager uses asynchronous tags by default. Choose this option if
+								your site is unable to support DoubleClick\'s asynchronous tags</em>'
 		);
 
 		return $fields;
