@@ -2,8 +2,6 @@
 // Exit if accessed directly
 if ( !defined('ABSPATH')) exit;
 
-include( 'class.epg_forms.php' );
-
 ?>
 <div class="epg_form_wrap">
 	<form enctype="multipart/form-data" onsubmit="return validate()" method="POST" name="MyForm" action="">
@@ -29,7 +27,7 @@ include( 'class.epg_forms.php' );
 			</select>
 
 			<h3>Date Submitted:</h3>
-			<input class="floatlabel full-width date_submitted" type="text" maxLength="8" value="01/01/14" name="date_submitted" placeholder="Format: mm/dd/yy">
+			<input class="floatlabel full-width submitted" type="text" maxLength="8" value="<?php echo date( 'm/d/y' ); ?>" name="date_submitted" placeholder="Format: mm/dd/yy">
 
 			<h2>REQUEST</h2>
 

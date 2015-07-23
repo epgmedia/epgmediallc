@@ -10,7 +10,7 @@ if ( !defined('ABSPATH')) exit;
                 IT Request Form
             </h3>
             <p>
-                Date submitted: <?php echo $_POST['date_submitted']; ?>
+                Date submitted: <?php echo filter_input( INPUT_POST, 'date_submitted', FILTER_SANITIZE_SPECIAL_CHARS ); ?>
             </p>
             <h2>
                 From:
@@ -21,7 +21,7 @@ if ( !defined('ABSPATH')) exit;
                         Employee Name:
                     </td>
                     <td align="left">
-                        <?php echo $_POST['employee']; ?>
+                        <?php echo filter_input( INPUT_POST, 'employee', FILTER_SANITIZE_SPECIAL_CHARS ); ?>
                     </td>
                 </tr>
                 <tr>
@@ -29,7 +29,7 @@ if ( !defined('ABSPATH')) exit;
                         <p>Email:</p>
                     </td>
                     <td align="left">
-                        <?php echo $_POST['email']; ?>
+                        <?php echo filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ); ?>
                     </td>
                 </tr>
                 <tr>
@@ -37,7 +37,7 @@ if ( !defined('ABSPATH')) exit;
                         Phone Number:
                     </td>
                     <td align="left">
-                        <?php echo $_POST['phoneNumber']; ?>
+                        <?php echo filter_input( INPUT_POST, 'phoneNumber', FILTER_SANITIZE_SPECIAL_CHARS ); ?>
                     </td>
                 </tr>
                 <tr>
@@ -45,7 +45,7 @@ if ( !defined('ABSPATH')) exit;
                         Office Location:
                     </td>
                     <td align="left">
-                        <?php echo $_POST['location']; ?>
+                        <?php echo filter_input( INPUT_POST, 'location', FILTER_SANITIZE_SPECIAL_CHARS ); ?>
                     </td>
                 </tr>
                 <tr>
@@ -53,7 +53,7 @@ if ( !defined('ABSPATH')) exit;
                         Computer Type:
                     </td>
                     <td align="left">
-                        <?php echo $_POST['computerType']; ?>
+                        <?php echo filter_input( INPUT_POST, 'computerType', FILTER_SANITIZE_SPECIAL_CHARS ); ?>
                     </td>
                 </tr>
                 <tr>
@@ -61,7 +61,7 @@ if ( !defined('ABSPATH')) exit;
                     	Supervisor:
                     </td>
                     <td align="left">
-                        <?php echo $_POST['supervisor']; ?>
+                        <?php echo filter_input( INPUT_POST, 'supervisor', FILTER_SANITIZE_EMAIL ); ?>
                     </td>
                 </tr>
             </table>
@@ -69,7 +69,7 @@ if ( !defined('ABSPATH')) exit;
                 Description:
             </h2>
             <p>
-                <?php echo wpautop( esc_textarea( $_POST['reason'] ) ); ?>
+                <?php echo wpautop( esc_textarea( filter_input( INPUT_POST, 'reason' ) ) ); ?>
             </p>
         </td>
     </tr>

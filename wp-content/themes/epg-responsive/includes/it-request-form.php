@@ -2,7 +2,6 @@
 // Exit if accessed directly
 if ( !defined('ABSPATH')) exit;
 
-include( 'class.epg_forms.php' );
 ?>
 <div class="epg_form_wrap">
     <form enctype="multipart/form-data" onsubmit="return validate()" method="POST" name="it-request-form" action="">

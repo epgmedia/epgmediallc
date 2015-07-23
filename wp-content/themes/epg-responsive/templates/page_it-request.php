@@ -9,13 +9,13 @@ get_header(); ?>
 
 <div id="content" class="grid col-940">
 
-    <?php if (empty($_POST)) {
+    <?php if ( empty( $_POST['email'] ) ) {
 
-        include_once( get_stylesheet_directory() . '/templates/it-request-form.php');
+        include_once( get_stylesheet_directory() . '/includes/it-request-form.php');
 
     } else {
 
-        include ( get_stylesheet_directory() . '/templates/it-request-email.php' );
+        include ( get_stylesheet_directory() . '/includes/it-request-email.php' );
 
     } ?>
 

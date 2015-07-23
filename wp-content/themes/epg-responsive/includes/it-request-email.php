@@ -4,7 +4,6 @@
  * Form to send an email to necessary people for IT request
  */
 if (!defined( 'ABSPATH' )) { exit; }
-
 /** Checks if values are set before continuing */
 if (
 	!isset($_POST['date_submitted']) ||
@@ -16,19 +15,18 @@ if (
 ) {
 	EPG_Forms::died('You are missing some required fields.');
 }
-
-include_once( ABSPATH . '/wp-includes/class-phpmailer.php' );
-
 /**
  * The Mail
  *
- * Sends email to requestor, supe, JP, and RJ.
+ * Sends email to requestor, supe, JP, and RJ. And Marion
  */
 $mail = new epg_phpmailer();
 $mail->IsHTML(TRUE);
-
 /** To and From */
-$mail->setFrom( $_POST['email'], $_POST['employee'] );
+$mail->setFrom(
+	filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ),
+	filter_input( INPUT_POST, 'employee', FILTER_SANITIZE_SPECIAL_CHARS )
+);
 $email_addresses = array(
     array(
 		'kind' => 'to',
@@ -37,7 +35,7 @@ $email_addresses = array(
 	),
     array(
 		'kind' => 'cc',
-		'address' => $_POST['supervisor']
+		'address' => filter_input( INPUT_POST, 'supervisor', FILTER_SANITIZE_EMAIL )
 	),
 	array(
 		'kind' => 'cc',
@@ -51,38 +49,28 @@ $email_addresses = array(
 	),
     array(
 		'kind' => 'bcc',
-		'address' => $_POST['email'],
-		'name' =>  $_POST['employee']
+	    filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL ),
+	    filter_input( INPUT_POST, 'employee', FILTER_SANITIZE_SPECIAL_CHARS )
 	),
 );
-$mail->it_request_recipients( $email_addresses );
-
+$mail->multiple_request_recipients( $email_addresses );
 /** Subject */
-$short_reason = 'IT Request';
+$subject = 'IT Request';
 if ( isset( $_POST['shortReasonText'] ) ) {
-	$short_reason .= ': ' . $_POST['shortReasonText'];
+	$subject .= ': ' . filter_input( INPUT_POST, 'shortReasonText', FILTER_SANITIZE_SPECIAL_CHARS );
 }
 if ( isset( $_POST['shortReasonItem'] ) ) {
-	$short_reason .= ' - ' . $_POST['shortReasonItem'];
+	$subject .= ' - ' . filter_input( INPUT_POST, 'shortReasonItem', FILTER_SANITIZE_SPECIAL_CHARS );
 }
-$mail->Subject = $short_reason;
-
-/** Email Content */
-$email_body = get_include_contents( get_stylesheet_directory() . '/templates/it-request-message.php' );
-$mail->msgHTML( $email_body );
-
+$mail->Subject = $subject;
+$email_body = $mail->include_html( '/includes/it-request-message.php' );
 /** Image Attachments */
 if (isset($_FILES)) {
 	$mail->multiple_attachments($_FILES);
 }
-
 /** Send the email */
-if(!$mail->Send()) {
-
+if( ! $mail->Send() ) {
     echo "There was an error sending the email: " . $mail->ErrorInfo;
-
 } else {
-
-    include( get_stylesheet_directory() . '/templates/it-request-confirm.php');
-
+    include( get_stylesheet_directory() . '/includes/it-request-confirm.php');
 }
