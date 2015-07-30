@@ -54,7 +54,7 @@ if ( !defined('ABSPATH')) exit;
                 to <?php _e( filter_input( INPUT_POST, 'dateto', FILTER_SANITIZE_SPECIAL_CHARS ) ); ?>.</p>
             <h2>The reason for this request:</h2>
             <p>
-                <?php wpautop( esc_html( filter_input( INPUT_POST, 'reason' ) ) ); ?></p>
+                <?php _e( wpautop( esc_html( filter_input( INPUT_POST, 'reason' ) ) ) ); ?></p>
         </td>
     </tr>
 </table>
